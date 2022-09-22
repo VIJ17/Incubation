@@ -149,7 +149,7 @@ public class ArrayListRunner
 			List<Object> arrayList = list.getArrayList(tester);
 			arrayList = tester.getArrayObjects();
 			int length = list.arrayLength(arrayList);
-			System.out.println("The ArrayList is : "+String.valueOf(arrayList));
+			System.out.println("The ArrayList is : "+arrayList);
 			System.out.println("Length of the ArrayList is : "+length);
 			break;
 		}
@@ -160,7 +160,7 @@ public class ArrayListRunner
 			arrayList.addAll(tester.getArrayStringElements());
 			arrayList.addAll(tester.getArrayObjects());
 			int length = list.arrayLength(arrayList);
-			System.out.println("The ArrayList is : "+String.valueOf(arrayList));
+			System.out.println("The ArrayList is : "+arrayList);
 			System.out.println("Length of the ArrayList is : "+length);
 			break;
 		}
