@@ -33,10 +33,9 @@ public class ArrayListRunner
 		System.out.println("Enter the number of Elements...");
 		int n = sc.nextInt();
 		sc.nextLine();
-		System.out.println("Enter the Objects one by one...");
 		for(int i = 0; i<n; i++)
 		{
-			arrayList.add(sc.next());
+			arrayList.add(new StringRunner());
 		}
 		return arrayList;
 	}
@@ -82,10 +81,10 @@ public class ArrayListRunner
 		}
 		return arrayList;
 	}
-	public void forLoopToPrint(List<String> arrayList)
+	public <T> void forLoopToPrint(List<T> arrayList)
 	{
 		System.out.println("The ArrayList is :");
-		for(String element : arrayList)
+		for(T element : arrayList)
 		{
 			System.out.println(element);
 		}
@@ -150,16 +149,18 @@ public class ArrayListRunner
 			List<Object> arrayList = list.getArrayList(tester);
 			arrayList = tester.getArrayObjects();
 			int length = list.arrayLength(arrayList);
-			System.out.println("The ArrayList is : "+arrayList);
+			System.out.println("The ArrayList is : "+String.valueOf(arrayList));
 			System.out.println("Length of the ArrayList is : "+length);
 			break;
 		}
 		case 5:
 		{
 			List<Object> arrayList = list.getArrayList(tester);
-			arrayList = tester.getArrayObjects();
+			arrayList.addAll(tester.getArrayIntegerElements());
+			arrayList.addAll(tester.getArrayStringElements());
+			arrayList.addAll(tester.getArrayObjects());
 			int length = list.arrayLength(arrayList);
-			System.out.println("The ArrayList is : "+arrayList);
+			System.out.println("The ArrayList is : "+String.valueOf(arrayList));
 			System.out.println("Length of the ArrayList is : "+length);
 			break;
 		}
