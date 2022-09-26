@@ -154,8 +154,7 @@ public class HashMapRunner
 		    	map = run.getMapKeyValuesStrings();
 		    	System.out.println("Enter the key to check...");
 		    	String key = sc.nextLine();
-		    	hashmap.checkThePresenceOfKey(map, key);
-		    	System.out.println("Given Key is present in the Map.");
+		    	System.out.println(hashmap.checkThePresenceOfKey(map, key));
 		    	break;
 		 	}
 		 	case 9:

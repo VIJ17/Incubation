@@ -27,12 +27,7 @@ public class HashMaps
 	public<K, V> boolean checkThePresenceOfKey(Map<K,V> map, K key) throws WrongEntryException
 	{
 		nullCheck(map);
-		boolean result = map.containsKey(key);
-		if(result == false)
-		{
-			throw new WrongEntryException("No such Key in the Map.");
-		}
-		return result;
+		return map.containsKey(key);
 	}
 	public<K, V> boolean checkThePresenceOfValue(Map<K,V> map, V value) throws WrongEntryException
 	{
@@ -42,7 +37,6 @@ public class HashMaps
 	public<K, V> V getValueOfExistingKey(Map<K,V> map, K key) throws WrongEntryException
 	{
 		nullCheck(map);
-		checkThePresenceOfKey(map, key);
 		return map.get(key);
 	}
 	public<K, V> V getValueForNonExistingKey(Map<K,V> map, K key, V defaultValue) throws WrongEntryException
@@ -59,25 +53,21 @@ public class HashMaps
 	public<K, V> void removeExistingKey(Map<K,V> map, K key) throws WrongEntryException
 	{
 		nullCheck(map);
-		checkThePresenceOfKey(map, key);
 		map.remove(key);
 	}
 	public<K, V> void removeExistingKeyWithValue(Map<K,V> map, K key, V value) throws WrongEntryException
 	{
 		nullCheck(map);
-		checkThePresenceOfKey(map, key);
 		map.remove(key, value);
 	}
 	public<K, V> void replaceExistingKey(Map<K,V> map, K key, V newValue) throws WrongEntryException
 	{
 		nullCheck(map);
-		checkThePresenceOfKey(map, key);
 		map.replace(key, newValue);
 	}
 	public<K, V> void replaceExistingKeyWithValue(Map<K,V> map, K key, V oldValue, V newValue) throws WrongEntryException
 	{
 		nullCheck(map);
-		checkThePresenceOfKey(map, key);
 		map.replace(key, oldValue, newValue);
 	}
 	public<K, V> void joinMaps(Map<K,V> map, Map<K,V> map1) throws WrongEntryException
