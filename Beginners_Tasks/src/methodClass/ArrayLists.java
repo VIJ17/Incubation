@@ -99,11 +99,12 @@ public class ArrayLists
 	}
 	public <T> List<T> removeRangeOfElements(List<T> arrayList, int startIndex, int endIndex) throws WrongEntryException
 	{
-		int length = arrayLength(arrayList);
-		List<T> arrayList1 = arrayList.subList(0, startIndex);
-		List<T> arrayList2 = arrayList.subList(endIndex, length);
-		arrayList1.addAll(arrayList2);
-		return arrayList1;
+		//int length = arrayLength(arrayList);
+		//List<T> arrayList1 = arrayList.subList(0, startIndex);
+		//List<T> arrayList2 = arrayList.subList(endIndex, length);
+		//arrayList1.addAll(arrayList2);
+		arrayList.subList(startIndex, endIndex).clear();
+		return arrayList;
 	}
 	public List<String> removeList(List<String> arrayList, List<String> arrayList1) throws WrongEntryException
 	{
