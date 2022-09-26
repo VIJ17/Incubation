@@ -220,7 +220,7 @@ public class ArrayListRunner
 			String str = tester.getString();
 			System.out.println("Enter the position to add the string");
 			int index = tester.getIndex();
-			arrayList = list.addElement(arrayList, str, index-1);
+			list.addElement(arrayList, str, index-1);
 			System.out.println("ArrayList after adding the string : "+arrayList);
 			int length = list.arrayLength(arrayList);
 			System.out.println("Length of the ArrayList is : "+length);
@@ -271,7 +271,7 @@ public class ArrayListRunner
 			arrayList = tester.getArrayDecimalElements();
 			System.out.println("Enter the Decimal value to remove from the list");
 			double value = sc.nextDouble();
-			arrayList = list.removeElement(arrayList, value);
+			list.removeElement(arrayList, value);
 			int length = list.arrayLength(arrayList);
 			System.out.println("The ArrayList is : "+arrayList);
 			System.out.println("Length of the ArrayList is : "+length);
@@ -283,7 +283,7 @@ public class ArrayListRunner
 			arrayList = tester.getArrayDecimalElements();
 			System.out.println("Enter the index to remove from the list");
 			int index = tester.getIndex();
-			arrayList = list.removeElementAtIndex(arrayList, index-1);
+			list.removeElementAtIndex(arrayList, index-1);
 			int length = list.arrayLength(arrayList);
 			System.out.println("The ArrayList is : "+arrayList);
 			System.out.println("Length of the ArrayList is : "+length);
@@ -297,7 +297,7 @@ public class ArrayListRunner
 			int startIndex = tester.getIndex();
 			System.out.println("Enter the end index to remove from the arraylist");
 			int endIndex = tester.getIndex();
-			arrayList = list.removeRangeOfElements(arrayList, startIndex-1, endIndex);
+			list.removeRangeOfElements(arrayList, startIndex-1, endIndex);
 			int length = list.arrayLength(arrayList);
 			System.out.println("The ArrayList is : "+arrayList);
 			System.out.println("Length of the ArrayList is : "+length);
@@ -310,7 +310,7 @@ public class ArrayListRunner
 			List<String> arrayList1 = list.getArrayList("Strings");
 			System.out.println("Create a subList you want to remove from the list..");
 			arrayList1 = tester.getArrayStringElements();
-			arrayList = list.removeList(arrayList, arrayList1);
+			list.removeList(arrayList, arrayList1);
 			int length = list.arrayLength(arrayList);
 			System.out.println("The ArrayList is : "+arrayList);
 			System.out.println("Length of the ArrayList is : "+length);
@@ -323,7 +323,7 @@ public class ArrayListRunner
 			List<String> arrayList1 = list.getArrayList("Strings");
 			System.out.println("Create a subList you want to retain from the list..");
 			arrayList1 = tester.getArrayStringElements();
-			arrayList = list.retainList(arrayList, arrayList1);
+			list.retainList(arrayList, arrayList1);
 			int length = list.arrayLength(arrayList);
 			System.out.println("The ArrayList is : "+arrayList);
 			System.out.println("Length of the ArrayList is : "+length);
@@ -333,7 +333,7 @@ public class ArrayListRunner
 		{
 			List<Long> arrayList = list.getArrayList(1L);
 			arrayList = tester.getArrayLongElements();
-			arrayList = list.removeAll(arrayList);
+			list.removeAll(arrayList);
 			int length = list.arrayLength(arrayList);
 			System.out.println("The ArrayList is : "+arrayList);
 			System.out.println("Length of the ArrayList is : "+length);

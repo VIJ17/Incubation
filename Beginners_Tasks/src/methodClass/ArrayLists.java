@@ -54,11 +54,10 @@ public class ArrayLists
 		}
 		return lastIndex;
 	}
-	public List<String> addElement(List<String> arrayList, String str, int index) throws WrongEntryException
+	public void addElement(List<String> arrayList, String str, int index) throws WrongEntryException
 	{
 		nullCheck(arrayList);
 		arrayList.add(index, str);
-		return arrayList;
 	}
 	public List<String> CreateSubArray(List<String> arrayList, int startIndex, int endIndex) throws WrongEntryException
 	{
@@ -77,7 +76,7 @@ public class ArrayLists
 		arrayList.addAll(0,arrayList1);
 		return arrayList;
 	}
-	public List<Double> removeElement(List<Double> arrayList, double value) throws WrongEntryException
+	public void removeElement(List<Double> arrayList, double value) throws WrongEntryException
 	{
 		if(arrayList.indexOf(value) == -1)
 		{
@@ -85,9 +84,8 @@ public class ArrayLists
 		}
 		nullCheck(arrayList);
 		arrayList.remove(value);
-		return arrayList;
 	}
-	public List<Double> removeElementAtIndex(List<Double> arrayList, int index) throws WrongEntryException
+	public void removeElementAtIndex(List<Double> arrayList, int index) throws WrongEntryException
 	{
 		if(index >= arrayList.size())
 		{
@@ -95,34 +93,29 @@ public class ArrayLists
 		}
 		nullCheck(arrayList);
 		arrayList.remove(index);
-		return arrayList;
 	}
-	public <T> List<T> removeRangeOfElements(List<T> arrayList, int startIndex, int endIndex) throws WrongEntryException
+	public <T> void removeRangeOfElements(List<T> arrayList, int startIndex, int endIndex) throws WrongEntryException
 	{
-		//int length = arrayLength(arrayList);
-		//List<T> arrayList1 = arrayList.subList(0, startIndex);
+		//int length = arrayLength(arrayList);						Another method to do this...
+		//List<T> arrayList1 = arrayList.subList(0, startIndex);	But little clumsy...
 		//List<T> arrayList2 = arrayList.subList(endIndex, length);
 		//arrayList1.addAll(arrayList2);
 		arrayList.subList(startIndex, endIndex).clear();
-		return arrayList;
 	}
-	public List<String> removeList(List<String> arrayList, List<String> arrayList1) throws WrongEntryException
+	public void removeList(List<String> arrayList, List<String> arrayList1) throws WrongEntryException
 	{
 		nullCheck(arrayList);
 		arrayList.removeAll(arrayList1);
-		return arrayList;
 	}
-	public List<String> retainList(List<String> arrayList, List<String> arrayList1) throws WrongEntryException
+	public void retainList(List<String> arrayList, List<String> arrayList1) throws WrongEntryException
 	{
 		nullCheck(arrayList);
 		arrayList.retainAll(arrayList1);
-		return arrayList;
 	}
-	public <T> List<T> removeAll(List<T> arrayList) throws WrongEntryException
+	public <T> void removeAll(List<T> arrayList) throws WrongEntryException
 	{
 		nullCheck(arrayList);
 		arrayList.clear();
-		return arrayList;
 	}
 	public boolean checkTheList(List<String> arrayList, String str) throws WrongEntryException
 	{
