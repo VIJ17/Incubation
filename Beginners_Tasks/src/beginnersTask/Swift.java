@@ -1,15 +1,10 @@
-package methodClass;
+package beginnersTask;
 
-public class SCross extends Car
+public class Swift extends Car
 {
 	private int noOfSeats, noOfAirBags;
 	private String model, color;
 	
-	@Override
-	public void maintenance()
-	{
-		System.out.println("Maruti SCross under maintenance");
-	}
 	public void setNoOfSeats(int noOfSeats)
 	{
 		this.noOfSeats = noOfSeats;

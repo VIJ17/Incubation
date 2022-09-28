@@ -1,4 +1,4 @@
-package methodClass;
+package beginnersTask;
 
 import exceptions.WrongEntryException;
 

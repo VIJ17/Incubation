@@ -1,10 +1,14 @@
-package methodClass;
+package beginnersTask;
 
-public class Swift extends Car
+public class XUV extends Car
 {
 	private int noOfSeats, noOfAirBags;
 	private String model, color;
 	
+	public XUV()
+	{
+		super("XUV is calling Car's overloaded constructor...");
+	}
 	public void setNoOfSeats(int noOfSeats)
 	{
 		this.noOfSeats = noOfSeats;

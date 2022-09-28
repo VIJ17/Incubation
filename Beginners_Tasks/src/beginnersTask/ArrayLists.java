@@ -1,4 +1,4 @@
-package methodClass;
+package beginnersTask;
 
 import java.util.ArrayList;
 import java.util.List;

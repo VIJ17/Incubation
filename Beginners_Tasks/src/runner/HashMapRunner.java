@@ -5,8 +5,8 @@ import java.util.InputMismatchException;
 import java.util.Map;
 import java.util.Scanner;
 
+import beginnersTask.HashMaps;
 import exceptions.WrongEntryException;
-import methodClass.HashMaps;
 
 public class HashMapRunner
 {

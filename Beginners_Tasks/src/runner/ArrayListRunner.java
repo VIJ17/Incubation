@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
+import beginnersTask.ArrayLists;
 import exceptions.WrongEntryException;
-import methodClass.ArrayLists;
 
 public class ArrayListRunner
 {

@@ -2,12 +2,12 @@ package runner;
 
 import java.util.Scanner;
 
-import methodClass.Car;
-import methodClass.Duck;
-import methodClass.ParrotMod;
-import methodClass.SCross;
-import methodClass.Swift;
-import methodClass.XUV;
+import beginnersTask.Car;
+import beginnersTask.Duck;
+import beginnersTask.ParrotMod;
+import beginnersTask.SCross;
+import beginnersTask.Swift;
+import beginnersTask.XUV;
 
 public class InheritanceRunner
 {

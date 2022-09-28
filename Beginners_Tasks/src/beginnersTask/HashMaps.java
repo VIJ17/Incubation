@@ -1,4 +1,4 @@
-package methodClass;
+package beginnersTask;
 
 import java.util.HashMap;
 import java.util.Map;

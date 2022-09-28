@@ -1,4 +1,4 @@
-package methodClass;
+package beginnersTask;
 
 public class ParrotMod extends BirdAbstract
 {

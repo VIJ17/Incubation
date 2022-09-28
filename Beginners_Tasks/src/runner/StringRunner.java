@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import beginnersTask.Strings;
 import exceptions.WrongEntryException;
-import methodClass.Strings;
 
 public class StringRunner
 {
@@ -22,7 +22,7 @@ public class StringRunner
 	    String str = sc.nextLine();
 	    return str;
 	  }
-	  public static void main(String[] args)
+	  public static void main(String[] args) throws WrongEntryException
 	  {
 	    StringRunner test = new StringRunner();
 	    Strings word = new Strings();
@@ -247,11 +247,11 @@ public class StringRunner
 	}
 	     catch(WrongEntryException ex)
 	    {
-	      System.out.print(ex.getMessage());
+	    	 System.out.print(ex.getMessage());
 	    }
 	    catch(InputMismatchException e)
 	    {
-	      System.out.println("Data type mismatch...");
+	    	System.out.println("Data type mismatch...");
 	    }
 	    finally
 	    {

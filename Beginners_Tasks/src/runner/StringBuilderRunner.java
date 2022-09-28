@@ -3,8 +3,8 @@ package runner;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import beginnersTask.StrBuilder;
 import exceptions.WrongEntryException;
-import methodClass.StrBuilder;
 
 public class StringBuilderRunner
 {

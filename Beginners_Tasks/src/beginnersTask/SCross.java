@@ -1,13 +1,14 @@
-package methodClass;
+package beginnersTask;
 
-public class XUV extends Car
+public class SCross extends Car
 {
 	private int noOfSeats, noOfAirBags;
 	private String model, color;
 	
-	public XUV()
+	@Override
+	public void maintenance()
 	{
-		super("XUV is calling Car's overloaded constructor...");
+		System.out.println("Maruti SCross under maintenance");
 	}
 	public void setNoOfSeats(int noOfSeats)
 	{
