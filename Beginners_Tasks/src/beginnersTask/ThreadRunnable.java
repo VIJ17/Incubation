@@ -1,0 +1,31 @@
+package beginnersTask;
+
+public class ThreadRunnable implements Runnable
+{
+	
+	private long sleepTime;
+	
+	public void setSleepTime(long sleepTime)
+	{
+		this.sleepTime = sleepTime;
+	}
+	
+	@Override
+	public void run()
+	{
+		System.out.println("Thread Name : " + Thread.currentThread().getName() +
+				   "\nPriority : " + Thread.currentThread().getPriority() +
+				   "\nState : " + Thread.currentThread().getState());
+		System.out.println("Going to Sleep : " + Thread.currentThread().getName());
+		try
+		{
+			Thread.sleep(sleepTime);
+		}
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+		System.out.println("After Sleeping : " + Thread.currentThread().getName());
+	}
+
+}
