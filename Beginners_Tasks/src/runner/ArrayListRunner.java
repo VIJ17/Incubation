@@ -113,11 +113,11 @@ public class ArrayListRunner
 		ArrayListRunner tester = new ArrayListRunner();
 		ArrayLists list = new ArrayLists(); 
 		System.out.println("Enter a case number to execute...");
-		int c = sc.nextInt();
+		int caseValue = sc.nextInt();
 		sc.nextLine();
 		try
 		{
-		switch(c)
+		switch(caseValue)
 		{
 		case 1:
 		{

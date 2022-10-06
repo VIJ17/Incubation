@@ -161,6 +161,103 @@ public class ThreadRunner
 				
 				break;
 			}
+			case 6:
+			{
+				Threads thread1 = new Threads("ExtendedThread-1");
+				long sleepTime = runner.getSleepTime();
+				thread1.setSleepTime(sleepTime);
+				thread1.setWhileCondition(true);
+				Threads thread2 = new Threads("ExtendedThread-2");
+				sleepTime = runner.getSleepTime();
+				thread2.setSleepTime(sleepTime);
+				thread2.setWhileCondition(true);
+				Threads thread3 = new Threads("ExtendedThread-3");
+				sleepTime = runner.getSleepTime();
+				thread3.setSleepTime(sleepTime);
+				thread3.setWhileCondition(true);
+				thread1.start();
+				thread2.start();
+				thread3.start();
+				
+				ThreadRunnable threadRun1 = new ThreadRunnable();
+				Thread runnableThread1 = new Thread(threadRun1, "RunnableThread-1");
+				sleepTime = runner.getSleepTime();
+				threadRun1.setSleepTime(sleepTime);
+				threadRun1.setWhileCondition(true);
+				ThreadRunnable threadRun2 = new ThreadRunnable();
+				Thread runnableThread2 = new Thread(threadRun2, "RunnableThread-2");
+				sleepTime = runner.getSleepTime();
+				threadRun2.setSleepTime(sleepTime);
+				threadRun2.setWhileCondition(true);
+				ThreadRunnable threadRun3 = new ThreadRunnable();
+				Thread runnableThread3 = new Thread(threadRun3, "RunnableThread-3");
+				sleepTime = runner.getSleepTime();
+				threadRun3.setSleepTime(sleepTime);
+				threadRun3.setWhileCondition(true);
+				runnableThread1.start();
+				runnableThread2.start();
+				runnableThread3.start();
+				
+				break;
+			}
+			case 7:
+			{
+				Threads thread1 = new Threads("ExtendedThread-1");
+				thread1.setWhileCondition(true);
+				Threads thread2 = new Threads("ExtendedThread-2");
+				thread2.setWhileCondition(true);
+				Threads thread3 = new Threads("ExtendedThread-3");
+				thread3.setWhileCondition(true);
+				thread1.start();
+				thread2.start();
+				thread3.start();
+				
+				ThreadRunnable threadRun1 = new ThreadRunnable();
+				Thread runnableThread1 = new Thread(threadRun1, "RunnableThread-1");
+				threadRun1.setWhileCondition(true);
+				ThreadRunnable threadRun2 = new ThreadRunnable();
+				Thread runnableThread2 = new Thread(threadRun2, "RunnableThread-2");
+				threadRun2.setWhileCondition(true);
+				ThreadRunnable threadRun3 = new ThreadRunnable();
+				Thread runnableThread3 = new Thread(threadRun3, "RunnableThread-3");
+				threadRun3.setWhileCondition(true);
+				runnableThread1.start();
+				runnableThread2.start();
+				runnableThread3.start();
+				
+				try
+				{
+					Thread.sleep(10000);
+					thread1.setWhileCondition(false);
+					
+					Thread.sleep(10000);
+					thread2.setWhileCondition(false);
+
+					Thread.sleep(10000);
+					thread3.setWhileCondition(false);
+					
+					Thread.sleep(10000);
+					threadRun1.setWhileCondition(false);
+					
+					Thread.sleep(10000);
+					threadRun2.setWhileCondition(false);
+					
+					Thread.sleep(10000);
+					threadRun3.setWhileCondition(false);
+				}
+				catch (InterruptedException e)
+				{
+					e.printStackTrace();
+				}
+				
+				if(!(thread1.isAlive() && thread2.isAlive() && thread3.isAlive() &&
+						runnableThread1.isAlive() && runnableThread2.isAlive() && runnableThread3.isAlive()))
+				{
+					System.out.println("Tasks Completed.");
+				}
+				
+				break;
+			}
 			default:
 			{
 				System.out.println("XXX...Invalid case number...XXX");

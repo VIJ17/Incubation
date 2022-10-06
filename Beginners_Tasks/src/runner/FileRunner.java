@@ -10,7 +10,7 @@ import beginnersTask.Files_Properties;
 
 public class FileRunner
 {
-	public static Scanner sc = new Scanner(System.in);
+	static Scanner sc = new Scanner(System.in);
 	
 	public void setProperties(Properties prop)
 	{

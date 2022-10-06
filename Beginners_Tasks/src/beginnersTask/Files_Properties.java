@@ -24,10 +24,10 @@ public class Files_Properties
 				writer.write(strArray[i]+"\n");
 			}
 		}
-		catch(IOException e)
-		{
-			throw e;
-		}
+//		catch(IOException e)
+//		{
+//			throw e;
+//		}
 	}
 	public void storePropertiesInTextFile(Properties prop, String fileName) throws IOException
 	{
@@ -36,10 +36,10 @@ public class Files_Properties
 		{
 			prop.store(writer, "File is created successfully.");
 		}
-		catch (IOException e)
-		{
-			throw e;
-		}
+//		catch (IOException e)
+//		{
+//			throw e;
+//		}
 	}
 	public void restoreProperties(Properties prop, String fileName) throws IOException
 	{
@@ -48,9 +48,9 @@ public class Files_Properties
 		{
 			prop.load(reader);
 		}
-		catch (IOException e)
-		{
-			throw e;
-		}
+//		catch (IOException e)
+//		{
+//			throw e;
+//		}
 	}
 }
