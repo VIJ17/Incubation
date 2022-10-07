@@ -8,7 +8,7 @@ public class UsingEnum
 		
 		private final int value;
 		
-		private RainbowColors(int value)
+		private RainbowColors(int value)				//By default Enum constructors are private...
 		{
 			this.value = value;
 		}

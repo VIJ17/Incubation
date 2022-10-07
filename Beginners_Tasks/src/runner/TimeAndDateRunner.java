@@ -23,6 +23,7 @@ public class TimeAndDateRunner
 	{ 
 		TimeAndDate obj = new TimeAndDate();
 		TimeAndDateRunner runner = new TimeAndDateRunner();
+		Logger logger = Logger.getAnonymousLogger();
 		
 		try
 		{
@@ -51,32 +52,88 @@ public class TimeAndDateRunner
 				}
 				case 4:
 				{
-					System.out.println("Week Day for Current Time : " + obj.getCurrentWeekDay());
-					
-					long milliSeconds = runner.getmilliseconds();
-					System.out.println("Week Day for given time : " + obj.getWeekDay(milliSeconds));
+					System.out.println("Enter 1 to get Week Day for current time.\nEnter 2 to get Week Day for given time.");
+					int decision = sc.nextInt();
+					long milliSeconds;
+					switch(decision)
+					{
+						case 1:
+						{
+							milliSeconds = obj.getCurrentMilliSeconds();
+							logger.info("Week Day for Current Time : " + obj.getWeekDay(milliSeconds));
+							break;
+						}
+						case 2:
+						{
+							milliSeconds = runner.getmilliseconds();
+							logger.info("Week Day for given time : " + obj.getWeekDay(milliSeconds));
+							break;
+						}
+						default:
+						{
+							logger.info("Invalid Case Number.");
+							break;
+						}
+					}
 					break;
 				}
 				case 5:
 				{
-					System.out.println("Month of the current Time : " + obj.getCurrentMonth());
-					
-					long milliSeconds = runner.getmilliseconds();
-					System.out.println("Month of the given Time : " + obj.getMonth(milliSeconds));
+					System.out.println("Enter 1 to get Month of the current time.\nEnter 2 to get Month of the given time.");
+					int decision = sc.nextInt();
+					long milliSeconds;
+					switch(decision)
+					{
+						case 1:
+						{
+							milliSeconds = obj.getCurrentMilliSeconds();
+							logger.info("Month of the current Time : " + obj.getMonth(milliSeconds));
+							break;
+						}
+						case 2:
+						{
+							milliSeconds = runner.getmilliseconds();
+							logger.info("Month of the given Time : " + obj.getMonth(milliSeconds));
+							break;
+						}
+						default:
+						{
+							logger.info("Invalid Case Number.");
+							break;
+						}
+					}
 					break;
 				}
 				case 6:
 				{
-					System.out.println("Current Year : " + obj.getCurrentYear());
-					
-					long milliSeconds = runner.getmilliseconds();
-					System.out.println("Year of given Time : " + obj.getYear(milliSeconds));
+					System.out.println("Enter 1 to get Current Year.\nEnter 2 to get Year of the given time.");
+					int decision = sc.nextInt();
+					long milliSeconds;
+					switch(decision)
+					{
+						case 1:
+						{
+							milliSeconds = obj.getCurrentMilliSeconds();
+							logger.info("Current Year : " + obj.getYear(milliSeconds));
+							break;
+						}
+						case 2:
+						{
+							milliSeconds = runner.getmilliseconds();
+							logger.info("Year of given Time : " + obj.getYear(milliSeconds));
+							break;
+						}
+						default:
+						{
+							logger.info("Invalid Case Number.");
+							break;
+						}
+					}
 					break;
 				}
 				default:
 				{
 					System.out.println("Invalid case number...");
-					Logger logger = Logger.getAnonymousLogger();
 					logger.info("Invalid Case Number.");
 					break;
 				}
