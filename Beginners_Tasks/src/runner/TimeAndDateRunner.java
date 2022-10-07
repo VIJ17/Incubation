@@ -2,6 +2,7 @@ package runner;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 import beginnersTask.TimeAndDate;
 
@@ -75,6 +76,8 @@ public class TimeAndDateRunner
 				default:
 				{
 					System.out.println("Invalid case number...");
+					Logger logger = Logger.getAnonymousLogger();
+					logger.info("Invalid Case Number.");
 					break;
 				}
 			}
