@@ -12,15 +12,21 @@ public class PojoReflectionRunner
 	
 	public static void main(String args[])
 	{
+		
+		ReflectionProvider reflect = new ReflectionProvider();
+		
 		try {
 			System.out.println("Enter a String...");
 			String str = sc.nextLine();
 			System.out.println("Enter a integer value...");
 			int intValue = sc.nextInt();
+			sc.nextLine();
+			System.out.println("Enter the Class name with package to use reflection...");
+			String className = sc.nextLine();
 			
-			Class<?> cls = Class.forName("beginnersTask.PojoReflection");
+			Class<?> cls = reflect.getReflectionClass(className);     //"beginnersTask.PojoReflection"
 			
-			Constructor<?> defaultConst = cls.getConstructor();
+			Constructor<?> defaultConst = reflect.getDefaultConstructor(cls);
 			Object defaultObj = defaultConst.newInstance();			//invoking default constructor...
 			
 			Constructor<?> overLoadedConst = cls.getConstructor(String.class, int.class);
@@ -32,7 +38,7 @@ public class PojoReflectionRunner
 			
 			Method method1 = cls.getDeclaredMethod("getString");
 			method1.setAccessible(true);				//If the specified method is private, make it accessible by this code...
-			System.out.println("Getting the String Value by Reflection : " + method1.invoke(overLoadedObj));		//invoking getString method...
+			System.out.println("Getting the String Value by Reflection : " + method1.invoke(overLoadedObj));  //invoking getString method...
 		}
 		catch (NoSuchMethodException e)
 		{

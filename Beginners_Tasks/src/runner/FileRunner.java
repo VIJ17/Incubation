@@ -6,7 +6,7 @@ import java.util.InputMismatchException;
 import java.util.Properties;
 import java.util.Scanner;
 
-import beginnersTask.Files_Properties;
+import beginnersTask.FilesProperties;
 
 public class FileRunner
 {
@@ -43,7 +43,7 @@ public class FileRunner
 	public static void main(String[] args)
 	{
 		FileRunner base = new FileRunner();
-		Files_Properties obj = new Files_Properties();
+		FilesProperties obj = new FilesProperties();
 		String decision;
 		do
 		{

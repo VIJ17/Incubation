@@ -6,7 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Properties;
 
-public class Files_Properties
+public class FilesProperties
 {
 	public Properties getProperties()
 	{

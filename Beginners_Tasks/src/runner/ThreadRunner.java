@@ -227,33 +227,36 @@ public class ThreadRunner
 				
 				try
 				{
-					Thread.sleep(10000);
+					Thread.sleep(20000);
 					thread1.setWhileCondition(false);
 					
-					Thread.sleep(10000);
+					Thread.sleep(20000);
 					thread2.setWhileCondition(false);
 
-					Thread.sleep(10000);
+					Thread.sleep(20000);
 					thread3.setWhileCondition(false);
 					
-					Thread.sleep(10000);
+					Thread.sleep(20000);
 					threadRun1.setWhileCondition(false);
 					
-					Thread.sleep(10000);
+					Thread.sleep(20000);
 					threadRun2.setWhileCondition(false);
 					
-					Thread.sleep(10000);
+					Thread.sleep(20000);
 					threadRun3.setWhileCondition(false);
+					
+					Thread.sleep(5000);
+					if(!(thread1.isAlive() && thread2.isAlive() && thread3.isAlive() &&
+							runnableThread1.isAlive() && runnableThread2.isAlive() && runnableThread3.isAlive()))
+					{
+						System.out.println("Tasks Completed.");
+					}
+					
+					Thread.sleep(20000);
 				}
 				catch (InterruptedException e)
 				{
 					e.printStackTrace();
-				}
-				
-				if(!(thread1.isAlive() && thread2.isAlive() && thread3.isAlive() &&
-						runnableThread1.isAlive() && runnableThread2.isAlive() && runnableThread3.isAlive()))
-				{
-					System.out.println("Tasks Completed.");
 				}
 				
 				break;

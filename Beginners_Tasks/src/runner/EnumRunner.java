@@ -60,8 +60,10 @@ public class EnumRunner
 					break;
 				}
 			}
+			
 			System.out.println("Enter 'Yes' to continue. \n'No' to exit.");
 			decision = sc.nextLine();
+			
 		}while(decision.equalsIgnoreCase("Yes"));
 		
 		sc.close();

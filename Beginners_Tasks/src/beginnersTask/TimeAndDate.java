@@ -12,9 +12,15 @@ import java.time.ZonedDateTime;
 public class TimeAndDate
 {
 	
-	public String getCurrentTimeAndDate()
+	public DateTimeFormatter getFormat(String dateTimeFormat)
 	{
-		DateTimeFormatter formate = DateTimeFormatter.ofPattern("dd-MMMM-YYYY HH:mm:ss");
+		DateTimeFormatter format = DateTimeFormatter.ofPattern(dateTimeFormat);
+		return format;
+	}
+	
+	public String getCurrentTimeAndDate(String dateTimeFormat)
+	{
+		DateTimeFormatter formate = getFormat(dateTimeFormat);
 		LocalDateTime now = LocalDateTime.now();
 		return formate.format(now);
 	}
@@ -23,50 +29,53 @@ public class TimeAndDate
 	{
 //		 Date date = new Date();
 //		 long timeMilli = date.getTime();
-		 return System.currentTimeMillis();
+		 return System.currentTimeMillis();//swami
 	}
 	
-	public String getCurrentTimeAndDateInNewYork()
+	public String getCurrentTimeAndDateInGivenZone(ZoneId zoneId, String dateTimeFormat)
 	{
-		ZoneId londonId = ZoneId.of("America/New_York");
-		DateTimeFormatter formate = DateTimeFormatter.ofPattern("dd-MMMM-YYYY HH:mm:ss");
-		LocalDateTime now = LocalDateTime.now(londonId);
+		DateTimeFormatter formate = getFormat(dateTimeFormat);
+		LocalDateTime now = LocalDateTime.now(zoneId);
 		return formate.format(now);
 	}
 	
-	public String getCurrentTimeAndDateInLondon()
+	public ZoneId getZoneId(String zone)
 	{
-		ZoneId londonId = ZoneId.of("Europe/London");
-		DateTimeFormatter formate = DateTimeFormatter.ofPattern("dd-MMMM-YYYY HH:mm:ss");
-		LocalDateTime now = LocalDateTime.now(londonId);
-		return formate.format(now);
+			ZoneId zoneId = ZoneId.of(zone);
+			return zoneId;
 	}
 	
-	public LocalDate getLocalDate(long milliSeconds)
+	public ZoneId getSystemZoneId()
+	{
+		ZoneId zoneId = ZoneId.systemDefault();
+		return zoneId;
+	}
+	
+	public LocalDate getLocalDate(long milliSeconds, ZoneId zoneId)
 	{
 		Instant instant = Instant.ofEpochMilli(milliSeconds);				   //Obtains an instance of Instant using milliseconds from the epoch of 1970-01-01T00:00:00Z.
-		ZonedDateTime zoneDateTime = instant.atZone(ZoneId.systemDefault());   //Combines this instant with a time-zone to create a ZonedDateTime.
+		ZonedDateTime zoneDateTime = instant.atZone(zoneId);   	   			   //Combines this instant with a time-zone to create a ZonedDateTime.
 																			   //This returns an ZonedDateTime formed from this instant at the specified time-zone.
 		LocalDate date = zoneDateTime.toLocalDate();						   //Gets the LocalDate part of this date-time.Returns the date part of this date-time.
 		return date;
 	}
 	
-	public String getWeekDay(long milliSeconds)
+	public String getWeekDay(long milliSeconds, ZoneId zoneId)
 	{
-		LocalDate date = getLocalDate(milliSeconds);
+		LocalDate date = getLocalDate(milliSeconds, zoneId);
 		DayOfWeek day = DayOfWeek.from(date);
 		return day.name();
 	}
 	
-	public Month getMonth(long milliSeconds)
+	public Month getMonth(long milliSeconds, ZoneId zoneId)
 	{
-		LocalDate date = getLocalDate(milliSeconds);
+		LocalDate date = getLocalDate(milliSeconds, zoneId);
 		return date.getMonth();
 	}
 	
-	public int getYear(long milliSeconds)
+	public int getYear(long milliSeconds, ZoneId zoneId)
 	{
-		LocalDate date = getLocalDate(milliSeconds);
+		LocalDate date = getLocalDate(milliSeconds, zoneId);
 		return date.getYear();
 	}
 }
