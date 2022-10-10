@@ -1,11 +1,12 @@
 package runner;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 import beginnersTask.DataBase;
 import beginnersTask.DependentPojo;
@@ -14,6 +15,7 @@ import beginnersTask.EmployeePojo;
 public class DataBaseRunner
 {
 	
+	static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	static Scanner sc = new Scanner(System.in);
 	
 	public int getInteger()
@@ -22,35 +24,111 @@ public class DataBaseRunner
 		sc.nextLine();
 		return value;
 	}
+	
 	public String getString()
 	{
 		String str = sc.nextLine();
 		return str;
 	}
-	public void printResult(ResultSet result) throws SQLException
+	
+	public String getDataTypeForColumns()
 	{
-		while(result.next())
+		logger.info("Enter the data type of the column.");
+		String dataType = sc.nextLine();
+		
+		if(dataType.equalsIgnoreCase("int"))
 		{
-			System.out.print("EmployeeId : " + result.getLong("EMPLOYEE_ID") + ";\t");
-			System.out.print("NAME : " + result.getString("NAME") + ";\t");
-			System.out.print("MOBILE : " + result.getLong("MOBILE") + ";\t");
-			System.out.print("EMAIL : " + result.getString("EMAIL") + ";\t");
-			System.out.print("DEPARTMENT : " + result.getString("DEPARTMENT") + "\n");
+			dataType = "INT";
+		}else if(dataType.equalsIgnoreCase("String"))
+		{
+			dataType = "VARCHAR";
+			dataType += "(" + getStringLength() + ")";
+			
+		}else if(dataType.equalsIgnoreCase("long"))
+		{
+			dataType = "BIGINT";
+		}
+		
+		return dataType;
+	}
+	
+	public String getStringLength()
+	{
+		logger.info("Enter the maximum length of the String.");
+		String length = sc.nextLine();
+		return length;
+	}
+	
+	public String getColumnNames()
+	{
+		logger.info("Enter the Column name");
+		String columnName = sc.nextLine();
+		
+		columnName += " " + getDataTypeForColumns();
+		
+		return columnName;
+	}
+	
+	public String getPrimaryKey()
+	{
+		logger.info("Enter the column name to set Primary key.");
+		String primaryKey = sc.nextLine();
+		return primaryKey;
+	}
+	
+	public String getColumnNamesInSql()
+	{
+		logger.info("Enter the number of columns.");
+		int n = sc.nextInt();
+		sc.nextLine();
+		List<String> columnList = new ArrayList<String>();
+		
+		for(int i = 0; i<n; i++)
+		{
+			columnList.add(getColumnNames());
+		}
+		
+		columnList.add("PRIMARY KEY(" + getPrimaryKey() + ")");
+		
+		String sql = String.join(", ", columnList);
+		return sql;
+	}
+	
+	public void printMap(Map<Integer,Map<String,String>> map)
+	{
+		int n = map.size();
+		
+		for(int i = 1; i<=n; i++)
+		{
+			Map<String,String> innerMap = map.get(i);
+			
+			System.out.println(innerMap.get("EMPLOYEE_ID"));
+			System.out.println(innerMap.get("NAME"));
+			System.out.println(innerMap.get("MOBILE"));
+			System.out.println(innerMap.get("EMAIL"));
+			System.out.println(innerMap.get("DEPARTMENT"));
+			System.out.println("___________________________________________________________");
+			
 		}
 	}
-	public void printDependentResult(ResultSet result) throws SQLException
+	
+	public void printMapCombined(Map<Integer,Map<String,String>> map)
 	{
-		while(result.next())
+		int n = map.size();
+		
+		for(int i = 1; i<=n; i++)
 		{
-			System.out.print("EmployeeId : " + result.getLong("EMPLOYEE_ID") + ";");
-			System.out.print("DependentId : " + result.getString("DEPENDENT_ID") + ";");
-			System.out.print("Dependent Name : " + result.getString("NAME") + ";");
-			System.out.print("Dependent Age : " + result.getString("AGE") + ";");
-			System.out.print("Relationship : " + result.getString("RELATIONSHIP") + ";\n");
-			System.out.print("Employee Name : " + result.getString("Employee.NAME") + ";");
-			System.out.print("MOBILE : " + result.getLong("MOBILE") + ";");
-			System.out.print("EMAIL : " + result.getString("EMAIL") + ";");
-			System.out.print("DEPARTMENT : " + result.getString("DEPARTMENT") + ";\n");
+			Map<String,String> innerMap = map.get(i);
+			
+			System.out.println("EMPLOYEE_ID : " + innerMap.get("EMPLOYEE_ID"));
+			System.out.println("NAME : " + innerMap.get("NAME"));
+			System.out.println("MOBILE : " + innerMap.get("MOBILE"));
+			System.out.println("EMAIL : " + innerMap.get("EMAIL"));
+			System.out.println("DEPARTMENT : " + innerMap.get("DEPARTMENT"));
+			System.out.println("DEPENDENT NAME : " + innerMap.get("DEPENDENT NAME"));
+			System.out.println("AGE : " + innerMap.get("AGE"));
+			System.out.println("RELATIONSHIP : " + innerMap.get("RELATIONSHIP"));
+			System.out.println("___________________________________________________________");
 			
 		}
 	}
@@ -59,29 +137,33 @@ public class DataBaseRunner
 	{
 		DataBaseRunner runner = new DataBaseRunner();
 		DataBase db = new DataBase();
-		System.out.println("Enter the case number to execute...");
-		int caseValue = sc.nextInt();
-		sc.nextLine();
 		
 		try
 		{
+			
+			logger.info("Enter the case number to execute...");
+			int caseValue = sc.nextInt();
+			sc.nextLine();
+			
 			switch(caseValue)
 			{
 				case 1:
 				{
-					System.out.println("Enter the Table name to create");
+					logger.info("Enter the Table name to create");
 					String tableName = runner.getString();
 					
-					db.createTableInDataBase(tableName);
-					System.out.println("Table created successfuly...");
+					String sql = runner.getColumnNamesInSql();
+					
+					db.createTableInDataBase(tableName, sql);
+					logger.info("Table created successfuly...");
 					break;
 					
 				}
 				case 2:
 				{
-					System.out.println("Enter the Table name to add details.");
+					logger.info("Enter the Table name to add details.");
 					String tableName = runner.getString();
-					System.out.println("Enter the number of Employees...");
+					logger.info("Enter the number of Employees...");
 					int n = sc.nextInt();
 					List<EmployeePojo> employeeList = new ArrayList<EmployeePojo>();
 					
@@ -92,130 +174,140 @@ public class DataBaseRunner
 					
 					for(EmployeePojo pojo : employeeList)
 					{
-						System.out.println("Enter the Employee ID.");
+						logger.info("Enter the Employee ID.");
 						String str = runner.getString();
 						pojo.setEmployeeId(str);
-						System.out.println("Enter the Employee Name.");
+						logger.info("Enter the Employee Name.");
 						str = runner.getString();
 						pojo.setName(str);
-						System.out.println("Enter the Employee mobile number.");
+						logger.info("Enter the Employee mobile number.");
 						str = runner.getString();
 						pojo.setMobileNum(str);
-						System.out.println("Enter Employee Email Id.");
+						logger.info("Enter Employee Email Id.");
 						str = runner.getString();
 						pojo.setEmailId(str);
-						System.out.println("Enter Employee Department.");
+						logger.info("Enter Employee Department.");
 						str = runner.getString();
 						pojo.setDepartment(str);
 					}
 					
 					db.insertTableDetails(employeeList, tableName);
-					System.out.println("Employees details inserted successfully...");
+					logger.info("Employees details inserted successfully...");
 					break;
 				}
 				case 3:
 				{
-					System.out.println("Enter the Table name to get details.");
+					logger.info("Enter the Table name to get details.");
 					String tableName = runner.getString();
-					System.out.println("Enter the Employee name to get details.");
+					logger.info("Enter the Employee name to get details.");
 					String name = runner.getString();
 					
-					ResultSet result = db.retrieveTableDetails(tableName, name);
+					Map<Integer,Map<String,String>> map = db.retrieveTableDetails(tableName, name);
 					
-					runner.printResult(result);
+					runner.printMap(map);
+					
 					break;
 				}
 				case 4:
 				{
-					System.out.println("Enter the Table name to Update details.");
+					logger.info("Enter the Table name to Update details.");
 					String tableName = runner.getString();
-					System.out.println("Enter the Employee Name to which have to Update data.");
+					logger.info("Enter the Employee Name to which have to Update data.");
 					String name = runner.getString();
-					System.out.println("Enter the updated mobile number.");
+					logger.info("Enter the updated mobile number.");
 					String mobileNumber = runner.getString();
 					
 					db.modifyTableDetails(tableName, name, mobileNumber);
 					
-					ResultSet result = db.retrieveTableDetails(tableName, name);
-					runner.printResult(result);
+					Map<Integer,Map<String,String>> map = db.retrieveTableDetails(tableName, name);
+					
+					runner.printMap(map);
+					
 					break;
 				}
 				case 5:
 				{
-					System.out.println("Enter the Table name to get details.");
+					logger.info("Enter the Table name to get details.");
 					String tableName = runner.getString();
-					System.out.println("Enter the value for first number of Employees to print");
+					logger.info("Enter the value for first number of Employees to print");
 					int n = runner.getInteger();
 					
-					ResultSet result = db.getFirstNRecords(tableName, n);
+					Map<Integer,Map<String,String>> map = db.getFirstNRecords(tableName, n);
 					
-					runner.printResult(result);
+					runner.printMap(map);
+					
 					break;
 				}
 				case 6:
 				{
-					System.out.println("Enter the Table name to sort the details.");
+					logger.info("Enter the Table name to sort the details.");
 					String tableName = runner.getString();
-					System.out.println("Enter the column name to sort the Table.");
+					logger.info("Enter the column name to sort the Table.");
 					String sortID = runner.getString();
-					System.out.println("Enter 'a' to sort data in ascending.\nor\nEnter 'd' to sort data in descending.");
+					logger.info("Enter the value for first number of Employees to print after sorting");
+					int n = runner.getInteger();
+					logger.info("Enter 'a' to sort data in ascending.\nor\nEnter 'd' to sort data in descending.");
 					String decision = runner.getString();
 					
 					switch(decision)
 					{
 						case "a":
 						{
-							ResultSet result = db.sortDataInAscending(tableName, sortID);
-							runner.printResult(result);
+							Map<Integer,Map<String,String>> map = db.sortDataInAscending(tableName, sortID, n);
+							runner.printMap(map);
 							break;
 						}
 						case "d":
 						{
-							ResultSet result = db.sortDataInDescending(tableName, sortID);
-							runner.printResult(result);
+							Map<Integer,Map<String,String>> map = db.sortDataInDescending(tableName, sortID, n);
+							runner.printMap(map);
 							break;
 						}
 						default:
 						{
-							System.out.println("Invalid Input.");
+							logger.info("Invalid Input.");
 							break;
 						}
 					}
-					System.out.println("Table sorted successfully...");
+					logger.info("Table sorted successfully...");
 
 					break;
 				}
 				case 7:
 				{
-					System.out.println("Enter the Table name to Delete the details.");
+					logger.info("Enter the Table name to Delete the details.");
 					String tableName = runner.getString();
-					System.out.println("Enter the Employee ID which have to delete from the table.");
+					logger.info("Enter the Employee ID which have to delete from the table.");
 					String employeeID = runner.getString();
 					
 					db.deleteTableContent(tableName, employeeID);
 					
-					ResultSet result = db.getTableDetails(tableName);
-					runner.printResult(result);						   //To see whether the specified details are deleted or not.
+					Map<Integer,Map<String,String>> map = db.getTableDetails(tableName);
+					
+					runner.printMap(map);	//To see whether the specified details are deleted or not.
+					
 					break;
 				}
 				case 8:
 				{
-					System.out.println("Enter the Table name to create Dependent Table.");
+					logger.info("Enter the Table name to create Dependent Table.");
 					String tableName = runner.getString();
-					System.out.println("Enter the Parent Table name.");
+					logger.info("Enter the Parent Table name.");
 					String parentTable = runner.getString();
-					System.out.println("Enter the foreignKey to set.");
+					logger.info("Enter the foreignKey to set.");
 					String foreignKey = runner.getString();
 					
-					db.createDependentTable(tableName, parentTable, foreignKey);
-					System.out.println("Table created successfuly...");
+					String sql = runner.getColumnNamesInSql();
+					
+					db.createDependentTable(tableName, sql, parentTable, foreignKey);
+					logger.info("Table created successfuly...");
 					break;
 				}
 				case 9:
 				{
-					System.out.println("Enter the Table name to add details.");
+					logger.info("Enter the Table name to add details.");
 					String tableName = runner.getString();
-					System.out.println("Enter the total number of Dependents...");
+					logger.info("Enter the total number of Dependents...");
 					int n = sc.nextInt();
 					sc.nextLine();
 					List<DependentPojo> dependentList = new ArrayList<DependentPojo>();
@@ -227,65 +319,79 @@ public class DataBaseRunner
 					
 					for(DependentPojo pojo : dependentList)
 					{
-						System.out.println("Enter the Employee ID.");
+						logger.info("Enter the Employee ID.");
 						String str = runner.getString();
 						pojo.setEmployeeId(str);
-						System.out.println("Enter the Dependent ID.");
+						logger.info("Enter the Dependent ID.");
 						str = runner.getString();
 						pojo.setDependentId(str);
-						System.out.println("Enter the Dependent Name.");
+						logger.info("Enter the Dependent Name.");
 						str = runner.getString();
 						pojo.setName(str);
-						System.out.println("Enter the Dependent Age.");
+						logger.info("Enter the Dependent Age.");
 						int age = runner.getInteger();
 						pojo.setAge(age);
-						System.out.println("Enter Dependent's relationship with Employee.");
+						logger.info("Enter Dependent's relationship with Employee.");
 						str = runner.getString();
 						pojo.setRelationship(str);
 					}
 					
 					db.insertDependentTableDetails(dependentList, tableName);
-					System.out.println("Dependents details inserted successfully...");
+					logger.info("Dependents details inserted successfully...");
 					break;
 				}
 				case 10:
 				{
-					System.out.println("Enter the Dependent Table name.");
+					logger.info("Enter the Dependent Table name.");
 					String tableName = runner.getString();
-					System.out.println("Enter the Parent Table name.");
+					logger.info("Enter the Parent Table name.");
 					String parentTable = runner.getString();
-					System.out.println("Enter the Foreign key column name.");
+					logger.info("Enter the Foreign key column name.");
 					String foreignKey = runner.getString();
-					System.out.println("Enter the Employee ID for which dependents details are needed.");
+					logger.info("Enter the Employee ID for which dependents details are needed.");
 					String employeeID = runner.getString();
 					
-					ResultSet result = db.retrieveDependentTableDetails(tableName, parentTable, foreignKey, employeeID);
-					runner.printDependentResult(result);
+					Map<Integer,Map<String,String>> map = db.retrieveDependentTableDetails(tableName, parentTable, foreignKey, employeeID);
+					
+					runner.printMapCombined(map);
+					
 					break;
 				}
 				case 11:
 				{
-					System.out.println("Enter the Dependent Table name.");
-					String tableName = runner.getString();
-					System.out.println("Enter the Parent Table name.");
+					logger.info("Enter the Parent Table name.");
 					String parentTable = runner.getString();
-					System.out.println("Enter the Foreign key column name.");
+					logger.info("Enter the Dependent Table name.");
+					String tableName = runner.getString();
+					logger.info("Enter the Foreign key column name.");
 					String foreignKey = runner.getString();
+					logger.info("Enter the column name to sort the Table.");
+					String sortID = runner.getString();
+					logger.info("Enter the value for first number of Employees to print after sorting");
+					int n = runner.getInteger();
 					
-					ResultSet result = db.getDependentTableDetails(tableName, parentTable, foreignKey);
-					runner.printDependentResult(result);
+					Map<Integer,Map<String,String>> map = db.getDependentTableDetails(tableName, parentTable, foreignKey, sortID, n);
+					
+					runner.printMapCombined(map);
+					
 					break;
 				}
 				default:
 				{
-					System.out.println("XXX...Invalid Case Value...XXX");
+					logger.info("XXX...Invalid Case Value...XXX");
 					break;
 				}
 			}
 		}
-		catch(SQLException | InputMismatchException e)
+		catch(SQLException e)
 		{
-			e.printStackTrace();
+			logger.info(e.getMessage());
+//			e.printStackTrace();
+		}
+		catch(InputMismatchException e)
+		{
+			logger.warning("Data type mismatch...");
+//	    	e.printStackTrace();
 		}
 	}
 

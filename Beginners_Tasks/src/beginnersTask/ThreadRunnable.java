@@ -1,11 +1,25 @@
 package beginnersTask;
 
+import java.util.logging.Logger;
+
 public class ThreadRunnable implements Runnable
 {
+	
+	static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	
 	private long sleepTime = 5000;
 	private boolean condition;
 	
+	public ThreadRunnable(long sleepTime)
+	{
+		this.sleepTime = sleepTime;
+	}
+	
+	public ThreadRunnable()
+	{
+		super();
+	}
+
 	public void setWhileCondition(boolean condition)
 	{
 		this.condition = condition;
@@ -22,22 +36,20 @@ public class ThreadRunnable implements Runnable
 		
 		while(condition)
 		{
-			System.out.println("Thread Name : " + Thread.currentThread().getName() +
+			logger.info("Thread Name : " + Thread.currentThread().getName() +
 					   "\nPriority : " + Thread.currentThread().getPriority() +
 					   "\nState : " + Thread.currentThread().getState());
-			System.out.println("Going to Sleep : " + Thread.currentThread().getName());
+			logger.info("Going to Sleep : " + Thread.currentThread().getName());
 			try
 			{
 				Thread.sleep(sleepTime);
 			}
-			catch (InterruptedException e)
-			{
-				e.printStackTrace();
-			}
-			System.out.println("After Sleeping : " + Thread.currentThread().getName());
+			catch (InterruptedException e){}
+			logger.info("After Sleeping : " + Thread.currentThread().getName());
 		}
 		
 	}
+
 	
 //	case 6 & 7:
 	
@@ -46,7 +58,7 @@ public class ThreadRunnable implements Runnable
 //	{
 //		while(condition)
 //		{
-//			System.out.println("Thread Name : " + Thread.currentThread().getName() +
+//			logger.info("Thread Name : " + Thread.currentThread().getName() +
 //					   "\nPriority : " + Thread.currentThread().getPriority() +
 //					   "\nState : " + Thread.currentThread().getState());
 //			

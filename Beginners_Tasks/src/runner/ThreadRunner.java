@@ -1,17 +1,21 @@
 package runner;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 import beginnersTask.ThreadRunnable;
 import beginnersTask.Threads;
 
 public class ThreadRunner
 {
+	
+	static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	static Scanner sc = new Scanner(System.in);
 
 	public long getSleepTime()
 	{
-		System.out.println("Enter the sleep time in milliseconds...");
+		logger.info("Enter the sleep time in milliseconds...");
 		long sleepTime = sc.nextLong();
 		return sleepTime;
 	}
@@ -19,20 +23,28 @@ public class ThreadRunner
 	public static void main(String[] args)
 	{
 		ThreadRunner runner = new ThreadRunner();
-		System.out.println("Enter the case number to execute...");
-		int caseValue = sc.nextInt();
-		sc.nextLine();
+		int caseValue = 0;
+		try
+		{
+			logger.info("Enter the case number to execute...");
+			caseValue = sc.nextInt();
+			sc.nextLine();
+		}
+		catch(InputMismatchException e)
+		{
+			logger.warning("Invalid Data Type.");
+		}
 		switch(caseValue)
 		{
 			case 1:
 			{
 				Threads thread = new Threads();
-				System.out.println("Thread Name : " +thread.getName() +
+				logger.info("Thread Name : " +thread.getName() +
 								   "\nPriority : " + thread.getPriority() +
 								   "\nState : " + thread.getState());
 				thread.start();
 		
-				System.out.println("Thread Name : " +thread.getName() +
+				logger.info("Thread Name : " +thread.getName() +
 			    		     	   "\nPriority : " + thread.getPriority() +
 			    		     	   "\nState : " + thread.getState());
 				break;
@@ -42,13 +54,13 @@ public class ThreadRunner
 				ThreadRunnable threadRun = new ThreadRunnable();
 				Thread thread = new Thread(threadRun);
 				
-				System.out.println("Thread Name : " + thread.getName() +
+				logger.info("Thread Name : " + thread.getName() +
 								   "\nPriority : " + thread.getPriority() +
 								   "\nState : " + thread.getState());
 				
 				thread.start();
 				
-				System.out.println("Thread Name : " + thread.getName() +
+				logger.info("Thread Name : " + thread.getName() +
 							       "\nPriority : " + thread.getPriority() +
 							       "\nState : " + thread.getState());
 				break;
@@ -56,25 +68,25 @@ public class ThreadRunner
 			case 3:
 			{
 				Threads thread = new Threads("ExtendedThread");
-				System.out.println("Thread Name : " +thread.getName() +
+				logger.info("Thread Name : " +thread.getName() +
 								   "\nPriority : " + thread.getPriority() +
 								   "\nState : " + thread.getState());
 				thread.start();
 		
-				System.out.println("Thread Name : " +thread.getName() +
+				logger.info("Thread Name : " +thread.getName() +
 			    		     	   "\nPriority : " + thread.getPriority() +
 			    		     	   "\nState : " + thread.getState());
 				
 				ThreadRunnable threadRun = new ThreadRunnable();
 				Thread thread1 = new Thread(threadRun, "RunnableThread");
 				
-				System.out.println("Thread Name : " + thread1.getName() +
+				logger.info("Thread Name : " + thread1.getName() +
 								   "\nPriority : " + thread1.getPriority() +
 								   "\nState : " + thread1.getState());
 				
 				thread1.start();
 				
-				System.out.println("Thread Name : " + thread1.getName() +
+				logger.info("Thread Name : " + thread1.getName() +
 							       "\nPriority : " + thread1.getPriority() +
 							       "\nState : " + thread1.getState());
 				break;
@@ -112,47 +124,27 @@ public class ThreadRunner
 			}
 			case 5:
 			{
-				Threads thread1 = new Threads("ExtendedThread-1");
-				long sleepTime = runner.getSleepTime();
-				thread1.setSleepTime(sleepTime);
-				Threads thread2 = new Threads("ExtendedThread-2");
-				sleepTime = runner.getSleepTime();
-				thread2.setSleepTime(sleepTime);
-				Threads thread3 = new Threads("ExtendedThread-3");
-				sleepTime = runner.getSleepTime();
-				thread3.setSleepTime(sleepTime);
-				Threads thread4 = new Threads("ExtendedThread-4");
-				sleepTime = runner.getSleepTime();
-				thread4.setSleepTime(sleepTime);
-				Threads thread5 = new Threads("ExtendedThread-5");
-				sleepTime = runner.getSleepTime();
-				thread5.setSleepTime(sleepTime);
+				Threads thread1 = new Threads("ExtendedThread-1", runner.getSleepTime());
+				Threads thread2 = new Threads("ExtendedThread-2", runner.getSleepTime());
+				Threads thread3 = new Threads("ExtendedThread-3", runner.getSleepTime());
+				Threads thread4 = new Threads("ExtendedThread-4", runner.getSleepTime());
+				Threads thread5 = new Threads("ExtendedThread-5", runner.getSleepTime());
 				thread1.start();
 				thread2.start();
 				thread3.start();
 				thread4.start();
 				thread5.start();
 				
-				ThreadRunnable threadRun1 = new ThreadRunnable();
+				ThreadRunnable threadRun1 = new ThreadRunnable(runner.getSleepTime());
 				Thread runnableThread1 = new Thread(threadRun1, "RunnableThread-1");
-				sleepTime = runner.getSleepTime();
-				threadRun1.setSleepTime(sleepTime);
-				ThreadRunnable threadRun2 = new ThreadRunnable();
+				ThreadRunnable threadRun2 = new ThreadRunnable(runner.getSleepTime());
 				Thread runnableThread2 = new Thread(threadRun2, "RunnableThread-2");
-				sleepTime = runner.getSleepTime();
-				threadRun2.setSleepTime(sleepTime);
-				ThreadRunnable threadRun3 = new ThreadRunnable();
+				ThreadRunnable threadRun3 = new ThreadRunnable(runner.getSleepTime());
 				Thread runnableThread3 = new Thread(threadRun3, "RunnableThread-3");
-				sleepTime = runner.getSleepTime();
-				threadRun3.setSleepTime(sleepTime);
-				ThreadRunnable threadRun4 = new ThreadRunnable();
+				ThreadRunnable threadRun4 = new ThreadRunnable(runner.getSleepTime());
 				Thread runnableThread4 = new Thread(threadRun4, "RunnableThread-4");
-				sleepTime = runner.getSleepTime();
-				threadRun4.setSleepTime(sleepTime);
-				ThreadRunnable threadRun5 = new ThreadRunnable();
+				ThreadRunnable threadRun5 = new ThreadRunnable(runner.getSleepTime());
 				Thread runnableThread5 = new Thread(threadRun5, "RunnableThread-5");
-				sleepTime = runner.getSleepTime();
-				threadRun5.setSleepTime(sleepTime);
 				runnableThread1.start();
 				runnableThread2.start();
 				runnableThread3.start();
@@ -163,36 +155,24 @@ public class ThreadRunner
 			}
 			case 6:
 			{
-				Threads thread1 = new Threads("ExtendedThread-1");
-				long sleepTime = runner.getSleepTime();
-				thread1.setSleepTime(sleepTime);
+				Threads thread1 = new Threads("ExtendedThread-1", runner.getSleepTime());
 				thread1.setWhileCondition(true);
-				Threads thread2 = new Threads("ExtendedThread-2");
-				sleepTime = runner.getSleepTime();
-				thread2.setSleepTime(sleepTime);
+				Threads thread2 = new Threads("ExtendedThread-2", runner.getSleepTime());
 				thread2.setWhileCondition(true);
-				Threads thread3 = new Threads("ExtendedThread-3");
-				sleepTime = runner.getSleepTime();
-				thread3.setSleepTime(sleepTime);
+				Threads thread3 = new Threads("ExtendedThread-3", runner.getSleepTime());
 				thread3.setWhileCondition(true);
 				thread1.start();
 				thread2.start();
 				thread3.start();
 				
-				ThreadRunnable threadRun1 = new ThreadRunnable();
+				ThreadRunnable threadRun1 = new ThreadRunnable(runner.getSleepTime());
 				Thread runnableThread1 = new Thread(threadRun1, "RunnableThread-1");
-				sleepTime = runner.getSleepTime();
-				threadRun1.setSleepTime(sleepTime);
 				threadRun1.setWhileCondition(true);
-				ThreadRunnable threadRun2 = new ThreadRunnable();
+				ThreadRunnable threadRun2 = new ThreadRunnable(runner.getSleepTime());
 				Thread runnableThread2 = new Thread(threadRun2, "RunnableThread-2");
-				sleepTime = runner.getSleepTime();
-				threadRun2.setSleepTime(sleepTime);
 				threadRun2.setWhileCondition(true);
-				ThreadRunnable threadRun3 = new ThreadRunnable();
+				ThreadRunnable threadRun3 = new ThreadRunnable(runner.getSleepTime());
 				Thread runnableThread3 = new Thread(threadRun3, "RunnableThread-3");
-				sleepTime = runner.getSleepTime();
-				threadRun3.setSleepTime(sleepTime);
 				threadRun3.setWhileCondition(true);
 				runnableThread1.start();
 				runnableThread2.start();
@@ -227,35 +207,39 @@ public class ThreadRunner
 				
 				try
 				{
-					Thread.sleep(20000);
+					Thread.sleep(30000);
 					thread1.setWhileCondition(false);
 					
-					Thread.sleep(20000);
+					Thread.sleep(30000);
 					thread2.setWhileCondition(false);
 
-					Thread.sleep(20000);
+					Thread.sleep(30000);
 					thread3.setWhileCondition(false);
 					
-					Thread.sleep(20000);
+					Thread.sleep(30000);
 					threadRun1.setWhileCondition(false);
 					
-					Thread.sleep(20000);
+					Thread.sleep(30000);
 					threadRun2.setWhileCondition(false);
 					
-					Thread.sleep(20000);
+					Thread.sleep(30000);
 					threadRun3.setWhileCondition(false);
+					
+					int count = Thread.activeCount();
+					System.out.println("Number of threads active : "+count);
 					
 					Thread.sleep(5000);
 					if(!(thread1.isAlive() && thread2.isAlive() && thread3.isAlive() &&
 							runnableThread1.isAlive() && runnableThread2.isAlive() && runnableThread3.isAlive()))
 					{
-						System.out.println("Tasks Completed.");
+						logger.info("Tasks Completed.");
 					}
 					
 					Thread.sleep(20000);
 				}
 				catch (InterruptedException e)
 				{
+					logger.info("Data type mismatch...");
 					e.printStackTrace();
 				}
 				
@@ -263,7 +247,7 @@ public class ThreadRunner
 			}
 			default:
 			{
-				System.out.println("XXX...Invalid case number...XXX");
+				logger.info("XXX...Invalid case number...XXX");
 				break;
 			}
 			

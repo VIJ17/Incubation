@@ -7,6 +7,7 @@ import java.util.Properties;
 import java.util.Scanner;
 
 import beginnersTask.FilesProperties;
+import exceptions.WrongEntryException;
 
 public class FileRunner
 {
@@ -47,100 +48,104 @@ public class FileRunner
 		String decision;
 		do
 		{
-		try
-		{
-		System.out.println("Enter the case value to execute...");
-		int caseValue = sc.nextInt();
-		sc.nextLine();
-		switch(caseValue)
-		{
-		case 1:
+			try
 			{
-				System.out.println("Enter the file name to create...");
-				String fileName = sc.nextLine();
-				String[] strArray = base.createArrayOfLines();
-				
-				//writer.write("Programmatically created file.");
-				//writer.write("These words were written programmatically.");
-				//writer.write("All is Well. Be happy & enjoy the moment.");
-				
-				obj.createTextFile(fileName, strArray);
-				break;
+				System.out.println("Enter the case value to execute...");
+				int caseValue = sc.nextInt();
+				sc.nextLine();
+				switch(caseValue)
+				{
+					case 1:
+						{
+							System.out.println("Enter the file name to create...");
+							String fileName = sc.nextLine();
+							String[] strArray = base.createArrayOfLines();
+							
+							//writer.write("Programmatically created file.");
+							//writer.write("These words were written programmatically.");
+							//writer.write("All is Well. Be happy & enjoy the moment.");
+							
+							obj.createTextFile(fileName, strArray);
+							break;
+						}
+					case 2:
+					{
+						Properties prop = obj.getProperties();
+						base.setProperties(prop);
+						System.out.println("Enter the File name to create text file...");
+						String fileName = sc.nextLine();
+						obj.storePropertiesInTextFile(prop, fileName);			
+						break;
+						
+					}
+					case 3:
+					{
+						Properties prop = obj.getProperties();
+						System.out.println("Enter the File name to load back...");
+						String fileName = sc.nextLine();
+						obj.restoreProperties(prop, fileName);
+			//			System.out.println(prop);			implicitly calls toString method to print...
+						prop.list(System.out);
+						break;
+					}
+					case 4:
+					{
+			//			Case 1:
+						System.out.println("Enter the path where you want to create a folder...");
+						String path = sc.nextLine();
+						System.out.println("Enter the name of the desired directory...");
+						path += sc.nextLine();
+						File file = new File(path);
+						if(file.mkdir())
+						{
+							System.out.println("Folder is created successfully.");
+						}
+						else
+						{
+							System.out.println("Folder is not created.");
+						}
+						System.out.println("Enter the File name to create...");
+						String fileName = path + "/" + sc.nextLine();
+						String[] strArray = base.createArrayOfLines();
+						obj.createTextFile(fileName, strArray);
+						
+			//			Case 2:
+						Properties prop = obj.getProperties();
+						base.setProperties(prop);
+						System.out.println("Enter the File name to create text file...");
+						fileName = path + "/" + sc.nextLine();
+						obj.storePropertiesInTextFile(prop, fileName);
+						
+			//			Case 3:
+						Properties prop1 = obj.getProperties();
+						System.out.println("Enter the File name to load back...");
+						fileName = path + "/" + sc.nextLine();
+						obj.restoreProperties(prop1, fileName);
+						prop.list(System.out);
+						break;
+					}
+					default:
+					{
+						System.out.println("XXX...Invalid case value...XXX");
+					}
+				}
 			}
-		case 2:
-		{
-			Properties prop = obj.getProperties();
-			base.setProperties(prop);
-			System.out.println("Enter the File name to create text file...");
-			String fileName = sc.nextLine();
-			obj.storePropertiesInTextFile(prop, fileName);			
-			break;
-			
-		}
-		case 3:
-		{
-			Properties prop = obj.getProperties();
-			System.out.println("Enter the File name to load back...");
-			String fileName = sc.nextLine();
-			obj.restoreProperties(prop, fileName);
-//			System.out.println(prop);			implicitly calls toString method to print...
-			prop.list(System.out);
-			break;
-		}
-		case 4:
-		{
-//			Case 1:
-			System.out.println("Enter the path where you want to create a folder...");
-			String path = sc.nextLine();
-			System.out.println("Enter the name of the desired directory...");
-			path += sc.nextLine();
-			File file = new File(path);
-			if(file.mkdir())
+			catch(IOException e)
 			{
-				System.out.println("Folder is created successfully.");
+				e.getStackTrace();
 			}
-			else
+			catch(InputMismatchException e)
 			{
-				System.out.println("Folder is not created.");
+				System.out.println("...Invalid Data type entered...");
 			}
-			System.out.println("Enter the File name to create...");
-			String fileName = path + "/" + sc.nextLine();
-			String[] strArray = base.createArrayOfLines();
-			obj.createTextFile(fileName, strArray);
+			catch(WrongEntryException e)
+			{
+				System.out.println(e.getMessage());
+			}
 			
-//			Case 2:
-			Properties prop = obj.getProperties();
-			base.setProperties(prop);
-			System.out.println("Enter the File name to create text file...");
-			fileName = path + "/" + sc.nextLine();
-			obj.storePropertiesInTextFile(prop, fileName);
-			
-//			Case 3:
-			Properties prop1 = obj.getProperties();
-			System.out.println("Enter the File name to load back...");
-			fileName = path + "/" + sc.nextLine();
-			obj.restoreProperties(prop1, fileName);
-			prop.list(System.out);
-			break;
-		}
-		default:
-		{
-			System.out.println("XXX...Invalid case value...XXX");
-		}
-		}
-		}
-		catch(IOException e)
-		{
-			e.getStackTrace();
-		}
-		catch(InputMismatchException e)
-		{
-			System.out.println("...Invalid Data type entered...");
-		}
-		
-		System.out.println("Enter 'Yes' to continue. \n'No' to exit.");
-		decision = sc.nextLine();
-	}while(decision.equalsIgnoreCase("Yes"));
+			System.out.println("Enter 'Yes' to continue. \n'No' to exit.");
+			decision = sc.nextLine();
+		}while(decision.equalsIgnoreCase("Yes"));
 		
 		sc.close();
 	}

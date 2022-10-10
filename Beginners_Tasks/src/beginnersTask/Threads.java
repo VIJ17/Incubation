@@ -1,7 +1,12 @@
 package beginnersTask;
 
+import java.util.logging.Logger;
+
 public class Threads extends Thread
 {
+	
+	static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	
 	private long sleepTime = 5000;
 	private boolean condition;
 	
@@ -10,14 +15,15 @@ public class Threads extends Thread
 		this.condition = condition;
 	}
 	
-	public void setSleepTime(long sleepTime)
+	public Threads(String name,long sleepTime)
 	{
+		setName(name);
 		this.sleepTime = sleepTime;
 	}
 	
 	public Threads()
 	{
-		
+		super();
 	}
 	
 	public Threads(String name)
@@ -30,19 +36,16 @@ public class Threads extends Thread
 	{
 		while(condition)
 		{
-			System.out.println("Thread Name : " +Thread.currentThread().getName() +
+			logger.info("Thread Name : " +Thread.currentThread().getName() +
 							   "\nPriority : " + Thread.currentThread().getPriority() +
 							   "\nState : " + Thread.currentThread().getState());
-			System.out.println("Going to Sleep : " + Thread.currentThread().getName());
+			logger.info("Going to Sleep : " + Thread.currentThread().getName());
 			try
 			{
 				Thread.sleep(sleepTime);
 			}
-			catch (InterruptedException e)
-			{
-				e.printStackTrace();
-			}
-			System.out.println("After Sleeping : " + Thread.currentThread().getName());
+			catch (InterruptedException e){}
+			logger.info("After Sleeping : " + Thread.currentThread().getName());
 		}
 		
 	}
@@ -55,7 +58,7 @@ public class Threads extends Thread
 //		
 //		while(condition)
 //		{
-//			System.out.println("Thread Name : " +Thread.currentThread().getName() +
+//			logger.info("Thread Name : " +Thread.currentThread().getName() +
 //							   "\nPriority : " + Thread.currentThread().getPriority() +
 //							   "\nState : " + Thread.currentThread().getState());
 //			

@@ -1,19 +1,23 @@
 package beginnersTask;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
-
+import java.util.Map;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class DataBase
 {
 	
 	private String url = "jdbc:mysql://localhost/incubationDB";
 	private String userName = "root";
-	private String password = "";
+	private String password = "Root@123";
 	
 	public void setUrl(String url)
 	{
@@ -40,38 +44,92 @@ public class DataBase
 		return password;
 	}
 	
-	public PreparedStatement createConnection(String sql) throws SQLException
+	private Connection createConnection() throws SQLException
 	{
 		Connection connection = DriverManager.getConnection(url, userName, password);
+		return connection;
+	}
+	
+	private PreparedStatement createPreparedStatement(Connection connection, String sql) throws SQLException
+	{
 		PreparedStatement stmt = connection.prepareStatement(sql);
 		return stmt;
-			
 	}
 	
-	public void createTableInDataBase(String tableName) throws SQLException
+	public void createTableInDataBase(String tableName, String sql) throws SQLException
 	{
-		String sql = "CREATE TABLE "+tableName+" (EMPLOYEE_ID VARCHAR(30) NOT NULL, NAME VARCHAR(30), MOBILE VARCHAR(30), EMAIL VARCHAR(30), DEPARTMENT VARCHAR(30), PRIMARY KEY(EMPLOYEE_ID))";
-		PreparedStatement stmt = createConnection(sql);
+		sql = "CREATE TABLE "+tableName+" ("+sql+")";
+		Connection connection = createConnection();
+		PreparedStatement stmt = createPreparedStatement(connection, sql);
 		stmt.execute();
+		
+		closeStatement(stmt);
+		closeConnection(connection);
 	}
-	
-	public void createDependentTable(String tableName, String parentTable, String foreignKey) throws SQLException
+//	"CREATE TABLE "+tableName+" (EMPLOYEE_ID VARCHAR(30) NOT NULL, NAME VARCHAR(30), MOBILE VARCHAR(30), EMAIL VARCHAR(30), DEPARTMENT VARCHAR(30), PRIMARY KEY(EMPLOYEE_ID))";
+
+	public void createDependentTable(String tableName, String sql, String parentTable, String foreignKey) throws SQLException
 	{
-		String sql = "CREATE TABLE "+tableName+" (EMPLOYEE_ID VARCHAR(30) NOT NULL, DEPENDENT_ID VARCHAR(30) NOT NULL, NAME VARCHAR(30), AGE INT, RELATIONSHIP VARCHAR(30), PRIMARY KEY(DEPENDENT_ID), FOREIGN KEY ("+foreignKey+") REFERENCES "+parentTable+"("+foreignKey+"))";
-		PreparedStatement stmt = createConnection(sql);
+		sql = "CREATE TABLE "+tableName+" ("+sql+", FOREIGN KEY ("+foreignKey+") REFERENCES "+parentTable+"("+foreignKey+"))";
+		Connection connection = createConnection();
+		PreparedStatement stmt = createPreparedStatement(connection, sql);
 		stmt.execute();
+		
+		closeStatement(stmt);
+		closeConnection(connection);
+	}
+//	"CREATE TABLE "+tableName+" (EMPLOYEE_ID VARCHAR(30) NOT NULL, DEPENDENT_ID VARCHAR(30) NOT NULL, NAME VARCHAR(30), AGE INT, RELATIONSHIP VARCHAR(30), PRIMARY KEY(DEPENDENT_ID), FOREIGN KEY ("+foreignKey+") REFERENCES "+parentTable+"("+foreignKey+"))";
+	
+	public String getValuesString(int n)
+	{
+		List<String> valuesArray = new ArrayList<String>();
+		
+		for(int i = 0; i<n; i++)
+		{
+			valuesArray.add("?");
+		}
+		
+		String valuesString = String.join(", ", valuesArray);
+		
+		return valuesString;
 	}
 	
-	public String insertsql(String tableName)
+	public String insertsql(String tableName, int n)
 	{
-		String sql = "INSERT INTO "+tableName+" VALUES (?, ?, ?, ?, ?)";
+		String valuesString = getValuesString(n);
+		String sql = "INSERT INTO "+tableName+" VALUES ("+valuesString+")";
 		return sql;
+	}
+	
+	public ResultSet getTableDetailsAsResultSet(String tableName) throws SQLException
+	{
+		String sql = "SELECT * FROM "+tableName;
+		Connection connection = createConnection();
+		PreparedStatement stmt = createPreparedStatement(connection, sql);
+		ResultSet result = stmt.executeQuery();
+		
+		closeStatement(stmt);
+		closeConnection(connection);
+		
+		return result;
+	}
+	
+	public int getNoOfColumns(ResultSet result) throws SQLException
+	{
+		ResultSetMetaData metadata = result.getMetaData();
+		int numberOfColumns = metadata.getColumnCount();
+		return numberOfColumns;
 	}
 	
 	public void insertTableDetails(List<EmployeePojo> employeeList, String tableName) throws SQLException
 	{
-		String sql = insertsql(tableName);
-		PreparedStatement stmt = createConnection(sql);
+		ResultSet result = getTableDetailsAsResultSet(tableName);
+		int n = getNoOfColumns(result);
+		
+		String sql = insertsql(tableName, n);
+		
+		Connection connection = createConnection();
+		PreparedStatement stmt = createPreparedStatement(connection, sql);
 		
 		for(EmployeePojo pojo : employeeList)
 		{
@@ -84,12 +142,20 @@ public class DataBase
 			stmt.addBatch();
 		}
 		stmt.executeBatch();
+		
+		closeStatement(stmt);
+		closeConnection(connection);
 	}
 	
 	public void insertDependentTableDetails(List<DependentPojo> dependentList, String tableName) throws SQLException
 	{
-		String sql = insertsql(tableName);
-		PreparedStatement stmt = createConnection(sql);
+		ResultSet result = getTableDetailsAsResultSet(tableName);
+		int n = getNoOfColumns(result);
+		
+		String sql = insertsql(tableName, n);
+		
+		Connection connection = createConnection();
+		PreparedStatement stmt = createPreparedStatement(connection, sql);
 		
 		for(DependentPojo pojo : dependentList)
 		{
@@ -102,77 +168,215 @@ public class DataBase
 			stmt.addBatch();
 		}
 		stmt.executeBatch();
+		
+		closeStatement(stmt);
+		closeConnection(connection);
 	}
 	
-	public ResultSet getTableDetails(String tableName) throws SQLException
+	public Map<Integer,Map<String,String>> convertResultToMap(ResultSet result) throws SQLException
+	{
+		Map<Integer,Map<String,String>> map = new LinkedHashMap<Integer,Map<String,String>>();
+		Map<String,String> innerMap = new LinkedHashMap<String,String>();
+		
+		int key = 1;
+		
+		while(result.next())
+		{
+			innerMap.put("EMPLOYEE_ID : ", result.getString("EMPLOYEE_ID"));
+			innerMap.put("NAME : ", result.getString("NAME"));
+			innerMap.put("MOBILE : ", result.getString("MOBILE"));
+			innerMap.put("EMAIL : ", result.getString("EMAIL"));
+			innerMap.put("DEPARTMENT : ", result.getString("DEPARTMENT"));
+			
+			map.put(key, innerMap);
+			
+			key++;
+		}
+		
+		return map;
+	}
+	
+	private Map<Integer,Map<String,String>> convertResultToMapCombined(ResultSet result) throws SQLException
+	{
+		Map<Integer,Map<String,String>> map = new LinkedHashMap<Integer,Map<String,String>>();
+		
+		int key = 1;
+		
+		while(result.next())
+		{
+			Map<String,String> innerMap = new LinkedHashMap<String,String>();
+			
+			innerMap.put("EMPLOYEE_ID", result.getString("EMPLOYEE_ID"));
+			innerMap.put("NAME", result.getString("Employee.NAME"));
+			innerMap.put("MOBILE", result.getString("MOBILE"));
+			innerMap.put("EMAIL", result.getString("EMAIL"));
+			innerMap.put("DEPARTMENT", result.getString("DEPARTMENT"));
+			innerMap.put("DEPENDENT NAME", result.getString("Dependents.NAME"));
+			innerMap.put("AGE", result.getString("AGE"));
+			innerMap.put("RELATIONSHIP", result.getString("RELATIONSHIP"));
+			
+			map.put(key, innerMap);
+			
+			key++;
+		}
+
+		return map;
+	}
+	
+	public Map<Integer,Map<String,String>> getTableDetails(String tableName) throws SQLException
 	{
 		String sql = "SELECT * FROM "+tableName;
-		PreparedStatement stmt = createConnection(sql);
+		Connection connection = createConnection();
+		PreparedStatement stmt = createPreparedStatement(connection, sql);
 		ResultSet result = stmt.executeQuery();
-		return result;
+		
+		Map<Integer,Map<String,String>> map = convertResultToMap(result);
+		
+		closeStatement(stmt);
+		closeConnection(connection);
+		
+		return map;
 	}
 	
-	public ResultSet getDependentTableDetails(String tableName, String parentTable, String foreignKey) throws SQLException
+	public Map<Integer,Map<String,String>> getDependentTableDetails(String tableName, String parentTable, String foreignKey, String sortID, int n) throws SQLException
 	{
-		String sql = "SELECT * FROM "+tableName+" INNER JOIN "+parentTable+" ON "+tableName+"."+foreignKey+"="+parentTable+"."+foreignKey;
-		PreparedStatement stmt = createConnection(sql);
+		String sql = "SELECT * FROM "+parentTable+" INNER JOIN "+tableName+" ON "+parentTable+"."+foreignKey+"="+tableName+"."+foreignKey+" ORDER BY "+parentTable+"."+sortID+" LIMIT "+n;
+		Connection connection = createConnection();
+		PreparedStatement stmt = createPreparedStatement(connection, sql);
 		ResultSet result = stmt.executeQuery();
-		return result;
+		
+		Map<Integer,Map<String,String>> map = convertResultToMapCombined(result);
+		
+		closeResultSet(result);
+		closeStatement(stmt);
+		closeConnection(connection);
+		
+		return map;
 	}
-	//select * from Dependents inner join Employee on Dependents.EMPLOYEE_ID=Employee.EMPLOYEE_ID;
+	//select * from Employee inner join Dependents on Employee.EMPLOYEE_ID=Dependents.EMPLOYEE_ID order by Employee.NAME limit 5;
 	
-	public ResultSet retrieveTableDetails(String tableName, String name) throws SQLException
+	public Map<Integer,Map<String,String>> retrieveTableDetails(String tableName, String name) throws SQLException
 	{
 		String sql = "SELECT * FROM "+tableName+" WHERE NAME = '"+name+"'";
-		PreparedStatement stmt = createConnection(sql);
+		Connection connection = createConnection();
+		PreparedStatement stmt = createPreparedStatement(connection, sql);
 		ResultSet result = stmt.executeQuery();
-		return result;
+		
+		Map<Integer,Map<String,String>> map = convertResultToMap(result);
+		
+		closeStatement(stmt);
+		closeConnection(connection);
+		
+		return map;
 	}
 	
-	public ResultSet retrieveDependentTableDetails(String tableName, String parentTable, String foreignKey, String employeeID) throws SQLException
+	public Map<Integer,Map<String,String>> retrieveDependentTableDetails(String tableName, String parentTable, String foreignKey, String employeeID) throws SQLException
 	{
-		String sql = "SELECT * FROM "+tableName+" INNER JOIN "+parentTable+" ON "+tableName+"."+foreignKey+"="+parentTable+"."+foreignKey+" WHERE "+parentTable+"."+foreignKey+"="+employeeID;
-		PreparedStatement stmt = createConnection(sql);
+		String sql = "SELECT * FROM "+parentTable+" INNER JOIN "+tableName+" ON "+parentTable+"."+foreignKey+"="+tableName+"."+foreignKey+" WHERE "+parentTable+"."+foreignKey+"="+employeeID;
+		Connection connection = createConnection();
+		PreparedStatement stmt = createPreparedStatement(connection, sql);
 		ResultSet result = stmt.executeQuery();
-		return result;
+		
+		Map<Integer,Map<String,String>> map = convertResultToMapCombined(result);
+		
+		closeStatement(stmt);
+		closeConnection(connection);
+		
+		return map;
 	}
 	//select * from Dependents inner join Employee on Dependents.EMPLOYEE_ID=Employee.EMPLOYEE_ID where Employee.EMPLOYEE_ID=1;
 	
 	public void modifyTableDetails(String tableName, String name, String mobileNumber) throws SQLException
 	{
 		String sql = "UPDATE "+tableName+" SET MOBILE = "+mobileNumber+" WHERE NAME = '"+name+"'";
-		PreparedStatement stmt = createConnection(sql);
+		Connection connection = createConnection();
+		PreparedStatement stmt = createPreparedStatement(connection, sql);
 		stmt.execute();
+		
+		closeStatement(stmt);
+		closeConnection(connection);
 	}
 	
-	public ResultSet getFirstNRecords(String tableName, int n) throws SQLException
+	public Map<Integer,Map<String,String>> getFirstNRecords(String tableName, int n) throws SQLException
 	{
 		String sql = "SELECT * FROM "+tableName+" LIMIT "+n;
-		PreparedStatement stmt = createConnection(sql);
+		Connection connection = createConnection();
+		PreparedStatement stmt = createPreparedStatement(connection, sql);
 		ResultSet result = stmt.executeQuery();
-		return result;
+		
+		Map<Integer,Map<String,String>> map = convertResultToMap(result);
+		
+		closeStatement(stmt);
+		closeConnection(connection);
+		
+		return map;
 	}
 	
-	public ResultSet sortDataInAscending(String tableName, String sortID) throws SQLException
+	public Map<Integer,Map<String,String>> sortDataInAscending(String tableName, String sortID, int n) throws SQLException
 	{
-		String sql = "SELECT * FROM "+tableName+" ORDER BY "+sortID;
-		PreparedStatement stmt = createConnection(sql);
+		String sql = "SELECT * FROM "+tableName+" ORDER BY "+sortID+" LIMIT "+n;
+		Connection connection = createConnection();
+		PreparedStatement stmt = createPreparedStatement(connection, sql);
 		ResultSet result = stmt.executeQuery();
-		return result;
+		
+		Map<Integer,Map<String,String>> map = convertResultToMap(result);
+		
+		closeStatement(stmt);
+		closeConnection(connection);
+		
+		return map;
 	}
 	
-	public ResultSet sortDataInDescending(String tableName, String sortID) throws SQLException
+	public Map<Integer,Map<String,String>> sortDataInDescending(String tableName, String sortID, int n) throws SQLException
 	{
-		String sql = "SELECT * FROM "+tableName+" ORDER BY "+sortID+" DESC";
-		PreparedStatement stmt = createConnection(sql);
+		String sql = "SELECT * FROM "+tableName+" ORDER BY "+sortID+" DESC LIMIT "+n;
+		Connection connection = createConnection();
+		PreparedStatement stmt = createPreparedStatement(connection, sql);
 		ResultSet result = stmt.executeQuery();
-		return result;
+		
+		Map<Integer,Map<String,String>> map = convertResultToMap(result);
+		
+		closeStatement(stmt);
+		closeConnection(connection);
+		
+		return map;
 	}
 	
 	public void deleteTableContent(String tableName, String employeeID) throws SQLException
 	{
 		String sql = "DELETE FROM "+tableName+" WHERE EMPLOYEE_ID = '"+employeeID+"'";
-		PreparedStatement stmt = createConnection(sql);
+		Connection connection = createConnection();
+		PreparedStatement stmt = createPreparedStatement(connection, sql);
 		stmt.execute();
+		
+		closeStatement(stmt);
+		closeConnection(connection);
+	}
+	
+	public void closeResultSet(ResultSet result)
+	{
+		try
+		{
+			result.close();
+		}
+		catch(Exception e) {}
+	}
+	
+	public void closeStatement(Statement stmt)
+	{
+		try
+		{
+			stmt.close();
+		}
+		catch(Exception e) {}
+	}
+	
+	public void closeConnection(Connection connection)
+	{
+		try
+		{
+			connection.close();
+		}
+		catch(Exception e) {}
 	}
 }

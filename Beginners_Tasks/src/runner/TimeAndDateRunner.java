@@ -6,15 +6,17 @@ import java.util.Scanner;
 import java.util.logging.Logger;
 
 import beginnersTask.TimeAndDate;
+import exceptions.WrongEntryException;
 
 public class TimeAndDateRunner
 {
 	
+	static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	static Scanner sc = new Scanner(System.in);
 		
 	public long getmilliseconds() throws InputMismatchException
 	{
-		System.out.println("Enter the Time in milliseconds...");
+		logger.info("Enter the Time in milliseconds...");
 		long milliSeconds = sc.nextLong();
 	
 		return milliSeconds;
@@ -22,13 +24,13 @@ public class TimeAndDateRunner
 	
 	public String getZone()
 	{
-		System.out.println("Enter the ZoneId...\nEnter:\nLon-London\nNyk-NewYork");
+		logger.info("Give the ZoneId...\nEnter:\nLon-London\nNyk-NewYork");
 		String zoneId = sc.nextLine();
-		if(zoneId == "Lon")
+		if(zoneId.equalsIgnoreCase("Lon"))
 		{
 			zoneId = "Europe/London";
 		}
-		else if(zoneId == "Nyk")
+		else if(zoneId.equalsIgnoreCase("Nyk"))
 		{
 			zoneId = "America/New_York";
 		}
@@ -37,7 +39,7 @@ public class TimeAndDateRunner
 	
 	public String getFormatString()
 	{
-		System.out.println("Ender 'd' for default format.\nor\nEnter 'm' to give manual format");
+		logger.info("Ender 'd' for default format.\nor\nEnter 'm' to give manual format");
 		String decision = sc.nextLine().toLowerCase();
 		switch(decision)
 		{
@@ -48,13 +50,13 @@ public class TimeAndDateRunner
 		}
 		case "m":
 		{
-			System.out.println("Enter the Format of Date & Time to display...");
+			logger.info("Enter the Format of Date & Time to display...");
 			String dateTimeFormat = sc.nextLine();
 			return dateTimeFormat;
 		}
 		default:
 		{
-			System.out.println("Input Invalid.");
+			logger.info("Input Invalid.");
 			break;
 		}
 		}
@@ -65,12 +67,11 @@ public class TimeAndDateRunner
 	{ 
 		TimeAndDate obj = new TimeAndDate();
 		TimeAndDateRunner runner = new TimeAndDateRunner();
-		Logger logger = Logger.getAnonymousLogger();
 		
 		try
 		{
 		
-			System.out.println("Enter a case number to execute...");
+			logger.info("Enter a case number to execute...");
 			int caseValue = sc.nextInt();
 			sc.nextLine();
 			
@@ -79,12 +80,12 @@ public class TimeAndDateRunner
 				case 1:
 				{
 					String dateTimeFormat = runner.getFormatString();
-					System.out.println(obj.getCurrentTimeAndDate(dateTimeFormat));
+					logger.info(obj.getCurrentTimeAndDate(dateTimeFormat));
 					break;
 				}
 				case 2:
 				{
-					System.out.println(obj.getCurrentMilliSeconds());
+					logger.info("Current Milli Seconds is : " + obj.getCurrentMilliSeconds());
 					break;
 				}
 				case 3:
@@ -92,15 +93,15 @@ public class TimeAndDateRunner
 					String zone1 = runner.getZone();
 					ZoneId zoneId = obj.getZoneId(zone1);
 					String dateTimeFormat = runner.getFormatString();
-					System.out.println("New_York Time & Date :" + obj.getCurrentTimeAndDateInGivenZone(zoneId, dateTimeFormat));
+					logger.info("New_York Time & Date :" + obj.getCurrentTimeAndDateInGivenZone(zoneId, dateTimeFormat));
 					String zone2 = runner.getZone();
 					zoneId = obj.getZoneId(zone2);
-					System.out.println("London Time & Date :" + obj.getCurrentTimeAndDateInGivenZone(zoneId, dateTimeFormat));
+					logger.info("London Time & Date :" + obj.getCurrentTimeAndDateInGivenZone(zoneId, dateTimeFormat));
 					break;
 				}
 				case 4:
 				{
-					System.out.println("Enter 1 to get Week Day for current time.\nEnter 2 to get Week Day for given time.");
+					logger.info("Enter 1 to get Week Day for current time.\nEnter 2 to get Week Day for given millisecond.");
 					int decision = sc.nextInt();
 					ZoneId zoneId;
 					long milliSeconds;
@@ -131,7 +132,7 @@ public class TimeAndDateRunner
 				}
 				case 5:
 				{
-					System.out.println("Enter 1 to get Month of the current time.\nEnter 2 to get Month of the given time.");
+					logger.info("Enter 1 to get Month of the current time.\nEnter 2 to get Month of the given time.");
 					int decision = sc.nextInt();
 					ZoneId zoneId;
 					long milliSeconds;
@@ -162,7 +163,7 @@ public class TimeAndDateRunner
 				}
 				case 6:
 				{
-					System.out.println("Enter 1 to get Current Year.\nEnter 2 to get Year of the given time.");
+					logger.info("Enter 1 to get Current Year.\nEnter 2 to get Year of the given time.");
 					int decision = sc.nextInt();
 					ZoneId zoneId;
 					long milliSeconds;
@@ -193,23 +194,28 @@ public class TimeAndDateRunner
 				}
 				default:
 				{
-					System.out.println("Invalid case number...");
 					logger.info("Invalid Case Number.");
 					break;
 				}
 			}
 			
 		}
+		catch(WrongEntryException e)
+		{
+			logger.warning(e.getMessage());
+		}
 		catch(InputMismatchException e)
 		{
-			e.printStackTrace();
+			logger.warning("Wrong Data Type Entered.");
+//			e.printStackTrace();
 		}
 		finally
 		{
-			if(sc != null)
+			try
 			{
 				sc.close();
 			}
+			catch(Exception e) {}
 		}
 	}
 	

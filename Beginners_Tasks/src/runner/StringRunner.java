@@ -252,6 +252,7 @@ public class StringRunner
 	    catch(InputMismatchException e)
 	    {
 	    	System.out.println("Data type mismatch...");
+	    	e.printStackTrace();
 	    }
 	    finally
 	    {

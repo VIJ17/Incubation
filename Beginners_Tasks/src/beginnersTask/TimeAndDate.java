@@ -1,6 +1,9 @@
 package beginnersTask;
 
 import java.time.format.DateTimeFormatter;
+
+import exceptions.WrongEntryException;
+
 import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -12,13 +15,17 @@ import java.time.ZonedDateTime;
 public class TimeAndDate
 {
 	
-	public DateTimeFormatter getFormat(String dateTimeFormat)
+	Strings word = new Strings();
+	
+	public DateTimeFormatter getFormat(String dateTimeFormat) throws WrongEntryException
 	{
+		word.nullCheck(dateTimeFormat);
+		
 		DateTimeFormatter format = DateTimeFormatter.ofPattern(dateTimeFormat);
 		return format;
 	}
 	
-	public String getCurrentTimeAndDate(String dateTimeFormat)
+	public String getCurrentTimeAndDate(String dateTimeFormat) throws WrongEntryException
 	{
 		DateTimeFormatter formate = getFormat(dateTimeFormat);
 		LocalDateTime now = LocalDateTime.now();
@@ -29,20 +36,26 @@ public class TimeAndDate
 	{
 //		 Date date = new Date();
 //		 long timeMilli = date.getTime();
-		 return System.currentTimeMillis();//swami
+		
+//		Clock clock = Clock.systemDefaultZone();
+//		long milliSeconds = clock.millis();
+		
+		 return System.currentTimeMillis();  //swami
 	}
 	
-	public String getCurrentTimeAndDateInGivenZone(ZoneId zoneId, String dateTimeFormat)
+	public String getCurrentTimeAndDateInGivenZone(ZoneId zoneId, String dateTimeFormat) throws WrongEntryException
 	{
 		DateTimeFormatter formate = getFormat(dateTimeFormat);
 		LocalDateTime now = LocalDateTime.now(zoneId);
 		return formate.format(now);
 	}
 	
-	public ZoneId getZoneId(String zone)
+	public ZoneId getZoneId(String zone) throws WrongEntryException
 	{
-			ZoneId zoneId = ZoneId.of(zone);
-			return zoneId;
+		word.nullCheck(zone);
+		
+		ZoneId zoneId = ZoneId.of(zone);
+		return zoneId;
 	}
 	
 	public ZoneId getSystemZoneId()
