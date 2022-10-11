@@ -102,11 +102,11 @@ public class DataBaseRunner
 		{
 			Map<String,String> innerMap = map.get(i);
 			
-			System.out.println(innerMap.get("EMPLOYEE_ID"));
-			System.out.println(innerMap.get("NAME"));
-			System.out.println(innerMap.get("MOBILE"));
-			System.out.println(innerMap.get("EMAIL"));
-			System.out.println(innerMap.get("DEPARTMENT"));
+			System.out.println("EMPLOYEE_ID : " + innerMap.get("EMPLOYEE_ID"));
+			System.out.println("NAME : " + innerMap.get("NAME"));
+			System.out.println("MOBILE : " + innerMap.get("MOBILE"));
+			System.out.println("EMAIL : " + innerMap.get("EMAIL"));
+			System.out.println("DEPARTMENT : " + innerMap.get("DEPARTMENT"));
 			System.out.println("___________________________________________________________");
 			
 		}
@@ -203,7 +203,7 @@ public class DataBaseRunner
 					String name = runner.getString();
 					
 					Map<Integer,Map<String,String>> map = db.retrieveTableDetails(tableName, name);
-					
+
 					runner.printMap(map);
 					
 					break;
