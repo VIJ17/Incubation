@@ -27,7 +27,7 @@ public class RegularExpressions
 	{
 		word.nullCheck(str);
 		
-		String pattern = "^[a-zA-Z0-9]*$";
+		String pattern = "^[a-zA-Z0-9]+$";
 		boolean matcher = Pattern.matches(pattern, str);
 		return matcher;
 	}
@@ -36,7 +36,7 @@ public class RegularExpressions
 	{
 		word.nullCheck(str);
 		
-		String pattern = "^(.+)[@](.+)[.](.+)$";
+		String pattern = "^[a-zA-Z0-9._-]+[@][a-zA-Z0-9-]+[.][a-zA-Z.]{2,18}$";		//"^[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+\\.[a-zA-Z.]{2,18}$"
 		boolean matcher = Pattern.matches(pattern, str);
 		return matcher;
 	}
@@ -155,7 +155,7 @@ public class RegularExpressions
 	{
 		word.nullCheck(htmlString);
 		
-		String patternStr = "[<]([^>]+)[>]";
+		String patternStr = "</?[a-z]*>";					//"(</?[a-z]*>)"
 		Pattern pattern = Pattern.compile(patternStr);
 		Matcher matcher = pattern.matcher(htmlString);
 		List<String> resultList = new ArrayList<String>();

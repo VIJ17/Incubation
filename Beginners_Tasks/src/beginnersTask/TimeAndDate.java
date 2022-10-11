@@ -39,8 +39,12 @@ public class TimeAndDate
 		
 //		Clock clock = Clock.systemDefaultZone();
 //		long milliSeconds = clock.millis();
+//		return milliSeconds;
 		
-		 return System.currentTimeMillis();  //swami
+//		long milliSeconds = Instant.now().toEpochMilli();
+//		return milliSeconds;
+		
+		 return System.currentTimeMillis();  //swami - resolved
 	}
 	
 	public String getCurrentTimeAndDateInGivenZone(ZoneId zoneId, String dateTimeFormat) throws WrongEntryException
