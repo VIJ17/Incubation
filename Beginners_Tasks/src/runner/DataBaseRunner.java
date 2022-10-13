@@ -18,20 +18,20 @@ public class DataBaseRunner
 	static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	static Scanner sc = new Scanner(System.in);
 	
-	public int getInteger()
+	private int getInteger()
 	{
 		int value = sc.nextInt();
 		sc.nextLine();
 		return value;
 	}
 	
-	public String getString()
+	private String getString()
 	{
 		String str = sc.nextLine();
 		return str;
 	}
 	
-	public String getDataTypeForColumns()
+	private String getDataTypeForColumns()
 	{
 		logger.info("Enter the data type of the column.");
 		String dataType = sc.nextLine();
@@ -52,14 +52,14 @@ public class DataBaseRunner
 		return dataType;
 	}
 	
-	public String getStringLength()
+	private int getStringLength()
 	{
 		logger.info("Enter the maximum length of the String.");
-		String length = sc.nextLine();
+		int length = sc.nextInt();
 		return length;
 	}
 	
-	public String getColumnNames()
+	private String getColumnNames()
 	{
 		logger.info("Enter the Column name");
 		String columnName = sc.nextLine();
@@ -69,19 +69,22 @@ public class DataBaseRunner
 		return columnName;
 	}
 	
-	public String getPrimaryKey()
+	private String getPrimaryKey()
 	{
 		logger.info("Enter the column name to set Primary key.");
 		String primaryKey = sc.nextLine();
 		return primaryKey;
 	}
 	
-	public String getColumnNamesInSql()
+	private String getColumnNamesInSql()
 	{
 		logger.info("Enter the number of columns.");
 		int n = sc.nextInt();
 		sc.nextLine();
 		List<String> columnList = new ArrayList<String>();
+		
+		String primaryKey = getPrimaryKey();
+		columnList.add(primaryKey + " NOT NULL (" + getDataTypeForColumns());
 		
 		for(int i = 0; i<n; i++)
 		{
@@ -94,40 +97,41 @@ public class DataBaseRunner
 		return sql;
 	}
 	
-	public void printMap(Map<Integer,Map<String,String>> map)
+	private void printMap(List<EmployeePojo> list)
 	{
-		int n = map.size();
 		
-		for(int i = 1; i<=n; i++)
+		for(EmployeePojo pojo : list)
 		{
-			Map<String,String> innerMap = map.get(i);
 			
-			System.out.println("EMPLOYEE_ID : " + innerMap.get("EMPLOYEE_ID"));
-			System.out.println("NAME : " + innerMap.get("NAME"));
-			System.out.println("MOBILE : " + innerMap.get("MOBILE"));
-			System.out.println("EMAIL : " + innerMap.get("EMAIL"));
-			System.out.println("DEPARTMENT : " + innerMap.get("DEPARTMENT"));
+			System.out.println("EMPLOYEE_ID : " + pojo.getEmployeeId());
+			System.out.println("NAME : " + pojo.getName());
+			System.out.println("MOBILE : " + pojo.getMobileNum());
+			System.out.println("EMAIL : " + pojo.getEmailId());
+			System.out.println("DEPARTMENT : " + pojo.getDepartment());
 			System.out.println("___________________________________________________________");
 			
 		}
 	}
 	
-	public void printMapCombined(Map<Integer,Map<String,String>> map)
+	private void printMapCombined(Map<Integer,List<Object>> map)
 	{
 		int n = map.size();
 		
 		for(int i = 1; i<=n; i++)
 		{
-			Map<String,String> innerMap = map.get(i);
+			List<Object> list = map.get(i);
 			
-			System.out.println("EMPLOYEE_ID : " + innerMap.get("EMPLOYEE_ID"));
-			System.out.println("NAME : " + innerMap.get("NAME"));
-			System.out.println("MOBILE : " + innerMap.get("MOBILE"));
-			System.out.println("EMAIL : " + innerMap.get("EMAIL"));
-			System.out.println("DEPARTMENT : " + innerMap.get("DEPARTMENT"));
-			System.out.println("DEPENDENT NAME : " + innerMap.get("DEPENDENT NAME"));
-			System.out.println("AGE : " + innerMap.get("AGE"));
-			System.out.println("RELATIONSHIP : " + innerMap.get("RELATIONSHIP"));
+			EmployeePojo emplPojo = (EmployeePojo) list.get(0);
+			DependentPojo depPojo = (DependentPojo) list.get(1);
+			
+			System.out.println("EMPLOYEE_ID : " + emplPojo.getEmployeeId());
+			System.out.println("NAME : " + emplPojo.getName());
+			System.out.println("MOBILE : " + emplPojo.getMobileNum());
+			System.out.println("EMAIL : " + emplPojo.getEmailId());
+			System.out.println("DEPARTMENT : " + emplPojo.getDepartment());
+			System.out.println("DEPENDENT NAME : " + depPojo.getName());
+			System.out.println("AGE : " + depPojo.getAge());
+			System.out.println("RELATIONSHIP : " + depPojo.getRelationship());
 			System.out.println("___________________________________________________________");
 			
 		}
@@ -142,8 +146,7 @@ public class DataBaseRunner
 		{
 			
 			logger.info("Enter the case number to execute...");
-			int caseValue = sc.nextInt();
-			sc.nextLine();
+			int caseValue = runner.getInteger();
 			
 			switch(caseValue)
 			{
@@ -202,7 +205,7 @@ public class DataBaseRunner
 					logger.info("Enter the Employee name to get details.");
 					String name = runner.getString();
 					
-					Map<Integer,Map<String,String>> map = db.retrieveTableDetails(tableName, name);
+					List<EmployeePojo> map = db.retrieveTableDetails(tableName, name);
 
 					runner.printMap(map);
 					
@@ -219,7 +222,7 @@ public class DataBaseRunner
 					
 					db.modifyTableDetails(tableName, name, mobileNumber);
 					
-					Map<Integer,Map<String,String>> map = db.retrieveTableDetails(tableName, name);
+					List<EmployeePojo> map = db.retrieveTableDetails(tableName, name);
 					
 					runner.printMap(map);
 					
@@ -232,7 +235,7 @@ public class DataBaseRunner
 					logger.info("Enter the value for first number of Employees to print");
 					int n = runner.getInteger();
 					
-					Map<Integer,Map<String,String>> map = db.getFirstNRecords(tableName, n);
+					List<EmployeePojo> map = db.getFirstNRecords(tableName, n);
 					
 					runner.printMap(map);
 					
@@ -253,13 +256,13 @@ public class DataBaseRunner
 					{
 						case "a":
 						{
-							Map<Integer,Map<String,String>> map = db.sortDataInAscending(tableName, sortID, n);
+							List<EmployeePojo> map = db.sortDataInAscending(tableName, sortID, n);
 							runner.printMap(map);
 							break;
 						}
 						case "d":
 						{
-							Map<Integer,Map<String,String>> map = db.sortDataInDescending(tableName, sortID, n);
+							List<EmployeePojo> map = db.sortDataInDescending(tableName, sortID, n);
 							runner.printMap(map);
 							break;
 						}
@@ -282,7 +285,7 @@ public class DataBaseRunner
 					
 					db.deleteTableContent(tableName, employeeID);
 					
-					Map<Integer,Map<String,String>> map = db.getTableDetails(tableName);
+					List<EmployeePojo> map = db.getTableDetails(tableName);
 					
 					runner.printMap(map);	//To see whether the specified details are deleted or not.
 					
@@ -351,7 +354,7 @@ public class DataBaseRunner
 					logger.info("Enter the Employee ID for which dependents details are needed.");
 					String employeeID = runner.getString();
 					
-					Map<Integer,Map<String,String>> map = db.retrieveDependentTableDetails(tableName, parentTable, foreignKey, employeeID);
+					Map<Integer,List<Object>> map = db.retrieveDependentTableDetails(tableName, parentTable, foreignKey, employeeID);
 					
 					runner.printMapCombined(map);
 					
@@ -370,7 +373,7 @@ public class DataBaseRunner
 					logger.info("Enter the value for first number of Employees to print after sorting");
 					int n = runner.getInteger();
 					
-					Map<Integer,Map<String,String>> map = db.getDependentTableDetails(tableName, parentTable, foreignKey, sortID, n);
+					Map<Integer,List<Object>> map = db.getDependentTableDetails(tableName, parentTable, foreignKey, sortID, n);
 					
 					runner.printMapCombined(map);
 					

@@ -191,51 +191,54 @@ public class DataBase
 		}
 	}
 	
-	public Map<Integer,Map<String,String>> convertResultToMap(ResultSet result) throws SQLException
+	private List<EmployeePojo> convertResultToList(ResultSet result) throws SQLException
 	{
-		Map<Integer,Map<String,String>> map = new LinkedHashMap<Integer,Map<String,String>>();
-		
-		
-		int key = 1;
+		List<EmployeePojo> list = new ArrayList<EmployeePojo>();
 		
 		while(result.next())
 		{
-			Map<String,String> innerMap = new LinkedHashMap<String,String>();
+			EmployeePojo emplPojo = new EmployeePojo();
 			
-			innerMap.put("EMPLOYEE_ID", result.getString("EMPLOYEE_ID"));
-			innerMap.put("NAME", result.getString("NAME"));
-			innerMap.put("MOBILE", result.getString("MOBILE"));
-			innerMap.put("EMAIL", result.getString("EMAIL"));
-			innerMap.put("DEPARTMENT", result.getString("DEPARTMENT"));
+			emplPojo.setEmployeeId(result.getString("EMPLOYEE_ID"));
+			emplPojo.setDepartment(result.getString("DEPARTMENT"));
+			emplPojo.setEmailId(result.getString("EMAIL"));
+			emplPojo.setMobileNum(result.getString("MOBILE"));
+			emplPojo.setName(result.getString("NAME"));
 			
-			map.put(key, innerMap);
+			list.add(emplPojo);
 			
-			key++;
 		}
-		
-		return map;
+		return list;
 	}
 	
-	private Map<Integer,Map<String,String>> convertResultToMapCombined(ResultSet result) throws SQLException
+	private Map<Integer,List<Object>> convertResultToMapCombined(ResultSet result) throws SQLException
 	{
-		Map<Integer,Map<String,String>> map = new LinkedHashMap<Integer,Map<String,String>>();
+		Map<Integer,List<Object>> map = new LinkedHashMap<>();
 		
 		int key = 1;
 		
 		while(result.next())
 		{
-			Map<String,String> innerMap = new LinkedHashMap<String,String>();
+			EmployeePojo emplPojo = new EmployeePojo();
+			DependentPojo depPojo = new DependentPojo();
 			
-			innerMap.put("EMPLOYEE_ID", result.getString("EMPLOYEE_ID"));
-			innerMap.put("NAME", result.getString("Employee.NAME"));
-			innerMap.put("MOBILE", result.getString("MOBILE"));
-			innerMap.put("EMAIL", result.getString("EMAIL"));
-			innerMap.put("DEPARTMENT", result.getString("DEPARTMENT"));
-			innerMap.put("DEPENDENT NAME", result.getString("Dependents.NAME"));
-			innerMap.put("AGE", result.getString("AGE"));
-			innerMap.put("RELATIONSHIP", result.getString("RELATIONSHIP"));
+			List<Object> list = new ArrayList<>();
 			
-			map.put(key, innerMap);
+			emplPojo.setName(result.getString("Employee.NAME"));
+			emplPojo.setEmployeeId(result.getString("EMPLOYEE_ID"));
+			emplPojo.setMobileNum(result.getString("MOBILE"));
+			emplPojo.setEmailId(result.getString("EMAIL"));
+			emplPojo.setDepartment(result.getString("DEPARTMENT"));
+			
+			list.add(emplPojo);
+			
+			depPojo.setName(result.getString("Dependents.NAME"));
+			depPojo.setAge(result.getInt("AGE"));
+			depPojo.setRelationship(result.getString("RELATIONSHIP"));
+			
+			list.add(depPojo);
+			
+			map.put(key, list);
 			
 			key++;
 		}
@@ -243,7 +246,7 @@ public class DataBase
 		return map;
 	}
 	
-	public Map<Integer,Map<String,String>> getTableDetails(String tableName) throws SQLException
+	public List<EmployeePojo> getTableDetails(String tableName) throws SQLException
 	{
 		String sql = "SELECT * FROM "+tableName;
 		
@@ -252,12 +255,12 @@ public class DataBase
 		{
 			ResultSet result = stmt.executeQuery();
 			
-			return convertResultToMap(result);
+			return convertResultToList(result);
 			
 		}
 	}
 	
-	public Map<Integer,Map<String,String>> getDependentTableDetails(String tableName, String parentTable, String foreignKey, String sortID, int n) throws SQLException
+	public Map<Integer,List<Object>> getDependentTableDetails(String tableName, String parentTable, String foreignKey, String sortID, int n) throws SQLException
 	{
 		String sql = "SELECT * FROM "+parentTable+" INNER JOIN "+tableName+" ON "+parentTable+"."+foreignKey+"="+tableName+"."+foreignKey+" ORDER BY "+parentTable+"."+sortID+" LIMIT ?";
 		
@@ -274,7 +277,7 @@ public class DataBase
 	}
 	//select * from Employee inner join Dependents on Employee.EMPLOYEE_ID=Dependents.EMPLOYEE_ID order by Employee.NAME limit 5;
 	
-	public Map<Integer,Map<String,String>> retrieveTableDetails(String tableName, String name) throws SQLException
+	public List<EmployeePojo> retrieveTableDetails(String tableName, String name) throws SQLException
 	{
 		String sql = "SELECT * FROM "+tableName+" WHERE NAME = ?";
 		
@@ -284,13 +287,13 @@ public class DataBase
 			stmt.setString(1, name);
 			
 			ResultSet result = stmt.executeQuery();
-				
-			return convertResultToMap(result);
+			
+			return convertResultToList(result);
 			
 		}
 	}
 	
-	public Map<Integer,Map<String,String>> retrieveDependentTableDetails(String tableName, String parentTable, String foreignKey, String employeeID) throws SQLException
+	public Map<Integer,List<Object>> retrieveDependentTableDetails(String tableName, String parentTable, String foreignKey, String employeeID) throws SQLException
 	{
 		String sql = "SELECT * FROM "+parentTable+" INNER JOIN "+tableName+" ON "+parentTable+"."+foreignKey+"="+tableName+"."+foreignKey+" WHERE "+parentTable+"."+foreignKey+"= ?";
 		
@@ -307,7 +310,7 @@ public class DataBase
 	}
 	//select * from Dependents inner join Employee on Dependents.EMPLOYEE_ID=Employee.EMPLOYEE_ID where Employee.EMPLOYEE_ID=1;
 	
-	public void modifyTableDetails(String tableName, String name, String mobileNumber) throws SQLException
+	public List<EmployeePojo> modifyTableDetails(String tableName, String name, String mobileNumber) throws SQLException
 	{
 		String sql = "UPDATE "+tableName+" SET MOBILE = "+mobileNumber+" WHERE NAME = ?";
 		
@@ -315,11 +318,15 @@ public class DataBase
 		PreparedStatement stmt = createPreparedStatement(connection, sql);)
 		{
 			stmt.setString(1, name);
-			stmt.execute();
+			
+			ResultSet result = stmt.executeQuery();
+			
+			return convertResultToList(result);
+			
 		}
 	}
 	
-	public Map<Integer,Map<String,String>> getFirstNRecords(String tableName, int n) throws SQLException
+	public List<EmployeePojo> getFirstNRecords(String tableName, int n) throws SQLException
 	{
 		String sql = "SELECT * FROM "+tableName+" LIMIT ?";
 		
@@ -329,13 +336,13 @@ public class DataBase
 			stmt.setInt(1, n);
 			
 			ResultSet result = stmt.executeQuery();
-				
-			return convertResultToMap(result);
-				
+			
+			return convertResultToList(result);
+			
 		}
 	}
 	
-	public Map<Integer,Map<String,String>> sortDataInAscending(String tableName, String sortID, int n) throws SQLException
+	public List<EmployeePojo> sortDataInAscending(String tableName, String sortID, int n) throws SQLException
 	{
 		String sql = "SELECT * FROM "+tableName+" ORDER BY "+sortID+" LIMIT ?";
 		
@@ -345,13 +352,13 @@ public class DataBase
 			stmt.setInt(1, n);
 			
 			ResultSet result = stmt.executeQuery();
-				
-			return convertResultToMap(result);
-				
+			
+			return convertResultToList(result);
+			
 		}
 	}
 	
-	public Map<Integer,Map<String,String>> sortDataInDescending(String tableName, String sortID, int n) throws SQLException
+	public List<EmployeePojo> sortDataInDescending(String tableName, String sortID, int n) throws SQLException
 	{
 		String sql = "SELECT * FROM "+tableName+" ORDER BY "+sortID+" DESC LIMIT ?";
 		
@@ -361,13 +368,13 @@ public class DataBase
 			stmt.setInt(1, n);
 			
 			ResultSet result = stmt.executeQuery();
-				
-			return convertResultToMap(result);
-		
+			
+			return convertResultToList(result);
+			
 		}
 	}
 	
-	public void deleteTableContent(String tableName, String employeeID) throws SQLException
+	public List<EmployeePojo> deleteTableContent(String tableName, String employeeID) throws SQLException
 	{
 		String sql = "DELETE FROM "+tableName+" WHERE EMPLOYEE_ID = ?";
 		
@@ -375,7 +382,9 @@ public class DataBase
 		PreparedStatement stmt = createPreparedStatement(connection, sql);)
 		{
 			stmt.setString(1, employeeID);
-			stmt.execute();
+			ResultSet result = stmt.executeQuery();
+			
+			return convertResultToList(result);
 		}
 	}
 	
