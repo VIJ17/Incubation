@@ -11,12 +11,14 @@ import java.util.logging.Logger;
 import beginnersTask.DataBase;
 import beginnersTask.DependentPojo;
 import beginnersTask.EmployeePojo;
+import util.DB_DataTypes;
 
 public class DataBaseRunner
 {
 	
 	static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-	static Scanner sc = new Scanner(System.in);
+	Scanner sc = new Scanner(System.in);
+	static DataBaseRunner runner = new DataBaseRunner();
 	
 	private int getInteger()
 	{
@@ -33,21 +35,145 @@ public class DataBaseRunner
 	
 	private String getDataTypeForColumns()
 	{
-		logger.info("Enter the data type of the column.");
-		String dataType = sc.nextLine();
+		String dataType = new String();
 		
-		if(dataType.equalsIgnoreCase("int"))
+		logger.info("Enter the corresponding data type for the column :\nA(BIT)\nB(TINYINT)\nC(SMALLINT)\nD(INT)\nE(REAL)\nF(BIGINT)\n"
+				+ "G(FLOAT)\nH(NCHAR)\nI(NVARCHAR)\nJ(BINARY)\nK(VARBINARY)\n"
+				+ "L(UNIQUEIDENTIFIER)\nM(CHAR)\nN(VARCHAR)\nO(DATE)\nP(NUMERIC)\n"
+				+ "Q(DECIMAL)\nR(MONEY)\nS(SMALLMONEY)\nT(SMALLDATETIME)\n"
+				+ "U(DATETIME)\nV(DATETIME2)");
+		String caseValue = runner.getString();
+		
+		do
 		{
-			dataType = "INT";
-		}else if(dataType.equalsIgnoreCase("String"))
-		{
-			dataType = "VARCHAR";
-			dataType += "(" + getStringLength() + ")";
-			
-		}else if(dataType.equalsIgnoreCase("long"))
-		{
-			dataType = "BIGINT";
-		}
+			switch(caseValue)
+			{
+				case "A":
+				{
+					dataType = DB_DataTypes.A.getValue();
+					break;
+				}
+				case "B":
+				{
+					dataType = DB_DataTypes.B.getValue();
+					break;
+				}
+				case "C":
+				{
+					dataType = DB_DataTypes.C.getValue();
+					break;
+				}
+				case "D":
+				{
+					dataType = DB_DataTypes.D.getValue();
+					break;
+				}
+				case "E":
+				{
+					dataType = DB_DataTypes.E.getValue();
+					break;
+				}
+				case "F":
+				{
+					dataType = DB_DataTypes.F.getValue();
+					break;
+				}
+				case "G":
+				{
+					dataType = DB_DataTypes.G.getValue();
+					break;
+				}
+				case "H":
+				{
+					dataType = DB_DataTypes.H.getValue();
+					dataType += "(" + getStringLength() + ")";
+					break;
+				}
+				case "I":
+				{
+					dataType = DB_DataTypes.I.getValue();
+					dataType += "(" + getStringLength() + ")";
+					break;
+				}
+				case "J":
+				{
+					dataType = DB_DataTypes.J.getValue();
+					dataType += "(" + getStringLength() + ")";
+					break;
+				}
+				case "K":
+				{
+					dataType = DB_DataTypes.K.getValue();
+					dataType += "(" + getStringLength() + ")";
+					break;
+				}
+				case "L":
+				{
+					dataType = DB_DataTypes.L.getValue();
+					break;
+				}
+				case "M":
+				{
+					dataType = DB_DataTypes.M.getValue();
+					dataType += "(" + getStringLength() + ")";
+					break;
+				}
+				case "N":
+				{
+					dataType = DB_DataTypes.N.getValue();
+					dataType += "(" + getStringLength() + ")";
+					break;
+				}
+				case "O":
+				{
+					dataType = DB_DataTypes.O.getValue();
+					dataType += "(" + getStringLength() + ")";
+					break;
+				}
+				case "P":
+				{
+					dataType = DB_DataTypes.P.getValue();
+					dataType += "(" + getStringLength() + ")";
+					break;
+				}
+				case "Q":
+				{
+					dataType = DB_DataTypes.Q.getValue();
+					dataType += "(" + getStringLength() + ")";
+					break;
+				}
+//				case "R":
+//				{
+//					dataType = DB_DataTypes.R.getValue();
+//					break;
+//				}
+				case "S":
+				{
+					dataType = DB_DataTypes.S.getValue();
+					break;
+				}
+				case "T":
+				{
+					dataType = DB_DataTypes.T.getValue();
+					break;
+				}
+				case "U":
+				{
+					dataType = DB_DataTypes.U.getValue();
+					break;
+				}
+				case "V":
+				{
+					dataType = DB_DataTypes.V.getValue();
+					break;
+				}
+				default:
+				{
+					logger.info("Invalid input.");
+					break;
+				}
+			}
+		}while(dataType != null);
 		
 		return dataType;
 	}
@@ -55,14 +181,14 @@ public class DataBaseRunner
 	private int getStringLength()
 	{
 		logger.info("Enter the maximum length of the String.");
-		int length = sc.nextInt();
+		int length = runner.getInteger();
 		return length;
 	}
 	
 	private String getColumnNames()
 	{
 		logger.info("Enter the Column name");
-		String columnName = sc.nextLine();
+		String columnName = runner.getString();
 		
 		columnName += " " + getDataTypeForColumns();
 		
@@ -72,21 +198,21 @@ public class DataBaseRunner
 	private String getPrimaryKey()
 	{
 		logger.info("Enter the column name to set Primary key.");
-		String primaryKey = sc.nextLine();
+		String primaryKey = runner.getString();
 		return primaryKey;
 	}
 	
 	private String getColumnNamesInSql()
 	{
 		logger.info("Enter the number of columns.");
-		int n = sc.nextInt();
-		sc.nextLine();
+		int n = runner.getInteger();
+		
 		List<String> columnList = new ArrayList<String>();
 		
 		String primaryKey = getPrimaryKey();
 		columnList.add(primaryKey + " NOT NULL (" + getDataTypeForColumns());
 		
-		for(int i = 0; i<n; i++)
+		for(int i = 0; i<n-1; i++)
 		{
 			columnList.add(getColumnNames());
 		}
@@ -94,7 +220,9 @@ public class DataBaseRunner
 		columnList.add("PRIMARY KEY(" + getPrimaryKey() + ")");
 		
 		String sql = String.join(", ", columnList);
+		
 		return sql;
+		
 	}
 	
 	private void printMap(List<EmployeePojo> list)
@@ -139,7 +267,6 @@ public class DataBaseRunner
 	
 	public static void main(String[] args)
 	{
-		DataBaseRunner runner = new DataBaseRunner();
 		DataBase db = new DataBase();
 		
 		try
@@ -167,7 +294,7 @@ public class DataBaseRunner
 					logger.info("Enter the Table name to add details.");
 					String tableName = runner.getString();
 					logger.info("Enter the number of Employees...");
-					int n = sc.nextInt();
+					int n = runner.getInteger();
 					List<EmployeePojo> employeeList = new ArrayList<EmployeePojo>();
 					
 					for(int i = 0; i<n; i++)
@@ -311,8 +438,8 @@ public class DataBaseRunner
 					logger.info("Enter the Table name to add details.");
 					String tableName = runner.getString();
 					logger.info("Enter the total number of Dependents...");
-					int n = sc.nextInt();
-					sc.nextLine();
+					int n = runner.getInteger();
+					
 					List<DependentPojo> dependentList = new ArrayList<DependentPojo>();
 					
 					for(int i = 0; i<n; i++)
