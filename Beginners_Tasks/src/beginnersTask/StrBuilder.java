@@ -40,7 +40,7 @@ public class StrBuilder
 			strBuil = strBuil.append(str[i]);
 		return strBuil;
 	}
-	public int strLength(StringBuilder strBuil) throws WrongEntryException
+	public int strBuilderLength(StringBuilder strBuil) throws WrongEntryException
 	{
 		nullCheck(strBuil);
 		int length = strBuil.length();
@@ -59,7 +59,7 @@ public class StrBuilder
 	}
 	public StringBuilder insertString(StringBuilder strBuil, String insertStr) throws WrongEntryException
 	{
-		int length = strLength(strBuil);
+		int length = strBuilderLength(strBuil);
 		String str1 = strBuil.toString();
 		String[] strArray = str1.split(" ");
 		str1 = String.join(" ", strArray[0], insertStr, strArray[1]);
@@ -76,7 +76,7 @@ public class StrBuilder
 	public StringBuilder replaceSpaceInString(StringBuilder strBuil, String actualSymbol, String replSymbol) throws WrongEntryException
 	{
 		nullCheck(strBuil);
-		int length = strLength(strBuil);
+		int length = strBuilderLength(strBuil);
 		for(int i = 0; i<length; i++)
 		{
 			if(strBuil.charAt(i) == actualSymbol.charAt(0))
@@ -93,7 +93,7 @@ public class StrBuilder
 	}
 	public StringBuilder deleteNthCharactersInString(StringBuilder strBuil, int startIndex, int endIndex) throws WrongEntryException
 	{
-		int length = strLength(strBuil);
+		int length = strBuilderLength(strBuil);
 		rangeCheck(startIndex, endIndex, length);
 		startIndex -= 1;
 		strBuil = strBuil.delete(startIndex, endIndex);
@@ -101,7 +101,7 @@ public class StrBuilder
 	}
 	public StringBuilder replaceNthCharactersInString(StringBuilder strBuil, String repString, int startIndex, int endIndex) throws WrongEntryException
 	{
-		int length = strLength(strBuil);
+		int length = strBuilderLength(strBuil);
 		rangeCheck(startIndex, endIndex, length);
 		startIndex -= 1;
 		strBuil = strBuil.replace(startIndex, endIndex, repString);

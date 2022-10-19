@@ -72,11 +72,11 @@ try
 	    	case 1:
 	    	{
 	    	    StringBuilder strBuil = build.getStringBuilder();
-	    		int length = build.strLength(strBuil);
+	    		int length = build.strBuilderLength(strBuil);
 	    		System.out.println("Length of the string is : "+length);
 	    		str = test.getString();
 	    		strBuil = build.createStringBuilder(str);
-	    		length = build.strLength(strBuil);
+	    		length = build.strBuilderLength(strBuil);
 	    		System.out.println("Length of the string is : "+length);
 	    		break;
 	    	}
@@ -84,7 +84,7 @@ try
 	    	{
 	    		str = test.getString();
 	    		StringBuilder strBuil = build.createStringBuilder(str);
-	    		int length = build.strLength(strBuil);
+	    		int length = build.strBuilderLength(strBuil);
 	    		System.out.println("Length of the string is : "+length);
 	    		sc.nextLine();
 	    		System.out.println("Enter the line of strings to be added...");
@@ -92,7 +92,7 @@ try
 	    		String[] strArray = str.split(" ");
 	    		String symbol = test.getSymbol();
 	    		strBuil = build.addString(strBuil, symbol, strArray);
-	    		length = build.strLength(strBuil);
+	    		length = build.strBuilderLength(strBuil);
 	    		System.out.println("Given strings are added as required : "+strBuil);
 	    		System.out.println("Length of the string is : "+length);
 	    		break;
@@ -101,22 +101,22 @@ try
 	    	{
 	    		str = test.get2StringWithSpace();
 	    		StringBuilder strBuil = build.createStringBuilder(str);
-	    		int length = build.strLength(strBuil);
+	    		int length = build.strBuilderLength(strBuil);
 	    		System.out.println("Length of the string is : "+length);
 	    		str = test.getReplacementString();
 	    		strBuil = build.insertString(strBuil, str);
 	    		System.out.println("Final string is : "+strBuil);
-	    		System.out.println("Length of the final string is :"+build.strLength(strBuil));
+	    		System.out.println("Length of the final string is :"+build.strBuilderLength(strBuil));
 	    		break;
 	    	}
 	    	case 4:
 	    	{
 	    		str = test.get2StringWithSpace();
 	    		StringBuilder strBuil = build.createStringBuilder(str);
-	    		int length = build.strLength(strBuil);
+	    		int length = build.strBuilderLength(strBuil);
 	    		System.out.println("Length of the string is : "+length);
 	    		strBuil = build.deleteString(strBuil);
-	    		length = build.strLength(strBuil);
+	    		length = build.strBuilderLength(strBuil);
 	    		System.out.println("After deleting the first string : "+strBuil);
 	    		System.out.println("Length of the string is : "+length);
 	    		break;
@@ -125,12 +125,12 @@ try
 	    	{
 	    		str = test.get3StringWithSpace();
 	    		StringBuilder strBuil = build.createStringBuilder(str);
-	    		int length = build.strLength(strBuil);
+	    		int length = build.strBuilderLength(strBuil);
 	    		System.out.println("Length of the string is : "+length);
 	    		String actualSymbol = test.getSymbol();
 	    		String replSymbol = test.getSymbol();
 	    		strBuil = build.replaceSpaceInString(strBuil, actualSymbol, replSymbol);
-	    		length = build.strLength(strBuil);
+	    		length = build.strBuilderLength(strBuil);
 	    		System.out.println("After replacing '"+actualSymbol+"'with '"+replSymbol+"' : "+strBuil);
 	    		System.out.println("Length of the string is : "+length);
 	    		break;
@@ -139,10 +139,10 @@ try
 	    	{
 	    		str= test.get3StringWithSpace();
 	    		StringBuilder strBuil = build.createStringBuilder(str);
-	    		int length = build.strLength(strBuil);
+	    		int length = build.strBuilderLength(strBuil);
 	    		System.out.println("Length of the string is : "+length);
 	    		strBuil = build.reverseString(strBuil);
-	    		length = build.strLength(strBuil);
+	    		length = build.strBuilderLength(strBuil);
 	    		System.out.println("After reversing the string : "+strBuil);
 	    		System.out.println("Length of the string is : "+length);
 	    		break;
@@ -151,14 +151,14 @@ try
 	    	{
 	    		str = test.getStringWithMinimum10Char();
 	    		StringBuilder strBuil = build.createStringBuilder(str);
-	    		int length = build.strLength(strBuil);
+	    		int length = build.strBuilderLength(strBuil);
 	    		System.out.println("Length of the string is : "+length);
 	    		System.out.println("Enter start index of the string to delete...");
 	    		int startIndex = test.getIndex();
 	    		System.out.println("Enter end index of the string to delete...");
 	    		int endIndex = test.getIndex();
 	    		strBuil = build.deleteNthCharactersInString(strBuil, startIndex, endIndex);
-	    		length = build.strLength(strBuil);
+	    		length = build.strBuilderLength(strBuil);
 	    		System.out.println("After deleting specified substring from the string : "+strBuil);
 	    		System.out.println("Length of the string is : "+length);
 	    		break;
@@ -167,7 +167,7 @@ try
 	    	{
 	    		str = test.getStringWithMinimum10Char();
 	    		StringBuilder strBuil = build.createStringBuilder(str);
-	    		int length = build.strLength(strBuil);
+	    		int length = build.strBuilderLength(strBuil);
 	    		System.out.println("Length of the string is : "+length);
 	    		String repString = test.getReplacementString();
 	    		System.out.println("Enter start index of the string to replace...");
@@ -175,7 +175,7 @@ try
 	    		System.out.println("Enter end index of the string to replace...");
 	    		int endIndex = test.getIndex();
 	    		strBuil = build.replaceNthCharactersInString(strBuil, repString, startIndex, endIndex);
-	    		length = build.strLength(strBuil);
+	    		length = build.strBuilderLength(strBuil);
 	    		System.out.println("After reversing the string : "+strBuil);
 	    		System.out.println("Length of the string is : "+length);
 	    		break;
@@ -184,7 +184,7 @@ try
 	    	{
 	    		str = test.get3StringWithHashtag();
 	    		StringBuilder strBuil = build.createStringBuilder(str);
-	    		int length = build.strLength(strBuil);
+	    		int length = build.strBuilderLength(strBuil);
 	    		System.out.println("Length of the string is : "+length);
 	    		String symbol = test.getSymbol();
 	    		int index = build.findFirstIndexOfSymbol(strBuil, symbol);
@@ -194,7 +194,7 @@ try
 	    	{
 	    		str = test.get3StringWithHashtag();
 	    		StringBuilder strBuil = build.createStringBuilder(str);
-	    		int length = build.strLength(strBuil);
+	    		int length = build.strBuilderLength(strBuil);
 	    		System.out.println("Length of the string is : "+length);
 	    		String symbol = test.getSymbol();
 	    		int index = build.findLastIndexOfSymbol(strBuil, symbol);
