@@ -1,0 +1,1028 @@
+package banking;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Savepoint;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+
+import datacarier.AccountDetails;
+import datacarier.CustomerDetails;
+import datacarier.TransactionDetails;
+import datacarier.UserDetails;
+import exceptions.WrongEntryException;
+import interfacemodule.BankingInterface;
+
+public class BankDataBase implements BankingInterface
+{
+	private String url = "jdbc:mysql://localhost/Success_Bank";
+	private String userName = "root";
+	private String password = "Root@123";
+	
+	public void closeStatement(PreparedStatement stmt)
+	{
+		try
+		{
+			stmt.close();
+		}
+		catch(Exception e) {}
+	}
+	
+	public void closeConnection(Connection connection)
+	{
+		try
+		{
+			connection.close();
+		}
+		catch(Exception e) {}
+	}
+	
+	private Connection createConnection() throws SQLException
+	{
+		
+		Connection connection = DriverManager.getConnection(url, userName, password);
+		
+		return connection;
+	
+	}
+	
+	private PreparedStatement createPreparedStatement(String sql, Connection connection) throws SQLException
+	{
+		
+		PreparedStatement stmt = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		
+		return stmt;
+	
+	}
+	
+	private void dataAvailabilityCheck(ResultSet result) throws WrongEntryException, SQLException
+	{
+		if(!(result.next()))
+		{
+			throw new WrongEntryException("No such data is Available.");
+		}
+		
+	}
+	
+	private Map<Long,Map<Long,AccountDetails>>  convertResultToMap(ResultSet result) throws SQLException
+	{
+		Map<Long,Map<Long,AccountDetails>> map = new Hashtable<>();
+		
+		Map<Long, AccountDetails> innerMap = new Hashtable<>();
+		
+		while(result.next())
+		{
+			AccountDetails pojo = new AccountDetails();
+			
+			pojo.setCustomerID(result.getLong("CUSTOMER_ID"));
+			pojo.setAccountNo(result.getLong("ACCOUNT_NO"));
+			pojo.setAccountType(result.getString("ACC_TYPE"));
+			pojo.setAccountStatus(result.getString("ACC_STATUS"));
+			pojo.setIfscCode(result.getString("IFSC_CODE"));
+			pojo.setBranch(result.getString("BRANCH"));
+			pojo.setBalance(result.getDouble("BALANCE"));
+			
+			innerMap.put(result.getLong("ACCOUNT_NO"), pojo);
+			
+			map.put(result.getLong("CUSTOMER_ID"), innerMap);
+			
+		}
+		
+		return map;
+	}
+	
+	@Override
+	public CustomerDetails getCustomerDetails(long customerID) throws WrongEntryException
+	{
+		
+		String sql = "SELECT * FROM CUSTOMER_DETAILS WHERE CUSTOMER_ID = ?";
+		
+		Connection connection = null;
+		PreparedStatement stmt = null;
+		
+		try
+		{
+			connection = createConnection();
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			stmt.setLong(1, customerID);
+			
+			ResultSet result = stmt.executeQuery();
+			
+			CustomerDetails customerDetails = new CustomerDetails();
+			
+			while(result.next())
+			{
+				
+				customerDetails.setCustomerID(result.getLong("CUSTOMER_ID"));
+				customerDetails.setPanNo(result.getString("PAN_NO"));
+				customerDetails.setAadharNo(result.getLong("AADHAR_NO"));
+				customerDetails.setAddress(result.getString("ADDRESS"));
+				customerDetails.setCustomerStatus(result.getString("CUS_STATUS"));
+				
+			}
+			
+			return customerDetails;
+			
+		}
+		catch(SQLException e)
+		{
+			throw new WrongEntryException(e);
+		}
+		
+	}
+	
+	private void checkAccountStatus(long accountNo) throws WrongEntryException
+	{
+		String sql = "SELECT ACC_STATUS FROM ACCOUNT_DETAILS WHERE ACCOUNT_NO = ?";
+		
+		Connection connection = null;
+		PreparedStatement stmt = null;
+		
+		try
+		{
+			connection = createConnection();
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			stmt.setLong(1, accountNo);
+			
+			ResultSet result = stmt.executeQuery();
+			
+			dataAvailabilityCheck(result);
+			
+			String accountStatus = result.getString("ACC_STATUS");
+			
+			if(!(accountStatus.equalsIgnoreCase("ACTIVE")))
+			{
+				throw new WrongEntryException("Account is Blocked. \nContact Admin to unblock.");
+			}
+			
+		}
+		catch(SQLException e)
+		{
+			throw new WrongEntryException(e);
+		}
+	}
+
+	@Override
+	public UserDetails userLogin(long userID, String password) throws WrongEntryException
+	{
+		
+		String sql = "SELECT * FROM USER_DETAILS WHERE USER_ID = ? AND PASSWORD = ?";
+//		SELECT * FROM USER_DETAILS WHERE USER_ID = 1 AND PASSWORD = 'Vijay@17.';
+		
+		Connection connection = null;
+		PreparedStatement stmt = null;
+		
+		try
+		{
+			connection = createConnection();
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			stmt.setLong(1, userID);
+			stmt.setString(2, password);
+			
+			ResultSet result = stmt.executeQuery();
+			
+			dataAvailabilityCheck(result);
+			
+			result.beforeFirst();
+			
+			UserDetails userDetails = new UserDetails();
+			
+			while(result.next())
+			{
+				
+				userDetails.setUserID(result.getLong("USER_ID"));
+				userDetails.setPassword(result.getString("PASSWORD"));
+				userDetails.setName(result.getString("NAME"));
+				userDetails.setMobile(result.getLong("MOBILE"));
+				userDetails.setEmailID(result.getString("EMAIL"));
+				userDetails.setDateOfBirth(result.getString("DOB"));
+				userDetails.setUserType(result.getString("USER_TYPE"));
+				
+			}
+			
+			return userDetails;
+			
+		}
+		catch(SQLException e)
+		{
+			throw new WrongEntryException(e);
+		}
+		finally
+		{
+			closeStatement(stmt);
+			closeConnection(connection);
+		}
+		
+	}
+	
+////Specific to Admin...
+//	public boolean adminLogin(long userID, String password) throws WrongEntryException
+//	{
+//		
+//		String sql = "SELECT * FROM USER_DETAILS WHERE USER_TYPE = 'ADMIN' AND USER_ID = ? AND PASSWORD = ?";
+////		SELECT * FROM USER_DETAILS WHERE USER_TYPE = 'ADMIN' AND USER_ID = 1 AND PASSWORD = 'Vijay@17.';
+//		
+//		Connection connection = null;
+//		PreparedStatement stmt = null;
+//		
+//		try
+//		{
+//			connection = createConnection();
+//			
+//			stmt = createPreparedStatement(sql, connection);
+//			
+//			stmt.setLong(1, userID);
+//			stmt.setString(2, password);
+//			
+//			ResultSet result = stmt.executeQuery();
+//			
+//			if(result.next())
+//			{
+//				return true;
+//			}
+//			
+//			return false;
+//			
+//		}
+//		catch(SQLException e)
+//		{
+//			throw new WrongEntryException(e);
+//		}
+//		
+//	}
+	
+	@Override
+	public Map<Long,Map<Long,AccountDetails>> getAccountDetails(long customerID, String password) throws WrongEntryException
+	{
+		
+		String sql = "SELECT ACCOUNT_DETAILS.* FROM ACCOUNT_DETAILS INNER JOIN USER_DETAILS ON ACCOUNT_DETAILS.CUSTOMER_ID = USER_DETAILS.USER_ID WHERE ACCOUNT_DETAILS.CUSTOMER_ID = 2 AND USER_DETAILS.PASSWORD = 'Anzar@09.'";
+//		SELECT ACCOUNT_DETAILS.* FROM ACCOUNT_DETAILS INNER JOIN USER_DETAILS ON ACCOUNT_DETAILS.CUSTOMER_ID = USER_DETAILS.USER_ID WHERE ACCOUNT_DETAILS.CUSTOMER_ID = 2 AND USER_DETAILS.PASSWORD = 'Anzar@09.';		
+		
+		Connection connection = null;
+		PreparedStatement stmt = null;
+		
+		try
+		{
+			connection = createConnection();
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+//			stmt.setLong(1, customerID);
+//			stmt.setString(2, password);
+			
+			ResultSet result = stmt.executeQuery();
+			
+//			result.beforeFirst();
+			
+//			System.out.println(result.next());
+			
+			Map<Long,Map<Long,AccountDetails>> map = convertResultToMap(result);
+			
+			return map;
+		}
+		catch(SQLException e)
+		{
+			throw new WrongEntryException(e);
+		}
+		finally
+		{
+			closeStatement(stmt);
+			closeConnection(connection);
+		}
+	}
+	
+////Specific to Admin(OVERLOADED)	
+//	public Map<Long,Map<Long,AccountDetails>> getAccountDetails(long customerID) throws WrongEntryException
+//	{
+//		String sql = "SELECT * FROM ACCOUNT_DETAILS WHERE CUSTOMER_ID = ?";
+//		
+//		Connection connection = null;
+//		PreparedStatement stmt = null;
+//		
+//		try
+//		{
+//			connection = createConnection();
+//			
+//			stmt = createPreparedStatement(sql, connection);
+//			
+//			stmt.setLong(1, customerID);
+//			
+//			ResultSet result = stmt.executeQuery();
+//			
+//			Map<Long,Map<Long,AccountDetails>> map = convertResultToMap(result);
+//			
+//			return map;
+//		}
+//		catch(SQLException e)
+//		{
+//			throw new WrongEntryException(e);
+//		}
+//		finally
+//		{
+//			closeStatement(stmt);
+//			closeConnection(connection);
+//		}
+//		
+//	}
+	
+//Specific to Admin(OVERLOADED)	
+	public double getBalance(long accountNo) throws WrongEntryException
+	{
+		String sql = "SELECT BALANCE FROM ACCOUNT_DETAILS WHERE ACCOUNT_NO = ?";
+		
+		Connection connection = null;
+		PreparedStatement stmt = null;
+		
+		try
+		{
+			connection = createConnection();
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			stmt.setLong(1, accountNo);
+			
+			ResultSet result = stmt.executeQuery();
+			
+			dataAvailabilityCheck(result);
+			
+			double balance = result.getLong("BALANCE");
+			
+			return balance;
+		}
+		catch(SQLException e)
+		{
+			throw new WrongEntryException(e);
+		}
+		finally
+		{
+			closeStatement(stmt);
+			closeConnection(connection);
+		}
+		
+	}
+	
+	@Override
+	public double getBalance(long accountNo, String password) throws WrongEntryException
+	{
+		
+		checkAccountStatus(accountNo);
+		
+		String sql = "SELECT ACCOUNT_DETAILS.BALANCE FROM ACCOUNT_DETAILS INNER JOIN USER_DETAILS ON ACCOUNT_DETAILS.CUSTOMER_ID = USER_DETAILS.USER_ID WHERE ACCOUNT_DETAILS.ACCOUNT_NO = ? AND USER_DETAILS.PASSWORD = ?";
+//		SELECT ACCOUNT_DETAILS.BALANCE FROM ACCOUNT_DETAILS INNER JOIN USER_DETAILS ON ACCOUNT_DETAILS.CUSTOMER_ID = USER_DETAILS.USER_ID WHERE ACCOUNT_DETAILS.ACCOUNT_NO = 1621000008120 AND USER_DETAILS.PASSWORD = 'Anzar@09.';	
+		
+		Connection connection = null;
+		PreparedStatement stmt = null;
+		
+		try
+		{
+			connection = createConnection();
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			stmt.setLong(1, accountNo);
+			stmt.setString(2, password);
+			
+			ResultSet result = stmt.executeQuery();
+			
+			dataAvailabilityCheck(result);
+			
+			double balance = result.getLong("BALANCE");
+			
+			return balance;
+		}
+		catch(SQLException e)
+		{
+			throw new WrongEntryException(e);
+		}
+		finally
+		{
+			closeStatement(stmt);
+			closeConnection(connection);
+		}
+	}
+	
+	public long getCustomerID(long accountNo) throws WrongEntryException
+	{
+		String sql = "SELECT CUSTOMER_ID FROM ACCOUNT_DETAILS WHERE ACCOUNT_NO = ?";
+		
+		Connection connection = null;
+		PreparedStatement stmt = null;
+		
+		try
+		{
+			connection = createConnection();
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			stmt.setLong(1, accountNo);
+			
+			ResultSet result = stmt.executeQuery();
+			
+			result.next();
+		
+			long receiverCustomerID = result.getLong("CUSTOMER_ID");
+			
+			return receiverCustomerID;
+			
+		}
+		catch(SQLException e)
+		{
+			throw new WrongEntryException(e);
+		}
+		finally
+		{
+			closeStatement(stmt);
+			closeConnection(connection);
+		}
+	}
+	
+	@Override
+	public void deposit(TransactionDetails transactionDetails) throws WrongEntryException
+	{
+		
+		long toAccount = transactionDetails.getToAccount();
+		double amount = transactionDetails.getAmount();
+		long customerID = transactionDetails.getCustomerID();
+		
+		checkAccountStatus(toAccount);
+		
+		String sql = "SELECT BALANCE FROM ACCOUNT_DETAILS WHERE ACCOUNT_NO = ?";
+//		SELECT BALANCE FROM ACCOUNT_DETAILS WHERE ACCOUNT_NO = 1621000008120;
+		
+		Connection connection = null;
+		PreparedStatement stmt = null;
+		Savepoint S1 = null;
+		
+		try
+		{
+			connection = createConnection();
+			
+			connection.setAutoCommit(false);
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			stmt.setLong(1, toAccount);
+			
+			ResultSet result = stmt.executeQuery();
+			
+			dataAvailabilityCheck(result);
+			
+			double balance = result.getLong("BALANCE");
+			
+			balance = balance + amount;
+			
+			closeStatement(stmt);
+			
+			sql = "UPDATE ACCOUNT_DETAILS SET BALANCE = ? WHERE ACCOUNT_NO = ?";
+//			UPDATE ACCOUNT_DETAILS SET BALANCE = 10000 WHERE ACCOUNT_NO = 1621000008119
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			stmt.setDouble(1, balance);
+			stmt.setLong(2, toAccount);
+			
+			S1 = connection.setSavepoint();
+			
+			stmt.execute();
+			
+			closeStatement(stmt);
+			
+////////////////////////////////////Updating Transaction Details////////////////////////////////////
+			
+			sql = "INSERT INTO TRANSACTION_DETAILS (CUSTOMER_ID, TO_ACC, AMOUNT, CLOSING_BALANCE, TRANSACTION_TIME, MODE_OF_TRANSACTION, TYPE) VALUES (?, ? ,? ,? ,? ,? ,?)";
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			stmt.setLong(1, customerID);
+			stmt.setLong(2, toAccount);
+			stmt.setDouble(3, amount);
+			stmt.setDouble(4, balance);
+			
+			long millisecond = System.currentTimeMillis();
+			
+			stmt.setLong(5, millisecond);
+			stmt.setString(6, "DEPOSIT");
+			stmt.setString(7, "CREDIT");
+			
+			stmt.execute();
+			
+			connection.commit();
+			
+		}
+		catch (SQLException e)
+		{
+			try
+			{
+				connection.rollback(S1);
+			}
+			catch (SQLException e1)
+			{
+				throw new WrongEntryException("Failed to Roll Back.", e);
+			}
+			
+			throw new WrongEntryException(e);
+		}
+		finally
+		{
+			closeStatement(stmt);
+			closeConnection(connection);
+		}
+		
+	}
+	
+	@Override
+	public double withdraw(TransactionDetails transactionDetails, String password) throws WrongEntryException
+	{
+		
+		long fromAccount = transactionDetails.getFromAccount();
+		double amount = transactionDetails.getAmount();
+		long customerID = transactionDetails.getCustomerID();
+		
+		checkAccountStatus(fromAccount);
+		
+		String sql = "UPDATE ACCOUNT_DETAILS INNER JOIN USER_DETAILS ON ACCOUNT_DETAILS.CUSTOMER_ID = USER_DETAILS.USER_ID SET ACCOUNT_DETAILS.BALANCE = ? WHERE ACCOUNT_DETAILS.ACCOUNT_NO = ? AND USER_DETAILS.PASSWORD = ?";
+//		UPDATE ACCOUNT_DETAILS INNER JOIN USER_DETAILS ON ACCOUNT_DETAILS.CUSTOMER_ID = USER_DETAILS.USER_ID SET ACCOUNT_DETAILS.BALANCE = 2500000 WHERE ACCOUNT_DETAILS.ACCOUNT_NO = 1621000008119 AND USER_DETAILS.PASSWORD = 'Vijay@17.';
+		
+		Connection connection = null;
+		PreparedStatement stmt = null;
+		Savepoint S1 = null;
+		
+		try
+		{
+			double balance = getBalance(fromAccount, password);
+			
+			connection = createConnection();
+			
+			connection.setAutoCommit(false);
+			
+			if(balance >= amount)
+			{
+				balance = balance - amount;
+				
+				stmt = createPreparedStatement(sql, connection);
+				
+				stmt.setDouble(1, balance);
+				stmt.setLong(2, fromAccount);
+				stmt.setString(3, password);
+				
+				S1 = connection.setSavepoint();
+				
+				stmt.execute();
+				
+			}
+			else
+			{
+				throw new WrongEntryException("Insufficient balance to withdraw. \nTransaction Failed.");
+			}
+			
+			
+			
+			closeStatement(stmt);
+
+////////////////////////////////////Updating Transaction Details////////////////////////////////////
+			
+			sql = "INSERT INTO TRANSACTION_DETAILS (CUSTOMER_ID, FROM_ACC, AMOUNT, CLOSING_BALANCE, TRANSACTION_TIME, MODE_OF_TRANSACTION, TYPE) VALUES (?, ? ,? ,? ,? ,? ,?)";
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			stmt.setLong(1, customerID);
+			stmt.setLong(2, fromAccount);
+			stmt.setDouble(3, amount);
+			stmt.setDouble(4, balance);
+			
+			long millisecond = System.currentTimeMillis();
+			
+			stmt.setLong(5, millisecond);
+			stmt.setString(6, "WITHDRAW");
+			stmt.setString(7, "DEBIT");
+			
+			stmt.execute();
+			
+			connection.commit();
+			
+			return balance;
+			
+		}
+		catch (SQLException e)
+		{
+			try
+			{
+				connection.rollback(S1);
+			}
+			catch (SQLException e1)
+			{
+				throw new WrongEntryException("Failed to Roll Back.", e);
+			}
+			
+			throw new WrongEntryException("Incorrect Account number.", e);
+		}
+		finally
+		{
+			closeStatement(stmt);
+			closeConnection(connection);
+		}
+	}
+	
+	@Override
+	public void onlineTransfer(TransactionDetails transactionDetails, String password) throws WrongEntryException
+	{
+		
+		long fromAccount = transactionDetails.getFromAccount();
+		long toAccount = transactionDetails.getToAccount();
+		double amount = transactionDetails.getAmount();
+		long customerID = transactionDetails.getCustomerID();
+		
+		checkAccountStatus(fromAccount);
+		checkAccountStatus(toAccount);
+		
+		Connection connection = null;
+		PreparedStatement stmt = null;
+		Savepoint S1 = null;
+		
+		try
+		{
+			double fromAccountBalance = getBalance(fromAccount, password);
+			
+			connection = createConnection();
+			
+			connection.setAutoCommit(false);
+			
+////////////////////////////////////withdraw From Account////////////////////////////////////
+			
+			if(fromAccountBalance >= amount)
+			{
+				fromAccountBalance = fromAccountBalance - amount;
+				
+				String sql = "UPDATE ACCOUNT_DETAILS SET BALANCE = ? WHERE ACCOUNT_NO = ?";
+				
+				stmt = createPreparedStatement(sql, connection);
+				
+				stmt.setDouble(1, fromAccountBalance);
+				stmt.setLong(2, fromAccount);
+				
+				S1 = connection.setSavepoint();
+				
+				stmt.execute();
+				
+				closeStatement(stmt);				//Closing statement...
+				
+////////////////////////////////////Updating Transaction Details////////////////////////////////////
+				
+				sql = "INSERT INTO TRANSACTION_DETAILS (CUSTOMER_ID, FROM_ACC, TO_ACC, AMOUNT, CLOSING_BALANCE, TRANSACTION_TIME, MODE_OF_TRANSACTION, TYPE) VALUES (?, ? ,? ,? ,? ,? ,?, ?)";
+				
+				stmt = createPreparedStatement(sql, connection);
+				
+				stmt.setLong(1, customerID);
+				stmt.setLong(2, fromAccount);
+				stmt.setLong(3, toAccount);
+				stmt.setDouble(4, amount);
+				stmt.setDouble(5, fromAccountBalance);
+				
+				long millisecond = System.currentTimeMillis();
+				
+				stmt.setLong(6, millisecond);
+				stmt.setString(7, "ONLINE TRANSFER");
+				stmt.setString(8, "DEBIT");
+				
+				stmt.execute();
+				
+				closeStatement(stmt);			//Closing statement...
+				
+			}
+			else
+			{
+				throw new WrongEntryException("Insufficient balance to withdraw. \nTransaction Failed.");
+			}
+			
+////////////////////////////////////Deposit To Account////////////////////////////////////
+			
+			String sql = "SELECT BALANCE FROM ACCOUNT_DETAILS WHERE ACCOUNT_NO = ?";
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			stmt.setLong(1, toAccount);
+			
+			ResultSet result = stmt.executeQuery();
+			
+			dataAvailabilityCheck(result);
+			
+			double toAccountBalance = result.getLong("BALANCE");
+			
+			toAccountBalance = toAccountBalance + amount;
+			
+			closeStatement(stmt);			//Closing statement...
+			
+			sql = "UPDATE ACCOUNT_DETAILS SET BALANCE = ? WHERE ACCOUNT_NO = ?";
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			stmt.setDouble(1, toAccountBalance);
+			stmt.setLong(2, toAccount);
+			
+			stmt.execute();
+			
+			closeStatement(stmt);			//Closing statement...
+			
+////////////////////////////////////Updating Transaction Details////////////////////////////////////
+			
+			sql = "SELECT CUSTOMER_ID FROM ACCOUNT_DETAILS WHERE ACCOUNT_NO = ?";
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			stmt.setLong(1, toAccount);
+			
+			result = stmt.executeQuery();
+			
+			result.next();
+			
+			long receiverCustomerID = result.getLong("CUSTOMER_ID");
+			
+			closeStatement(stmt);			//Closing statement...
+			
+			sql = "INSERT INTO TRANSACTION_DETAILS (CUSTOMER_ID, FROM_ACC, TO_ACC, AMOUNT, CLOSING_BALANCE, TRANSACTION_TIME, MODE_OF_TRANSACTION, TYPE) VALUES (?, ? ,? ,? ,? ,? ,?, ?)";
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			stmt.setLong(1, receiverCustomerID);
+			stmt.setLong(2, fromAccount);
+			stmt.setLong(3, toAccount);
+			stmt.setDouble(4, amount);
+			stmt.setDouble(5, toAccountBalance);
+			
+			long millisecond = System.currentTimeMillis();
+			
+			stmt.setLong(6, millisecond);
+			stmt.setString(7, "ONLINE TRANSFER");
+			stmt.setString(8, "CREDIT");
+			
+			stmt.execute();
+			
+			connection.commit();
+			
+		}
+		catch (SQLException e)
+		{
+			try
+			{
+				connection.rollback(S1);
+			}
+			catch (SQLException e1)
+			{
+				throw new WrongEntryException("Failed to Roll Back.", e);
+			}
+			throw new WrongEntryException(e);
+		}
+		finally
+		{
+			closeStatement(stmt);
+			closeConnection(connection);
+		}
+	}
+	
+	@Override
+	public List<TransactionDetails> getTransactionHistory(long accountNo, long customerID) throws WrongEntryException
+	{
+		
+		checkAccountStatus(accountNo);
+		
+		String sql = "SELECT * FROM TRANSACTION_DETAILS WHERE CUSTOMER_ID = ? AND FROM_ACC = ? OR TO_ACC = ?";
+		
+		Connection connection = null;
+		PreparedStatement stmt = null;
+		
+		try
+		{
+			connection = createConnection();
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			stmt.setLong(1, customerID);
+			stmt.setLong(2, accountNo);
+			stmt.setLong(3, accountNo);
+			
+			ResultSet result = stmt.executeQuery();
+			
+			List<TransactionDetails> transactionList = createtransactionList(result);
+			
+			return transactionList;
+			
+		}
+		catch(SQLException e)
+		{
+			throw new WrongEntryException(e);
+		}
+	}
+	
+	private List<TransactionDetails> createtransactionList(ResultSet result) throws SQLException
+	{
+		List<TransactionDetails> transactionList = new ArrayList<>();
+		
+		while(result.next())
+		{
+			TransactionDetails pojo = new TransactionDetails();
+			
+			pojo.setCustomerID(result.getLong("CUSTOMER_ID"));
+			pojo.setTransactionID(result.getLong("TRANSACTION_ID"));
+			pojo.setFromAccount(result.getLong("FROM_ACC"));
+			pojo.setToAccount(result.getLong("TO_ACC"));
+			pojo.setAmount(result.getDouble("AMOUNT"));
+			pojo.setClosingBalance(result.getDouble("CLOSING_BALANCE"));
+			pojo.setMilliSeconds(result.getLong("TRANSACTION_TIME"));
+			pojo.setModeOfTransaction(result.getString("MODE_OF_TRANSACTION"));
+			pojo.setType(result.getString("TYPE"));
+			
+			transactionList.add(pojo);
+			
+		}
+		
+		return transactionList;
+		
+	}
+	
+//Specific to Admin...	
+	public Map<Long,Map<Long,AccountDetails>> getcompleteAccountsList() throws WrongEntryException
+	{
+		
+		String sql = "SELECT * FROM ACCOUNT_DETAILS";
+		
+		Connection connection = null;
+		PreparedStatement stmt = null;
+		
+		try
+		{
+			connection = createConnection();
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			ResultSet result = stmt.executeQuery();
+			
+			Map<Long,Map<Long,AccountDetails>> completeAccountsList = convertResultToMap(result);
+			
+			return completeAccountsList;
+			
+		}
+		catch(SQLException e)
+		{
+			throw new WrongEntryException(e);
+		}
+		finally
+		{
+			closeStatement(stmt);
+			closeConnection(connection);
+		}
+		
+	}
+	
+	@Override
+	public void modifyUserDetails(UserDetails userDetails) throws WrongEntryException
+	{
+		
+/////////////////////////////////////////CREATING QUERY/////////////////////////////////////////
+		
+		StringBuilder strBuil = new StringBuilder();
+		
+		strBuil.append("UPDATE USER_DETAILS SET ");
+		
+		if(userDetails.getName() != null)
+		{
+			strBuil.append("NAME = '" + userDetails.getName() + "',");
+		}
+		if(userDetails.getMobile() != 0)
+		{
+			strBuil.append("MOBILE = '" + userDetails.getMobile() + "',");
+		}
+		if(userDetails.getEmailID() != null)
+		{
+			strBuil.append("EMAIL = '" + userDetails.getEmailID() + "',");
+		}
+		if(userDetails.getDateOfBirth() != null)
+		{
+			strBuil.append("DOB = '" + userDetails.getDateOfBirth() + "',");
+		}
+		
+		int length = strBuil.length();
+		
+		String sql = strBuil.substring(0, length-1).toString();
+		
+		strBuil.delete(0, length);
+		
+		strBuil.append(sql + " WHERE USER_ID = " + userDetails.getUserID());
+		
+		sql = strBuil.toString();
+		
+/////////////////////////////////////////QUERY CREATED/////////////////////////////////////////
+		
+		Connection connection = null;
+		PreparedStatement stmt = null;
+		
+		try
+		{
+			connection = createConnection();
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			stmt.execute();
+			
+		}
+		catch(SQLException e)
+		{
+			throw new WrongEntryException(e);
+		}
+		finally
+		{
+			closeStatement(stmt);
+			closeConnection(connection);
+		}
+		
+	}
+	
+	public void modifyPassword(long userID, String oldPassword, String newPassword) throws WrongEntryException
+	{
+		
+		String sql = "UPDATE USER_DETAILS SET PASSWORD = ? WHERE USER_ID = ? AND PASSWORD = ?";
+		
+		Connection connection = null;
+		PreparedStatement stmt = null;
+		
+		try
+		{
+			connection = createConnection();
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			stmt.setString(1, newPassword);
+			stmt.setLong(2, userID);
+			stmt.setString(3, oldPassword);
+			
+			stmt.execute();
+			
+		}
+		catch(SQLException e)
+		{
+			throw new WrongEntryException(e);
+		}
+		finally
+		{
+			closeStatement(stmt);
+			closeConnection(connection);
+		}
+		
+	}
+	
+	@Override
+	public void addUser(UserDetails userDetails) throws WrongEntryException
+	{
+		
+		String password = userDetails.getPassword();
+		String name = userDetails.getName();
+		long mobile = userDetails.getMobile();
+		String emailID = userDetails.getEmailID();
+		String dateOfBirth = userDetails.getDateOfBirth();
+		String userType = userDetails.getUserType();
+		
+		String sql = "INSERT INTO USER_DETAILS (PASSWORD,NAME,MOBILE,EMAIL,DOB,USER_TYPE) VALUES (?, ?, ?, ?, ?, ?)";
+		
+
+		Connection connection = null;
+		PreparedStatement stmt = null;
+		
+		try
+		{
+			connection = createConnection();
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			stmt.setString(1, password);
+			stmt.setString(2, name);
+			stmt.setLong(3, mobile);
+			stmt.setString(4, emailID);
+			stmt.setString(5, dateOfBirth);
+			stmt.setString(6, userType);
+			
+			stmt.execute();
+			
+		}
+		catch(SQLException e)
+		{
+			throw new WrongEntryException(e);
+		}
+		finally
+		{
+			closeStatement(stmt);
+			closeConnection(connection);
+		}
+		
+	}
+	
+}
