@@ -38,12 +38,10 @@ public class BankAdminLayer extends BankCustomerLayer
 		return balance;
 	}
 	
-	public long addUser(UserDetails userDetails) throws WrongEntryException
+	public void addUser(UserDetails userDetails) throws WrongEntryException
 	{
 		
-		long userID = db.addUser(userDetails);
-		
-		return userID;
+		db.addUser(userDetails);
 		
 	}
 	
@@ -68,6 +66,13 @@ public class BankAdminLayer extends BankCustomerLayer
 	{
 		
 		db.updateRejectedTransaction(transactionRequestDetails);
+		
+	}
+	
+	public void updateAccountRequest(AccountRequestDetails accountRequestDetails) throws WrongEntryException
+	{
+		
+		db.updateAccountRequest(accountRequestDetails);
 		
 	}
 	

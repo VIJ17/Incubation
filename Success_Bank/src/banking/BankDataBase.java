@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Savepoint;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -57,7 +56,7 @@ public class BankDataBase implements BankingInterface
 	private PreparedStatement createPreparedStatement(String sql, Connection connection) throws SQLException
 	{
 		
-		PreparedStatement stmt = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE, Statement.RETURN_GENERATED_KEYS);
+		PreparedStatement stmt = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 		
 		return stmt;
 	
@@ -76,7 +75,7 @@ public class BankDataBase implements BankingInterface
 	{
 		Map<Long,Map<Long,AccountDetails>> map = new Hashtable<>();;
 		
-		Map<Long, AccountDetails> innerMap = new Hashtable<>();
+		Map<Long, AccountDetails> innerMap = null;
 		
 		while(result.next())
 		{
@@ -572,6 +571,7 @@ public class BankDataBase implements BankingInterface
 		long customerID = transactionRequestDetails.getCustomerID();
 		String remarks = transactionRequestDetails.getDescription();
 		String status = transactionRequestDetails.getStatus();
+		long requestID = transactionRequestDetails.getRequestID();
 		
 		checkAccountStatus(fromAccount);
 		
@@ -584,7 +584,7 @@ public class BankDataBase implements BankingInterface
 		
 		try
 		{
-			double balance = getBalance(fromAccount, password);
+			double balance = getBalance(fromAccount);
 			
 			connection = createConnection();
 			
@@ -633,6 +633,17 @@ public class BankDataBase implements BankingInterface
 			
 			stmt.execute();
 			
+			closeStatement(stmt);
+			
+/////////////////////////////////////////UPDATING REQUEST TABLE//////////////////////////////////////
+			
+			sql = "UPDATE TRANSACTION_REQUEST SET STATUS = 'SUCCESS' WHERE REQUEST_ID = ?";
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			stmt.setLong(1, requestID);
+			stmt.execute();
+			
 			connection.commit();
 			
 			return balance;
@@ -665,12 +676,13 @@ public class BankDataBase implements BankingInterface
 		double amount = transactionRequestDetails.getAmount();
 		long customerID = transactionRequestDetails.getCustomerID();
 		String remarks = transactionRequestDetails.getDescription();
-		String status = transactionRequestDetails.getStatus();
+		long requestID = transactionRequestDetails.getRequestID();
 		
 		String sql = "SELECT BALANCE FROM ACCOUNT_DETAILS WHERE ACCOUNT_NO = ?";
 		
 		Connection connection = null;
 		PreparedStatement stmt = null;
+		Savepoint S1 = null;
 		
 		try
 		{
@@ -682,38 +694,71 @@ public class BankDataBase implements BankingInterface
 			
 			ResultSet result = stmt.executeQuery();
 			
-			result.next();
+			dataAvailabilityCheck(result);
+			
 			double balance = result.getDouble("BALANCE");
 			
 			closeStatement(stmt);
 			
 /////////////////////////////////////////UPDATING TRANSACTION_DETAILS//////////////////////////////////////			
 			
-			sql = "INSERT INTO TRANSACTION_DETAILS (CUSTOMER_ID, FROM_ACC, AMOUNT, CLOSING_BALANCE, TRANSACTION_TIME, MODE_OF_TRANSACTION, TYPE, REMARKS, STATUS) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			sql = "INSERT INTO TRANSACTION_DETAILS (CUSTOMER_ID, REFERENCE_ID, PRIMARY_ACC, AMOUNT, CLOSING_BALANCE, TRANSACTION_TIME, MODE_OF_TRANSACTION, TYPE, STATUS, REMARKS) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			
-			stmt.setLong(1, customerID);
-			stmt.setLong(2, fromAccount);
-			stmt.setDouble(3, amount);
-			stmt.setDouble(4, balance);
+			connection.setAutoCommit(false);
+			
+			stmt = createPreparedStatement(sql, connection);
 			
 			long millisecond = System.currentTimeMillis();
+			String referenceID = "REF" + millisecond;
 			
-			stmt.setLong(5, millisecond);
-			stmt.setString(6, "WITHDRAW");
-			stmt.setString(7, "DEBIT");
-			stmt.setString(8, remarks);
-			stmt.setString(9, status);
+			stmt.setLong(1, customerID);
+			stmt.setString(2, referenceID);
+			stmt.setLong(3, fromAccount);
+			stmt.setDouble(4, amount);
+			stmt.setDouble(5, balance);
+			stmt.setLong(6, millisecond);
+			stmt.setString(7, "WITHDRAW");
+			stmt.setString(8, "DEBIT");
+			stmt.setString(9, "REJECTED");
+			stmt.setString(10, remarks);
+			System.out.println();
+			
+			S1 = connection.setSavepoint();
 			
 			stmt.execute();
+			
+			closeStatement(stmt);
+			
+////////////////////////////////////////////UPDATING TRANSACTION REQUEST////////////////////////////////////
+			
+			sql = "UPDATE TRANSACTION_REQUEST SET STATUS = 'REJECTED' WHERE REQUEST_ID = ?";
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			stmt.setLong(1, requestID);
+			
+			stmt.execute();
+			
+			connection.commit();
+			
 		}
 		catch(SQLException e)
 		{
+			try
+			{
+				connection.rollback(S1);
+			}
+			catch (SQLException e1)
+			{
+				e1.printStackTrace();
+			}
+			
 			throw new WrongEntryException(e);
 		}
 		finally
 		{
-			closeStatement(stmt);
-			closeConnection(connection);
+//			closeStatement(stmt);
+//			closeConnection(connection);
 		}
 		
 	}
@@ -1082,7 +1127,7 @@ public class BankDataBase implements BankingInterface
 	}
 	
 	@Override
-	public long addUser(UserDetails userDetails) throws WrongEntryException
+	public void addUser(UserDetails userDetails) throws WrongEntryException
 	{
 		
 		String password = userDetails.getPassword();
@@ -1112,13 +1157,6 @@ public class BankDataBase implements BankingInterface
 			stmt.setString(6, userType);
 			
 			stmt.execute();
-			
-			ResultSet result = stmt.getGeneratedKeys();
-			
-			result.next();
-			Long userID = result.getLong("USER_ID");
-			
-			return userID;
 			
 		}
 		catch(SQLException e)
@@ -1236,6 +1274,41 @@ public class BankDataBase implements BankingInterface
 			}
 			
 			return requestList;
+			
+		}
+		catch(SQLException e)
+		{
+			throw new WrongEntryException(e);
+		}
+		finally
+		{
+			closeStatement(stmt);
+			closeConnection(connection);
+		}
+		
+	}
+	
+	public void updateAccountRequest(AccountRequestDetails accountRequestDetails) throws WrongEntryException
+	{
+		
+		String status = accountRequestDetails.getStatus();
+		long requestID = accountRequestDetails.getRequestID();
+		
+		String sql = "UPDATE ACCOUNT_REQUEST SET STATUS = ? WHERE REQUEST_ID = ?";
+		
+		Connection connection = null;
+		PreparedStatement stmt = null;
+		
+		try
+		{
+			connection = createConnection();
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			stmt.setString(1, status);
+			stmt.setLong(2, requestID);
+			
+			stmt.execute();
 			
 		}
 		catch(SQLException e)

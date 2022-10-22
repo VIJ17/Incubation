@@ -34,7 +34,7 @@ public interface BankingInterface
 	
 	void modifyPassword(long userID, String oldPassword, String newPassword) throws WrongEntryException;
 	
-	long addUser(UserDetails userDetails) throws WrongEntryException;
+	void addUser(UserDetails userDetails) throws WrongEntryException;
 	
 	void createCustomerIDRequest(UserDetails userDetails, String message) throws WrongEntryException;
 	

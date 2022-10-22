@@ -325,13 +325,14 @@ public class BankingRunner
 			TransactionRequestDetails details = entry.getValue();
 			
 			System.out.println("Enter " + key + " to change Status of :");
-			System.out.println("_____________________________________________________");
+			System.out.println("__________________________________________________________");
 			System.out.println("REQUEST_ID : " + details.getRequestID());
 			System.out.println("CUSTOMER_ID : " + details.getCustomerID());
 			System.out.println("ACCOUNT_NO : " + details.getAccountNo());
 			System.out.println("AMOUNT : " + details.getAmount());
 			System.out.println("STATUS : " + details.getStatus());
 			System.out.println("DESCRIPTION : " + details.getDescription());
+			System.out.println("__________________________________________________________");
 			
 		}
 		
@@ -417,9 +418,9 @@ public class BankingRunner
 						}
 						case 4:						//To deposite Amount...
 						{
-							logger.info("Enter Account number to deposit.");
+							logger.info("Select Account number to get balance.");
 							
-							long toAccount = runner.getLong();
+							long toAccount = getAccountNo(accountsList);
 							
 							logger.info("Enter the Amount to Deposite.");
 							double amount = runner.getDouble();
@@ -451,13 +452,22 @@ public class BankingRunner
 							
 							if(accountDetails.getAccountStatus().equalsIgnoreCase("ACTIVE"))
 							{
-								TransactionRequestDetails transactionRequestDetails = new TransactionRequestDetails();
-								
-								transactionRequestDetails.setAccountNo(fromAccount);
-								transactionRequestDetails.setAmount(amount);
-								transactionRequestDetails.setCustomerID(customerID);
-								
-								bank.createTransactionRequest(transactionRequestDetails);
+								double balance = accountDetails.getBalance();
+								if(balance >= amount)
+								{
+									TransactionRequestDetails transactionRequestDetails = new TransactionRequestDetails();
+									
+									transactionRequestDetails.setAccountNo(fromAccount);
+									transactionRequestDetails.setAmount(amount);
+									transactionRequestDetails.setCustomerID(customerID);
+									getDescription(transactionRequestDetails);
+									
+									bank.createTransactionRequest(transactionRequestDetails);
+								}
+								else
+								{
+									logger.info("Insufficient balance to withdraw.");
+								}
 								
 							}
 							else if(accountDetails.getAccountStatus().equalsIgnoreCase("INACTIVE"))
@@ -685,7 +695,7 @@ public class BankingRunner
 							
 							logger.info("Password changed Successfully.");
 							
-							break;
+							break A;
 							
 						}
 						case 0:						//To Logout Account...
@@ -936,11 +946,13 @@ public class BankingRunner
 									case 1:
 									{
 										accountRequestDetails.setStatus("APPROVED");
+										bank.updateAccountRequest(accountRequestDetails);
 										condition = false;
 									}
 									case 2:
 									{
 										accountRequestDetails.setStatus("REJECTED");
+										bank.updateAccountRequest(accountRequestDetails);
 										condition = false;
 									}
 									default:
@@ -962,7 +974,7 @@ public class BankingRunner
 					case 8:						//To see & approve/cancel Transaction request...
 					{
 						
-						if(accountRequestList != null)
+						if(transactionRequestList != null)
 						{
 							TransactionRequestDetails transactionRequestDetails = printTransactionRequestList(transactionRequestList);
 							
@@ -977,7 +989,7 @@ public class BankingRunner
 									case 1:
 									{
 										transactionRequestDetails.setStatus("APPROVED");
-										getRemarks(transactionRequestDetails);
+										getDescription(transactionRequestDetails);
 										
 										bank.withdraw(transactionRequestDetails);
 										condition = false;
@@ -987,7 +999,7 @@ public class BankingRunner
 									case 2:
 									{
 										transactionRequestDetails.setStatus("REJECTED");
-										getRemarks(transactionRequestDetails);
+										getDescription(transactionRequestDetails);
 										
 										bank.updateRejectedTransaction(transactionRequestDetails);
 										condition = false;
@@ -1090,9 +1102,9 @@ public class BankingRunner
 //		
 //	}
 	
-	private void getRemarks(TransactionRequestDetails transactionRequestDetails)
+	private void getDescription(TransactionRequestDetails transactionRequestDetails)
 	{
-		logger.info("Enter 1 to add Remarks. \nEnter 2 to skip remarks.");
+		logger.info("Enter 1 to add Description. \nEnter 2 to skip.");
 		int choice = getInteger();
 		
 		switch(choice)
