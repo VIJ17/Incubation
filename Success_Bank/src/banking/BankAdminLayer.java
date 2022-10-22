@@ -3,16 +3,16 @@ package banking;
 import java.util.Map;
 
 import datacarier.AccountDetails;
-import datacarier.TransactionDetails;
+import datacarier.AccountRequestDetails;
+import datacarier.TransactionRequestDetails;
 import datacarier.UserDetails;
 import exceptions.WrongEntryException;
-import util.InputCheck;
 
 public class BankAdminLayer extends BankCustomerLayer
 {
 	
-	InputCheck check = new InputCheck();
-	BankDataBase db = new BankDataBase();
+//	private InputCheck check = new InputCheck();
+	private BankDataBase db = new BankDataBase();
 	
 	public Map<Long,Map<Long,AccountDetails>> getcompleteAccountsList() throws WrongEntryException
 	{
@@ -38,17 +38,36 @@ public class BankAdminLayer extends BankCustomerLayer
 		return balance;
 	}
 	
-	public void deposit(TransactionDetails transactionDetails) throws WrongEntryException
+	public long addUser(UserDetails userDetails) throws WrongEntryException
 	{
 		
-		db.deposit(transactionDetails);
-			
+		long userID = db.addUser(userDetails);
+		
+		return userID;
+		
 	}
 	
-	public void addUser(UserDetails userDetails) throws WrongEntryException
+	public Map<Integer,AccountRequestDetails> getAccountRequests() throws WrongEntryException
 	{
 		
-		db.addUser(userDetails);
+		Map<Integer,AccountRequestDetails> requestList = bankInterf.getAccountRequests();
+		
+		return requestList;
+	}
+	
+	public Map<Integer,TransactionRequestDetails> getTransactionRequests() throws WrongEntryException
+	{
+		
+		Map<Integer,TransactionRequestDetails> requestList = bankInterf.getTransactionRequests();
+		
+		return requestList;
+		
+	}
+	
+	public void updateRejectedTransaction(TransactionRequestDetails transactionRequestDetails) throws WrongEntryException
+	{
+		
+		db.updateRejectedTransaction(transactionRequestDetails);
 		
 	}
 	

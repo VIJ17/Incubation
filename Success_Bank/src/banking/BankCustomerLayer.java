@@ -6,14 +6,14 @@ import java.util.Map;
 import datacarier.AccountDetails;
 import datacarier.CustomerDetails;
 import datacarier.TransactionDetails;
+import datacarier.TransactionRequestDetails;
+import datacarier.UserDetails;
 import exceptions.WrongEntryException;
-import interfacemodule.BankingInterface;
 import util.InputCheck;
 
 public class BankCustomerLayer extends BankUserLayer
 {
 	private InputCheck check = new InputCheck();
-	private BankingInterface bankInterf = new BankDataBase();
 	
 	public CustomerDetails getCustomerDetails(long customerID) throws WrongEntryException		//updated
 	{
@@ -47,16 +47,11 @@ public class BankCustomerLayer extends BankUserLayer
 			
 	}
 
-	public double withdraw(TransactionDetails transactionDetails, String password) throws WrongEntryException
+	public double withdraw(TransactionRequestDetails transactionRequestDetails) throws WrongEntryException
 	{
-		check.nullCheck(password);
 		
-		long fromAccount = transactionDetails.getFromAccount();
-		
-		double balance = bankInterf.withdraw(transactionDetails, password);
+		double balance = bankInterf.withdraw(transactionRequestDetails);
 			
-		balance = bankInterf.getBalance(fromAccount, password);
-		
 		return balance;
 	}
 	
@@ -74,6 +69,27 @@ public class BankCustomerLayer extends BankUserLayer
 		List<TransactionDetails> transactionList = bankInterf.getTransactionHistory(accountNo, customerID);
 		
 		return transactionList;
+	}
+	
+	public void createCustomerIDRequest(UserDetails userDetails, String message) throws WrongEntryException
+	{
+		
+		bankInterf.createCustomerIDRequest(userDetails, message);
+		
+	}
+	
+	public void createAccountRequest(AccountDetails accountDetails, String message) throws WrongEntryException
+	{
+		
+		bankInterf.createAccountRequest(accountDetails, message);
+		
+	}
+	
+	public void createTransactionRequest(TransactionRequestDetails transactionRequestDetails) throws WrongEntryException
+	{
+		
+		bankInterf.createTransactionRequest(transactionRequestDetails);
+		
 	}
 	
 }

@@ -9,7 +9,7 @@ public class BankUserLayer
 {
 	
 	private InputCheck check = new InputCheck();
-	private BankingInterface bankInterf = new BankDataBase();
+	protected BankingInterface bankInterf = new BankDataBase();
 	
 	public UserDetails userLogin(long userID, String password) throws WrongEntryException			//updated
 	{

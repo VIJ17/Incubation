@@ -4,39 +4,57 @@ public class TransactionDetails
 {
 	
 	private long customerID;
-	private long transactionID;
-	private Long fromAccount;
-	private Long toAccount;
+	private long ID;
+	private String referenceID;
+	private Long primaryAccount;
+	private Long secondaryAccount;
 	private double amount;
 	private double closingBalance;
 	private long milliSeconds;
 	private String modeOfTransaction;
 	private String type;
 	private String remarks;
+	private String status;
 	
-	public long getTransactionID()
+	public long getCustomerID()
 	{
-		return transactionID;
+		return customerID;
 	}
-	public void setTransactionID(long transactionID)
+	public void setCustomerID(long customerID)
 	{
-		this.transactionID = transactionID;
+		this.customerID = customerID;
 	}
-	public long getFromAccount()
+	public long getID()
 	{
-		return fromAccount;
+		return ID;
 	}
-	public void setFromAccount(long fromAccount)
+	public void setID(long iD)
 	{
-		this.fromAccount = fromAccount;
+		ID = iD;
 	}
-	public long getToAccount()
+	public String getReferenceID()
 	{
-		return toAccount;
+		return referenceID;
 	}
-	public void setToAccount(long toAccount)
+	public void setReferenceID(String referenceID)
 	{
-		this.toAccount = toAccount;
+		this.referenceID = referenceID;
+	}
+	public Long getPrimaryAccount()
+	{
+		return primaryAccount;
+	}
+	public void setPrimaryAccount(Long primaryAccount)
+	{
+		this.primaryAccount = primaryAccount;
+	}
+	public Long getSecondaryAccount()
+	{
+		return secondaryAccount;
+	}
+	public void setSecondaryAccount(Long secondaryAccount)
+	{
+		this.secondaryAccount = secondaryAccount;
 	}
 	public double getAmount()
 	{
@@ -46,22 +64,6 @@ public class TransactionDetails
 	{
 		this.amount = amount;
 	}
-	public long getMilliSeconds()
-	{
-		return milliSeconds;
-	}
-	public void setMilliSeconds(long milliSeconds)
-	{
-		this.milliSeconds = milliSeconds;
-	}
-	public long getCustomerID()
-	{
-		return customerID;
-	}
-	public void setCustomerID(long customerID)
-	{
-		this.customerID = customerID;
-	}
 	public double getClosingBalance()
 	{
 		return closingBalance;
@@ -69,6 +71,14 @@ public class TransactionDetails
 	public void setClosingBalance(double closingBalance)
 	{
 		this.closingBalance = closingBalance;
+	}
+	public long getMilliSeconds()
+	{
+		return milliSeconds;
+	}
+	public void setMilliSeconds(long milliSeconds)
+	{
+		this.milliSeconds = milliSeconds;
 	}
 	public String getModeOfTransaction()
 	{
@@ -86,11 +96,21 @@ public class TransactionDetails
 	{
 		this.type = type;
 	}
-	public String getRemarks() {
+	public String getRemarks()
+	{
 		return remarks;
 	}
-	public void setRemarks(String remarks) {
+	public void setRemarks(String remarks)
+	{
 		this.remarks = remarks;
+	}
+	public String getStatus()
+	{
+		return status;
+	}
+	public void setStatus(String status)
+	{
+		this.status = status;
 	}
 	
 }
