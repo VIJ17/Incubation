@@ -10,7 +10,6 @@ public class AccountDetails extends CustomerDetails
 	private String ifscCode;
 	private String branch;
 	private double balance;
-	private String status;
 	
 	public long getCustomerID() 
 	{
@@ -67,14 +66,6 @@ public class AccountDetails extends CustomerDetails
 	public void setAccountStatus(String accountStatus)
 	{
 		this.accountStatus = accountStatus;
-	}
-	public String getStatus()
-	{
-		return status;
-	}
-	public void setStatus(String status)
-	{
-		this.status = status;
 	}
 	
 }
