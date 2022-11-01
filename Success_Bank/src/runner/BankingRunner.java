@@ -789,8 +789,6 @@ public class BankingRunner
 		
 		Map<Integer,AccountRequestDetails> accountRequestList = bank.getAccountRequests();
 		
-		Map<Integer,TransactionRequestDetails> transactionRequestList = bank.getTransactionRequests();
-		
 		A:
 		while(true)
 		{
@@ -973,6 +971,7 @@ public class BankingRunner
 					}
 					case 8:						//To see & approve/cancel Transaction request...
 					{
+						Map<Integer,TransactionRequestDetails> transactionRequestList = bank.getTransactionRequests();
 						
 						if(transactionRequestList != null)
 						{
