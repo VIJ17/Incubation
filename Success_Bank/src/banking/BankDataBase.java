@@ -518,7 +518,7 @@ public class BankDataBase implements BankingInterface
 			
 ////////////////////////////////////Updating Transaction Details////////////////////////////////////
 			
-			sql = "INSERT INTO TRANSACTION_DETAILS (CUSTOMER_ID, REFERENCE_ID, SECONDARY_ACC, AMOUNT, CLOSING_BALANCE, TRANSACTION_TIME, MODE_OF_TRANSACTION, TYPE, STATUS, REMARKS) VALUES (?, ? ,? ,? ,? ,? ,?, ?, ?, ?)";
+			sql = "INSERT INTO TRANSACTION_DETAILS (CUSTOMER_ID, REFERENCE_ID, PRIMARY_ACC, AMOUNT, CLOSING_BALANCE, TRANSACTION_TIME, MODE_OF_TRANSACTION, TYPE, STATUS, REMARKS) VALUES (?, ? ,? ,? ,? ,? ,?, ?, ?, ?)";
 			
 			stmt = createPreparedStatement(sql, connection);
 			
