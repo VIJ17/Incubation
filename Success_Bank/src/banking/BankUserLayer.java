@@ -30,6 +30,7 @@ public class BankUserLayer
 	public void modifyPassword(long userID, String oldPassword, String newPassword) throws WrongEntryException
 	{
 		check.nullCheck(newPassword);
+		check.nullCheck(oldPassword);
 		
 		bankInterf.modifyPassword(userID, oldPassword, newPassword);
 		
