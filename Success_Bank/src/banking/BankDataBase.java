@@ -570,7 +570,6 @@ public class BankDataBase implements BankingInterface
 		double amount = transactionRequestDetails.getAmount();
 		long customerID = transactionRequestDetails.getCustomerID();
 		String remarks = transactionRequestDetails.getDescription();
-		String status = transactionRequestDetails.getStatus();
 		long requestID = transactionRequestDetails.getRequestID();
 		
 		checkAccountStatus(fromAccount);
@@ -629,7 +628,7 @@ public class BankDataBase implements BankingInterface
 			stmt.setString(7, "WITHDRAW");
 			stmt.setString(8, "DEBIT");
 			stmt.setString(9, remarks);
-			stmt.setString(10, status);
+			stmt.setString(10, "SUCCESS");
 			
 			stmt.execute();
 			
