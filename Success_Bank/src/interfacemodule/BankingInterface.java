@@ -26,7 +26,7 @@ public interface BankingInterface
 	
 	void onlineTransfer(TransactionDetails transactionDetails, String password) throws WrongEntryException;
 
-	List<TransactionDetails> getTransactionHistory(long accountNo, long customerID) throws WrongEntryException;
+	List<TransactionDetails> getTransactionHistory(long accountNo) throws WrongEntryException;
 
 	CustomerDetails getCustomerDetails(long customerID) throws WrongEntryException;
 	

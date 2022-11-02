@@ -63,10 +63,10 @@ public class BankCustomerLayer extends BankUserLayer
 		
 	}
 	
-	public List<TransactionDetails> getTransactionHistory(long accountNo, long customerID) throws WrongEntryException
+	public List<TransactionDetails> getTransactionHistory(long accountNo) throws WrongEntryException
 	{
 		
-		List<TransactionDetails> transactionList = bankInterf.getTransactionHistory(accountNo, customerID);
+		List<TransactionDetails> transactionList = bankInterf.getTransactionHistory(accountNo);
 		
 		return transactionList;
 	}

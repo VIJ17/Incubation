@@ -925,12 +925,12 @@ public class BankDataBase implements BankingInterface
 	}
 	
 	@Override
-	public List<TransactionDetails> getTransactionHistory(long accountNo, long customerID) throws WrongEntryException
+	public List<TransactionDetails> getTransactionHistory(long accountNo) throws WrongEntryException
 	{
 		
 		checkAccountStatus(accountNo);
 		
-		String sql = "SELECT * FROM TRANSACTION_DETAILS WHERE CUSTOMER_ID = ? AND PRIMARY_ACC = ?";
+		String sql = "SELECT * FROM TRANSACTION_DETAILS WHERE PRIMARY_ACC = ?";
 		
 		Connection connection = null;
 		PreparedStatement stmt = null;
@@ -941,8 +941,7 @@ public class BankDataBase implements BankingInterface
 			
 			stmt = createPreparedStatement(sql, connection);
 			
-			stmt.setLong(1, customerID);
-			stmt.setLong(2, accountNo);
+			stmt.setLong(1, accountNo);
 			
 			ResultSet result = stmt.executeQuery();
 			

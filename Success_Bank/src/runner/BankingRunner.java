@@ -602,7 +602,7 @@ public class BankingRunner
 							
 							long accountNo = accountsList.get(key);
 							
-							List<TransactionDetails> transactionList = bank.getTransactionHistory(accountNo, customerID);
+							List<TransactionDetails> transactionList = bank.getTransactionHistory(accountNo);
 							
 							printTransactionHistory(transactionList);
 							
@@ -895,7 +895,7 @@ public class BankingRunner
 						
 						long accountNo = getAccountNo(accountsList);
 						
-						List<TransactionDetails> transactionList = bank.getTransactionHistory(accountNo, customerID);
+						List<TransactionDetails> transactionList = bank.getTransactionHistory(accountNo);
 						
 						printTransactionHistory(transactionList);
 						
