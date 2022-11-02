@@ -502,20 +502,28 @@ public class BankingRunner
 							
 							if(fromAccountDetails.getAccountStatus().equalsIgnoreCase("ACTIVE") && toAccountDetails.getAccountStatus().equalsIgnoreCase("ACTIVE"))
 							{
-								TransactionDetails transactionDetails = new TransactionDetails();
-								
-								transactionDetails.setPrimaryAccount(fromAccount);
-								transactionDetails.setSecondaryAccount(toAccount);
-								transactionDetails.setAmount(amount);
-								transactionDetails.setCustomerID(customerID);
-								
-								bank.onlineTransfer(transactionDetails, password);
-								
-								updateCacheForWithdraw(map, transactionDetails);
+								double balance = fromAccountDetails.getBalance();
+								if(balance >= amount)
+								{
+									TransactionDetails transactionDetails = new TransactionDetails();
 									
-								updateCacheForDeposit(map, transactionDetails);
+									transactionDetails.setPrimaryAccount(fromAccount);
+									transactionDetails.setSecondaryAccount(toAccount);
+									transactionDetails.setAmount(amount);
+									transactionDetails.setCustomerID(customerID);
 									
-								logger.info("Transaction Successful.");
+									bank.onlineTransfer(transactionDetails, password);
+									
+									updateCacheForWithdraw(map, transactionDetails);
+										
+									updateCacheForDeposit(map, transactionDetails);
+										
+									logger.info("Transaction Successful.");
+								}
+								else
+								{
+									logger.info("Insufficient balance to withdraw.");
+								}
 							}
 							else if(fromAccountDetails.getAccountStatus().equalsIgnoreCase("INACTIVE"))
 							{
