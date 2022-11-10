@@ -1,0 +1,54 @@
+@charset "UTF-8";
+
+.login-body
+{
+	background-image:url(../images/background_5.jpg);
+	background-size:100% 100%;
+	overflow:hidden;
+}
+
+.login-div
+{
+	width:40%;
+	height:30%;
+	padding-left:18%;
+	overflow:hidden;
+}
+
+th
+{
+	width:180px;
+}
+
+td
+{
+	text-align:center;
+	background-color:#99ccff;
+}
+
+button
+{
+	font-size:15px;
+}
+
+label
+{
+	font-size:20px;
+}
+
+a
+{
+	font-size:20px;
+}
+
+h2
+{
+	font-size:30px;
+	margin-left:40%;
+}
+
+div
+{
+	width:100%;
+	height:1000px;
+}
