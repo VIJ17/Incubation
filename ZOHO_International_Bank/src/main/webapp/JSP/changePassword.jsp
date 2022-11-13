@@ -6,15 +6,6 @@
 <title> Change Password </title>
 <style type="text/css">
 
-.back-ground
-{
-	background-image:url(<%= request.getContextPath() %>/images/34.jpg);
-	background-size:100% 100%;
-	height:985px;
-	width:1515px;
-	overflow:hidden;
-}
-
 input
 {
 	font-size:20px;
@@ -25,6 +16,7 @@ input
 
 button
 {
+	color:#f3e6ff;
 	text-align:center;
 	border:groove;
 	border-color:#9999ff;
@@ -65,6 +57,14 @@ h2
 	font-size:30px;
 	background-color:#3333cc;
 	color:white;
+}
+
+.back-ground
+{
+	background-image:url(<%= request.getContextPath() %>/images/34.jpg);
+	background-size:100% 100%;
+	height:56em;	
+	width:100%;
 }
 
 </style>

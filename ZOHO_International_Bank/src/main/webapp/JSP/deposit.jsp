@@ -6,14 +6,6 @@
 <title> Deposit </title>
 <style type="text/css">
 
-.back-ground
-{
-	background-image:url(<%= request.getContextPath() %>/images/34.jpg);
-	background-size:100% 100%;
-	height:56em;	
-	width:100%;
-}
-
 select
 {
 	border:none;
@@ -26,6 +18,7 @@ select
 
 button
 {
+	color:#f3e6ff;
 	text-align:center;
 	border:groove;
 	border-color:#9999ff;
@@ -47,7 +40,7 @@ button:active
 
 label
 {
-	font-size:25px;
+	font-size:20px;
 }
 
 input
@@ -76,6 +69,14 @@ h2
 	color:white;
 }
 
+.back-ground
+{
+	background-image:url(<%= request.getContextPath() %>/images/34.jpg);
+	background-size:100% 100%;
+	height:56em;	
+	width:100%;
+}
+
 </style>
 </head>
 <body>
@@ -87,6 +88,7 @@ h2
 	
 	<img style = "padding-left:5%; float:left; height:32%; width:15%" src="<%= request.getContextPath() %>/images/png19.png" alt="Request Image">
 	<img style = "padding-right:10%; float:right; height:32%; width:15%" src="<%= request.getContextPath() %>/images/png19.png" alt="Request Image">
+	
 	<div style = "margin-left:30%" class = "border">
 		
 		<div style = "margin-top:5%; margin-left:3%">
@@ -111,7 +113,7 @@ h2
 				</tr>
 				</table> <br>
 				<p style = "background-color:#e6e6ff; width:${ Message.length() }%; padding-left:8%; padding-right:4%; font-size:20px; color:red"> ${ Message } </p>
-				<button value = "Make Deposit" name = "action"> Deposite </button>
+				<button value = "Make Deposit" name = "action"> Deposit </button>
 			</form>
 		</div>
 	</div><br><br><br><br>

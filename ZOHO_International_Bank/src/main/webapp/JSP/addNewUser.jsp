@@ -6,16 +6,9 @@
 <title> Add New User </title>
 <style type="text/css">
 
-.back-ground
-{
-	background-image:url(<%= request.getContextPath() %>/images/34.jpg);
-	background-size:100% 100%;
-	height:60em;
-	width:100%;
-}
-
 button
 {
+	color:#f3e6ff;
 	text-align:center;
 	border:groove;
 	border-color:#9999ff;
@@ -80,6 +73,14 @@ h2
 	color:white;
 }
 
+.back-ground
+{
+	background-image:url(<%= request.getContextPath() %>/images/34.jpg);
+	background-size:100% 100%;
+	height:56em;
+	width:100%;
+}
+
 </style>
 </head>
 <body>
@@ -88,6 +89,8 @@ h2
 
 <div class = "back-ground">
 	
+	<img style = "padding-top:8%; padding-right:5%; float:right; height:35%; width:15%" src="<%= request.getContextPath() %>/images/png18.png" alt="Request Image">
+	<img style = "padding-top:8%; padding-left:5%; float:left; height:35%; width:15%" src="<%= request.getContextPath() %>/images/png18a.png" alt="Request Image">
 	<div style = "margin-left:30%" class = "border">
 		
 		<div style = "margin-top:5%; margin-left:3%">

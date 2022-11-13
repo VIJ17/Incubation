@@ -5,13 +5,6 @@
 <meta charset="UTF-8">
 <title> Account Request </title>
 <style type="text/css">
-.back-ground
-{
-	background-image:url(<%= request.getContextPath() %>/images/34.jpg);
-	background-size:100% 100%;
-	height:56em;
-	width:100%;
-}
 
 select
 {
@@ -20,6 +13,26 @@ select
 	font-size:20px;
 	width:258px;
 	background-color:#e6e6ff;
+}
+
+button
+{
+	color:#f3e6ff;
+	text-align:center;
+	border:groove;
+	border-color:#9999ff;
+	background-color:#6666ff;
+	border-radius:20px;
+}
+
+button:hover
+{
+	background-color:#8080ff;
+}
+
+button:active
+{
+	background-color:cyan;
 }
 
 td
@@ -41,6 +54,14 @@ h2
 	font-size:30px;
 	background-color:#3333cc;
 	color:white;
+}
+
+.back-ground
+{
+	background-image:url(<%= request.getContextPath() %>/images/34.jpg);
+	background-size:100% 100%;
+	height:56em;
+	width:100%;
 }
 
 </style>
@@ -73,10 +94,10 @@ h2
 								<td> <input style = "font-size:15px; background:none; border:none; text-align:center" type = "number" id = "accountNo" name = "accountNo" value = "${ entry.value.getAccountNo() }" readonly> </td>
 								<td> <input style = "font-size:15px; background:none; border:none; text-align:center" type = "text" id = "accountStatus" name = "accountStatus" value = "${ entry.value.getAccountStatus() }" readonly> </td>
 								<td>
-									<input type="radio" id="approve" name="status" value="APPROVED">
+									<input type="radio" id="approve" name="status" value="APPROVED" required>
 			  						<label for="approve"> Approve </label>
 								
-									<input type="radio" id="reject" name="status" value="REJECTED">
+									<input type="radio" id="reject" name="status" value="REJECTED" required>
 			  						<label for="reject"> Reject </label>
 								</td>
 								<td> <input style = "background:none; border:none; text-align:center" type = "text" id = "description" name = "description" value = "${ entry.value.getDescription() }" readonly>

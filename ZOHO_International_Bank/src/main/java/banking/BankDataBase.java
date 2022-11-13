@@ -1196,13 +1196,9 @@ public class BankDataBase implements BankingInterface
 		
 	}
 	
-	@Override
-	public void createCustomerIDRequest(UserDetails userDetails, String customerStatus, String message) throws WrongEntryException
+	private void userIDCheck(long customerID) throws WrongEntryException
 	{
-		
-		long customerID = userDetails.getUserID();
-		
-		String sql = "SELECT * FROM ACCOUNT_REQUEST WHERE CUSTOMER_ID = ? AND STATUS = 'PENDING' AND ACCOUNT_NO IS NULL";
+		String sql = "SELECT * FROM USER_DETAILS WHERE USER_ID = ?";
 		
 		Connection connection = null;
 		PreparedStatement stmt = null;
@@ -1214,6 +1210,240 @@ public class BankDataBase implements BankingInterface
 			stmt = createPreparedStatement(sql, connection);
 			
 			stmt.setLong(1, customerID);
+			
+			ResultSet result = stmt.executeQuery();
+			
+			if(!(result.next()))
+			{
+				throw new WrongEntryException("Invalid Customer ID.");
+			}
+		}
+		catch(SQLException e)
+		{
+			throw new WrongEntryException("Error!");
+		}
+		finally
+		{
+			closeStatement(stmt);
+			closeConnection(connection);
+		}
+	}
+	
+	private void customerIDCheck(AccountDetails accountDetails) throws WrongEntryException
+	{
+		long customerID = accountDetails.getCustomerID();
+		
+		String sql = "SELECT * FROM CUSTOMER_DETAILS WHERE CUSTOMER_ID = ?";
+		
+		Connection connection = null;
+		PreparedStatement stmt = null;
+		
+		try
+		{
+			connection = createConnection();
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			stmt.setLong(1, customerID);
+			
+			ResultSet result = stmt.executeQuery();
+			
+			if(!(result.next()))
+			{
+				createCustomerDetails(accountDetails);
+			}
+		}
+		catch(SQLException e)
+		{
+			throw new WrongEntryException(e);
+		}
+		finally
+		{
+			closeStatement(stmt);
+			closeConnection(connection);
+		}
+	}
+	
+	private void duplicateAccountCheck(long customerID, String accountType) throws WrongEntryException
+	{
+		String sql = "SELECT * FROM ACCOUNT_DETAILS WHERE CUSTOMER_ID = ? AND ACC_TYPE = ?";
+		
+		Connection connection = null;
+		PreparedStatement stmt = null;
+		
+		try
+		{
+			connection = createConnection();
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			stmt.setLong(1, customerID);
+			stmt.setString(2, accountType);
+			
+			ResultSet result = stmt.executeQuery();
+			
+			if(result.next())
+			{
+				throw new WrongEntryException(accountType + " account is already exist for this user.");
+			}
+			
+		}
+		catch(SQLException e)
+		{
+			throw new WrongEntryException("Error!");
+		}
+		finally
+		{
+			closeStatement(stmt);
+			closeConnection(connection);
+		}
+	}
+	
+	private AccountDetails getAccountDetails(ResultSet result) throws SQLException
+	{
+		AccountDetails accountDetails = new AccountDetails();
+		
+		while(result.next())
+		{
+			
+			accountDetails.setCustomerID(result.getLong("CUSTOMER_ID"));
+			accountDetails.setAccountNo(result.getLong("ACCOUNT_NO"));
+			accountDetails.setAccountType(result.getString("ACC_TYPE"));
+			accountDetails.setAccountStatus(result.getString("ACC_STATUS"));
+			accountDetails.setIfscCode(result.getString("IFSC_CODE"));
+			accountDetails.setBranch(result.getString("BRANCH"));
+			accountDetails.setBalance(result.getDouble("BALANCE"));
+			
+		}
+		
+		return accountDetails;
+	}
+	
+	@Override
+	public AccountDetails addAccount(AccountDetails accountDetails) throws WrongEntryException
+	{
+		
+		
+		long customerID = accountDetails.getCustomerID();
+		String accountType = accountDetails.getAccountType();
+		String accountStatus = accountDetails.getAccountStatus();
+		String ifscCode = accountDetails.getIfscCode();
+		String branch = accountDetails.getBranch();
+		double balance = accountDetails.getBalance();
+		
+		userIDCheck(customerID);
+		customerIDCheck(accountDetails);
+		duplicateAccountCheck(customerID, accountType);
+		
+		String sql = "INSERT INTO ACCOUNT_DETAILS (CUSTOMER_ID, ACC_TYPE, ACC_STATUS, IFSC_CODE, BRANCH, BALANCE) VALUES (?, ?, ?, ?, ?, ?)";
+		
+		Connection connection = null;
+		PreparedStatement stmt = null;
+		
+		try
+		{
+			connection = createConnection();
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			stmt.setLong(1, customerID);
+			stmt.setString(2, accountType);
+			stmt.setString(3, accountStatus);
+			stmt.setString(4, ifscCode);
+			stmt.setString(5, branch);
+			stmt.setDouble(6, balance);
+			
+			stmt.execute();
+			
+			closeStatement(stmt);						//Closing Statement...
+			
+			sql = "SELECT * FROM ACCOUNT_DETAILS WHERE CUSTOMER_ID = ? AND ACC_TYPE = ?";
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			stmt.setLong(1, customerID);
+			stmt.setString(2, accountType);
+			
+			ResultSet result = stmt.executeQuery();
+			
+			accountDetails = getAccountDetails(result);
+			
+			return accountDetails;
+			
+		}
+		catch(SQLException e)
+		{
+			throw new WrongEntryException("Error!");
+		}
+		finally
+		{
+			closeStatement(stmt);
+			closeConnection(connection);
+		}
+		
+	}
+	
+	private void createCustomerDetails(AccountDetails accountDetails) throws WrongEntryException
+	{
+		long customerID = accountDetails.getCustomerID();
+		String panNo = accountDetails.getPanNo();
+		long aadharNo = accountDetails.getAadharNo();
+		String address = accountDetails.getAddress();
+		String customerStatus = accountDetails.getCustomerStatus();
+		
+		String sql = "INSERT INTO CUSTOMER_DETAILS VALUES(?, ?, ?, ?, ?)";
+		
+		Connection connection = null;
+		PreparedStatement stmt = null;
+		
+		try
+		{
+			connection = createConnection();
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			stmt.setLong(1, customerID);
+			stmt.setString(2, panNo);
+			stmt.setLong(3, aadharNo);
+			stmt.setString(4, address);
+			stmt.setString(5, customerStatus);
+			
+			stmt.execute();
+		}
+		catch(SQLException e)
+		{
+			throw new WrongEntryException("Error!");
+		}
+		finally
+		{
+			closeStatement(stmt);
+			closeConnection(connection);
+		}
+	}
+	
+	@Override
+	public void createCustomerIDRequest(UserDetails userDetails, String customerStatus, String message) throws WrongEntryException
+	{
+		
+		long customerID = userDetails.getUserID();
+		
+		String sql = "SELECT * FROM ACCOUNT_REQUEST WHERE CUSTOMER_ID = ? AND STATUS = 'PENDING' AND ACCOUNT_NO IS NULL";
+		
+		Connection connection = null;
+		PreparedStatement stmt = null;
+		Savepoint S1 = null;
+		
+		try
+		{
+			connection = createConnection();
+			
+			connection.setAutoCommit(false);
+			
+			stmt = createPreparedStatement(sql, connection);
+			
+			stmt.setLong(1, customerID);
+			
+			S1 = connection.setSavepoint();
 			
 			ResultSet result = stmt.executeQuery();
 			
@@ -1235,9 +1465,19 @@ public class BankDataBase implements BankingInterface
 			
 			stmt.execute();
 			
+			connection.commit();
+			
 		}
 		catch(SQLException e)
 		{
+			try
+			{
+				connection.rollback(S1);
+			}
+			catch (SQLException e1)
+			{
+				throw new WrongEntryException("Error in Roll Back.", e);
+			}
 			throw new WrongEntryException("Error!");
 		}
 		finally

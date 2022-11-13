@@ -58,9 +58,9 @@ button:active
 		<button type = "submit" value ="Account Statement" name = "action"> Account Statement </button> <br>
 		<!-- <a href = "JSP/statement.jsp" target = "menu"> Account Statement </a> <br> -->
    		<button type = "submit" value ="Account Request" name = "action"> Send Account Request </button> <br>
-	<!-- <button style = "font-size:20px; width:100%; border:groove; border-color:skyblue" type = "submit" value ="Customer ID Request" name = "action"> Send Customer Request </button> <br> -->
+	<!-- <button type = "submit" value ="Customer ID Request" name = "action"> Send Customer Request </button> <br> -->
 	</form>
-	<form action = "../myServlet" method = "post" target = "_parent">
+	<form action = "<%= request.getContextPath() %>/myServlet" method = "post" target = "_parent">
 		<button type = "submit" value ="Logout" name = "action"> Logout </button>
 		<!-- <a href = "JSP/UserLogin.jsp"> Logout </a> <br> -->
 	</form>

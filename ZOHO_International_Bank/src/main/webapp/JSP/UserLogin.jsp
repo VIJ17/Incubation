@@ -8,15 +8,6 @@
 <title>User Login</title>
 <style>
 
-.login-body
-{
-	background-image:url(<%= request.getContextPath() %>/images/background_5.jpg);
-	background-size:100% 100%;
-	overflow:hidden;
-	background-repeat:no-repeat;
-	height:100vh;
-}
-
 th
 {
 	width:160px;
@@ -25,6 +16,7 @@ th
 
 button
 {
+	color:white;
 	width:50%;
 	font-size:18px;
 	margin-left:25%;
@@ -71,6 +63,15 @@ p
 	color:white;
 	font-size:60px;
 	font-weight:800;
+}
+
+.login-body
+{
+	background-image:url(<%= request.getContextPath() %>/images/background_5.jpg);
+	background-size:100% 100%;
+	overflow:hidden;
+	background-repeat:no-repeat;
+	height:100vh;
 }
 
 </style>

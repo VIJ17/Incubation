@@ -157,7 +157,6 @@ public class BankServlet extends HttpServlet
 					UserDetails userDetails = bank.userLogin(userID, password);
 					String userType = userDetails.getUserType();
 					
-					
 					if(userType.equalsIgnoreCase("ADMIN"))
 					{
 						BankAdminLayer bankAdmin = new BankAdminLayer();
@@ -232,7 +231,7 @@ public class BankServlet extends HttpServlet
 				catch (WrongEntryException e)
 				{
 					request.setAttribute("Message", e.getMessage());
-					dispatcher = request.getRequestDispatcher("JSP/UserLogin.jsp");
+					dispatcher = request.getRequestDispatcher("JSP/sendCustomerRequest.jsp");
 					dispatcher.forward(request, response);
 				}
 				
@@ -691,46 +690,113 @@ public class BankServlet extends HttpServlet
 					dispatcher = request.getRequestDispatcher(path);
 					dispatcher.forward(request, response);
 				}
-				String name = request.getParameter("name");
-				long mobile = Long.parseLong(request.getParameter("mobile"));
-				String emailID = request.getParameter("emailID");
-				String dateOfBirth = request.getParameter("dateOfBirth");
-				String userType = request.getParameter("userType");
-				String password = request.getParameter("password");
-				String confirmPassword = request.getParameter("confirmPassword");
-				
-				if(password.equals(confirmPassword))
+				else
 				{
-					UserDetails details = new UserDetails();
-					details.setName(name);
-					details.setMobile(mobile);
-					details.setEmailID(emailID);
-					details.setDateOfBirth(dateOfBirth);
-					details.setPassword(password);
-					details.setUserType(userType);
+					String name = request.getParameter("name");
+					long mobile = Long.parseLong(request.getParameter("mobile"));
+					String emailID = request.getParameter("emailID");
+					String dateOfBirth = request.getParameter("dateOfBirth");
+					String userType = request.getParameter("userType");
+					String password = request.getParameter("password");
+					String confirmPassword = request.getParameter("confirmPassword");
+					
+					if(password.equals(confirmPassword))
+					{
+						UserDetails details = new UserDetails();
+						details.setName(name);
+						details.setMobile(mobile);
+						details.setEmailID(emailID);
+						details.setDateOfBirth(dateOfBirth);
+						details.setPassword(password);
+						details.setUserType(userType);
+						try
+						{
+							BankAdminLayer bankAdmin = new BankAdminLayer();
+							
+							UserDetails userDetails = bankAdmin.addUser(details);
+							
+							request.setAttribute("userDetails", userDetails);
+							path = "JSP/newUserDetails.jsp";
+							dispatcher = request.getRequestDispatcher(path);
+							dispatcher.forward(request, response);
+						}
+						catch (WrongEntryException e)
+						{
+							request.setAttribute("Message", e.getMessage());
+							dispatcher = request.getRequestDispatcher("JSP/addNewUser.jsp");
+							dispatcher.forward(request, response);
+						}
+					}
+					else
+					{
+						request.setAttribute("Message", "Password Mismatch.");
+						dispatcher = request.getRequestDispatcher("JSP/addNewUser.jsp");
+						dispatcher.forward(request, response);
+					}
+				}
+				
+				break;
+			}
+			case "Create Account":
+			{
+				if(request.getParameter("balance") == null)
+				{
+					path = "JSP/createNewAccount.jsp";
+					
+					if(request.getParameter("userID") == null)
+					{
+						dispatcher = request.getRequestDispatcher(path);
+						dispatcher.forward(request, response);
+					}
+					else
+					{
+						long customerID = Long.parseLong(request.getParameter("userID"));
+						request.setAttribute("customerID", customerID);
+						dispatcher = request.getRequestDispatcher(path);
+						dispatcher.forward(request, response);
+					}
+				}
+				else
+				{
+					long customerID = Long.parseLong(request.getParameter("customerID"));
+					String panNo = request.getParameter("panNo");
+					long aadharNo = Long.parseLong(request.getParameter("aadharNo"));
+					String address = request.getParameter("address");
+					String customerStatus = request.getParameter("customerStatus");
+					String accountType = request.getParameter("accountType");
+					String accountStatus = request.getParameter("accountStatus");
+					String ifscCode = request.getParameter("ifscCode");
+					String branch = request.getParameter("branch");
+					double balance = Double.parseDouble(request.getParameter("balance"));
+					
+					AccountDetails details = new AccountDetails();
+					details.setCustomerID(customerID);
+					details.setPanNo(panNo);
+					details.setAadharNo(aadharNo);
+					details.setAddress(address);
+					details.setCustomerStatus(customerStatus);
+					details.setAccountType(accountType);
+					details.setAccountStatus(accountStatus);
+					details.setIfscCode(ifscCode);
+					details.setBranch(branch);
+					details.setBalance(balance);
 					try
 					{
 						BankAdminLayer bankAdmin = new BankAdminLayer();
 						
-						UserDetails userDetails = bankAdmin.addUser(details);
+						AccountDetails accountDetails = bankAdmin.addAccount(details);
 						
-						request.setAttribute("userDetails", userDetails);
-						path = "JSP/newUserDetails.jsp";
+						request.setAttribute("accountDetails", accountDetails);
+						path = "JSP/newAccountDetails.jsp";
 						dispatcher = request.getRequestDispatcher(path);
 						dispatcher.forward(request, response);
 					}
 					catch (WrongEntryException e)
 					{
 						request.setAttribute("Message", e.getMessage());
-						dispatcher = request.getRequestDispatcher("JSP/addNewUser.jsp");
+						dispatcher = request.getRequestDispatcher("JSP/createNewAccount.jsp");
 						dispatcher.forward(request, response);
 					}
-				}
-				else
-				{
-					request.setAttribute("Message", "Password Mismatch.");
-					dispatcher = request.getRequestDispatcher("JSP/addNewUser.jsp");
-					dispatcher.forward(request, response);
 				}
 				
 				break;

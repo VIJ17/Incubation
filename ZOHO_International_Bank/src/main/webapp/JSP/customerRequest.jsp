@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+	<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -8,14 +8,6 @@
 <title> Customer Request </title>
 <style type="text/css">
 
-.back-ground
-{
-	background-image:url(<%= request.getContextPath() %>/images/34.jpg);
-	background-size:100% 100%;
-	height:56em;
-	width:100%;
-}
-
 select
 {
 	border:solid;
@@ -23,6 +15,26 @@ select
 	font-size:20px;
 	width:258px;
 	background-color:#e6e6ff;
+}
+
+button
+{
+	color:#f3e6ff;
+	text-align:center;
+	border:groove;
+	border-color:#9999ff;
+	background-color:#6666ff;
+	border-radius:20px;
+}
+
+button:hover
+{
+	background-color:#8080ff;
+}
+
+button:active
+{
+	background-color:cyan;
 }
 
 td
@@ -46,6 +58,14 @@ h2
 	color:white;
 }
 
+.back-ground
+{
+	background-image:url(<%= request.getContextPath() %>/images/34.jpg);
+	background-size:100% 100%;
+	height:56em;
+	width:100%;
+}
+
 </style>
 </head>
 <body>
@@ -58,7 +78,7 @@ h2
 	
 		<c:choose>
 			<c:when test="${ customerIDRequestMap != null }">
-				<table style = "height:200px; width:1000px; margin-left:8%">
+				<table style = "margin-left:8%">
 				
 					<tr style = "background-color:#3333cc">
 						<th>REQUEST_ID</th>
@@ -72,20 +92,16 @@ h2
 						<tr>
 							<td> <input style = "font-size:15px; background:none; border:none; text-align:center" type = "number" id = "requestID" name = "requestID" value = "${ entry.value.getRequestID() }" readonly> </td>
 							<td> <input style = "font-size:15px; background:none; border:none; text-align:center" type = "number" id = "customerID" name = "customerID" value = "${ entry.value.getCustomerID() }" readonly> </td>
-							<td> 
-								<select name = "customerStatus" id = "customerStatus">
-									<option value = "ACTIVE"> Active </option>
-									<option value = "INACTIVE"> Inactive </option>
-								</select><br>
-							</td>
+							<td> <input style = "font-size:15px; background:none; border:none; text-align:center" type = "text" id = "customerStatus" name = "customerStatus" value = "${ entry.value.getCustomerStatus() }" readonly> </td>
 							<td>
-								<select name = "status" id = "status">
-									<option value = "APPROVED"> Approve </option>
-									<option value = "REJECTED"> Reject </option>
-								</select><br>
+								<input type="radio" id="approve" name="status" value="APPROVED" required>
+		  						<label for="approve"> Approve </label>
+							
+								<input type="radio" id="reject" name="status" value="REJECTED" required>
+		  						<label for="reject"> Reject </label>
 							</td>
 							<td> <input style = "background:none; border:none; text-align:center" type = "text" id = "description" name = "description" value = "${ entry.value.getDescription() }" readonly>
-								 <button style = "text-align:center; border:groove; border-color:#33bbff" type = "submit" value = "Respond To Customer Requests" name = "action"> Submit </button>
+								 <button type = "submit" value = "Respond To Customer Requests" name = "action"> Submit </button>
 							</td>
 						</tr>
 					</form>

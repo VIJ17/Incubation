@@ -36,6 +36,8 @@ public interface BankingInterface
 	
 	UserDetails addUser(UserDetails userDetails) throws WrongEntryException;
 	
+	AccountDetails addAccount(AccountDetails accountDetails) throws WrongEntryException;
+	
 	void createCustomerIDRequest(UserDetails userDetails, String customerStatus, String message) throws WrongEntryException;
 	
 	void createAccountRequest(AccountDetails accountDetails, String message) throws WrongEntryException;

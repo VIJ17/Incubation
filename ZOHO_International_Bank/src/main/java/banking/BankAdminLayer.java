@@ -61,6 +61,15 @@ public class BankAdminLayer extends BankCustomerLayer
 		
 	}
 	
+	public AccountDetails addAccount(AccountDetails accountDetails) throws WrongEntryException
+	{
+		
+		accountDetails = db.addAccount(accountDetails);
+		
+		return accountDetails;
+		
+	}
+	
 	public Map<Integer,AccountRequestDetails> getCustomerIDRequests() throws WrongEntryException
 	{
 		

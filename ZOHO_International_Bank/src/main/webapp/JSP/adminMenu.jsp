@@ -7,7 +7,6 @@
 <style type="text/css">
 .back-ground
 {
-	babackground-color:#b3b3ff;
 	overflow:hidden;
 	height:60em;
 }
@@ -51,6 +50,8 @@ button:active
 		<!-- <a href = "JSP/statement.jsp" target = "menu"> Account Statement </a> <br> -->
 		<button type = "submit" value ="Add New User" name = "action"> Create User </button> <br>
 		<!-- <a href = "JSP/addNewUser.jsp" target = "menu"> Add New User </a> <br> -->
+		<button type = "submit" value ="Create Account" name = "action"> Create Account </button> <br>
+		
 		<button type = "submit" value ="Account Requests" name = "action"> Account Request </button> <br>
 		<!-- <a href = "JSP/accountRequest.jsp" target = "menu"> Account Requests </a> <br> -->
 		<button type = "submit" value ="Customer Requests" name = "action"> Customer Request </button> <br>
@@ -58,7 +59,7 @@ button:active
 		<button type = "submit" value ="Transaction Requests" name = "action"> Transaction Request </button> <br>
 		<!-- <a href = "JSP/transactionRequest.jsp" target = "menu"> Transaction Requests </a> <br> -->
 	</form>
-	<form action = "../myServlet" method = "post" target = "_parent">
+	<form action = "<%= request.getContextPath() %>/myServlet" method = "post" target = "_parent">
 		<button type = "submit" value ="Logout" name = "action"> Logout </button>
 		<!-- <a href = "JSP/UserLogin.jsp"> Logout </a> <br> -->
 	</form>

@@ -5,13 +5,6 @@
 <meta charset="UTF-8">
 <title> Transaction Request </title>
 <style type="text/css">
-.back-ground
-{
-	background-image:url(<%= request.getContextPath() %>/images/34.jpg);
-	background-size:100% 100%;
-	height:56em;
-	width:100%;
-}
 
 select
 {
@@ -20,6 +13,26 @@ select
 	font-size:20px;
 	width:258px;
 	background-color:#e6e6ff;
+}
+
+button
+{
+	color:#f3e6ff;
+	text-align:center;
+	border:groove;
+	border-color:#9999ff;
+	background-color:#6666ff;
+	border-radius:20px;
+}
+
+button:hover
+{
+	background-color:#8080ff;
+}
+
+button:active
+{
+	background-color:cyan;
 }
 
 td
@@ -43,19 +56,27 @@ h2
 	color:white;
 }
 
+.back-ground
+{
+	background-image:url(<%= request.getContextPath() %>/images/34.jpg);
+	background-size:100% 100%;
+	height:56em;
+	width:100%;
+}
+
 </style>
 </head>
 <body>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<h2> TRANSACTION REQUEST </h2>
+<h2> Transaction Request </h2>
 
 <div class = "back-ground">
 	<div style = "margin-left:0%">
 	
 		<c:choose>
-			<c:when test="${ accountRequestMap != null }">
-				<table style = "height:200px; width:1000px; margin-left:8%">
+			<c:when test="${ transactionRequestMap != null }">
+				<table style = "margin-left:8%">
 				
 					<tr style = "background-color:#3333cc">
 						<th>REQUEST_ID</th>
@@ -73,13 +94,14 @@ h2
 								<td> <input style = "font-size:15px; background:none; border:none; text-align:center" type = "number" id = "accountNo" name = "accountNo" value = "${ entry.value.getAccountNo() }" readonly> </td>
 								<td> <input style = "font-size:15px; background:none; border:none; text-align:center" type = "number" id = "amount" name = "amount" value = "${ entry.value.getAmount() }" readonly> </td>
 								<td>
-									<select name = "status" id = "status" style = "text-align:center; border:groove; border-color:#33bbff">
-										<option value = "APPROVED"> Approve </option>
-										<option value = "REJECTED"> Reject </option>
-									</select><br>
+									<input type="radio" id="approve" name="status" value="APPROVED">
+			  						<label for="approve"> Approve </label>
+								
+									<input type="radio" id="reject" name="status" value="REJECTED">
+			  						<label for="reject"> Reject </label>
 								</td>
 								<td> <input style = "background:none; border:none; text-align:center" type = "text" id = "description" name = "description" value = "${ entry.value.getDescription() }" readonly>
-									 <button style = "text-align:center; border:groove; border-color:#33bbff" type = "submit" value = "Respond To Transaction Requests" name = "action"> Submit </button>
+									 <button type = "submit" value = "Respond To Transaction Requests" name = "action"> Submit </button>
 								</td>
 							</tr>
 						</form>

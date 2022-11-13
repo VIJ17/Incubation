@@ -7,13 +7,6 @@
 <meta charset="UTF-8">
 <title>Deposit</title>
 <style type="text/css">
-.back-ground
-{
-	background-image:url(<%= request.getContextPath() %>/images/34.jpg);
-	background-size:100% 100%;
-	height:56em;
-	width:100%;
-}
 
 select
 {
@@ -27,6 +20,7 @@ select
 
 button
 {
+	color:#f3e6ff;
 	text-align:center;
 	border:groove;
 	border-color:#9999ff;
@@ -77,6 +71,14 @@ h2
 	color:white;
 }
 
+.back-ground
+{
+	background-image:url(<%= request.getContextPath() %>/images/34.jpg);
+	background-size:100% 100%;
+	height:56em;
+	width:100%;
+}
+
 </style>
 </head>
 <body>
@@ -96,7 +98,7 @@ h2
 				<tr>
 					<th style = "width:160px; text-align:left"> <label for = "accountNo"> Account No </label> </th>
 					<th>
-						<select style ="font-size:20px; width:258px" name= "accountNo" required>
+						<select name= "accountNo" required>
 						<option value="">Select an Account</option>
 							<c:forEach items="${ activeAccountsList }" var="entry">
 								<option value = "${entry.value}">${entry.value}</option>
