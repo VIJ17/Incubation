@@ -37,8 +37,15 @@ button:active
 	color:cyan;
 }
 
+input::-webkit-inner-spin-button
+{
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 input
 {
+	outline:none;
 	font-size:20px;
 	width:165%;
 	border:none;

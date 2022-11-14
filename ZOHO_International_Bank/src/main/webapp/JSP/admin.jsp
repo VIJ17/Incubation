@@ -95,6 +95,12 @@ button:active
 				&#128100;
 			</button>
 			<div class = "dropdown-content">
+				<form action = "<%= request.getContextPath() %>/myServlet" method = "post" target = "actionFrame">
+					<button class = "dropdown-button" type = "submit" value ="Profile" name = "action"> Profile </button> <br>
+					<!-- <a href = "JSP/profile.jsp" target = "menu"> Profile </a> <br> -->
+					<button class = "dropdown-button" type = "submit" value ="Change Password" name = "action"> Change Password </button> <br>
+					<!-- <a href = "JSP/changePassword.jsp" target = "menu"> Change Password </a> <br> -->
+				</form>
 				<form action = "<%= request.getContextPath() %>/myServlet" method = "post" target = "_parent">
 					<button class = "dropdown-button" type = "submit" value ="Logout" name = "action"> Logout </button>
 					<!-- <a href = "JSP/UserLogin.jsp"> Logout </a> <br> -->

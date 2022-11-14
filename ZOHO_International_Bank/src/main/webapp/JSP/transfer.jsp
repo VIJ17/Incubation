@@ -38,6 +38,12 @@ button:active
 	background-color:cyan;
 }
 
+input::-webkit-inner-spin-button
+{
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 input
 {
 	font-size:20px;
@@ -74,7 +80,7 @@ back-ground
 {
 	background-image:url(<%= request.getContextPath() %>/images/34.jpg);
 	background-size:100% 100%;
-	height:56em;
+	height:56em;	
 	width:100%;
 }
 
@@ -87,8 +93,8 @@ back-ground
 <h2> Transfer </h2>
 
 <div class = "back-ground">
-	<img style = "padding-left:10%; padding-top:3%; float:left; height:40%; width:15%" src="<%= request.getContextPath() %>/images/png9.png" alt="Transfer Image">
-	<img style = "padding-right:10%; padding-top:3%; float:right; height:40%; width:15%" src="<%= request.getContextPath() %>/images/png7.png" alt="Transfer Image">
+	<img style = "padding-left:10%; padding-top:3%; float:left; height:45vh; width:13%" src="<%= request.getContextPath() %>/images/png9.png" alt="Transfer Image">
+	<img style = "padding-right:10%; padding-top:3%; float:right; height:45vh; width:13%" src="<%= request.getContextPath() %>/images/png7.png" alt="Transfer Image">
 	<div style = "margin-left:30%" class = "border">
 
 		<div style = "margin-top:7%; margin-left:3%">
@@ -130,7 +136,7 @@ back-ground
 		</form>
 		</div>
 	</div><br>
-	<img style = "padding-top:1%; padding-left:4%; float:left; height:38%; width:38%" src="<%= request.getContextPath() %>/images/png11.png" alt="Transfer Image">
+	<img style = "padding-top:1%; padding-left:10%; float:left; height:30%; width:25%" src="<%= request.getContextPath() %>/images/png11.png" alt="Transfer Image">
 </div>
 </body>
 </html>

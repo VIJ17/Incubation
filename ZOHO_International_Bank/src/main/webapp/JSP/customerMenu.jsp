@@ -38,7 +38,7 @@ button:active
 
 <div class = "back-ground">
 
-	<p style = "padding-left:5%; font-size:23px; font-weight:400; font-family: system-ui"> WELCOME &nbsp ${ userDetails.getName() } </p>
+	<p style = "padding-left:5%; font-size:23px; font-weight:400; font-family: system-ui"> WELCOME &nbsp; ${ userDetails.getName() } </p>
 	
 	<form action = "<%= request.getContextPath() %>/myServlet" method = "post" target = "actionFrame">
 		<button type = "submit" value ="Home" name = "action"> Home </button> <br>
@@ -49,21 +49,14 @@ button:active
 		<!-- <a href = "JSP/withdraw.jsp" target = "menu"> Withdraw </a> <br> -->
 		<button type = "submit" value ="Online Transfer" name = "action"> Transfer </button> <br>
 		<!-- <a href = "JSP/transfer.jsp" target = "menu"> Online Transfer </a> <br> -->
-		<button type = "submit" value ="Profile" name = "action"> Profile </button> <br>
-		<!-- <a href = "JSP/profile.jsp" target = "menu"> Profile </a> <br> -->
-		<button type = "submit" value ="Change Password" name = "action"> Change Password </button> <br>
-		<!-- <a href = "JSP/changePassword.jsp" target = "menu"> Change Password </a> <br> -->
 		<button type = "submit" value ="Account Details" name = "action"> Account Details </button> <br>
 		<!-- <a href = "JSP/accountDetails.jsp" target = "menu"> Account Details </a> <br> -->
 		<button type = "submit" value ="Account Statement" name = "action"> Account Statement </button> <br>
 		<!-- <a href = "JSP/statement.jsp" target = "menu"> Account Statement </a> <br> -->
    		<button type = "submit" value ="Account Request" name = "action"> Send Account Request </button> <br>
-	<!-- <button type = "submit" value ="Customer ID Request" name = "action"> Send Customer Request </button> <br> -->
+		<!-- <button type = "submit" value ="Customer ID Request" name = "action"> Send Customer Request </button> <br> -->
 	</form>
-	<form action = "<%= request.getContextPath() %>/myServlet" method = "post" target = "_parent">
-		<button type = "submit" value ="Logout" name = "action"> Logout </button>
-		<!-- <a href = "JSP/UserLogin.jsp"> Logout </a> <br> -->
-	</form>
+	
 </div>
 </body>
 </html>

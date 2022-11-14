@@ -28,8 +28,15 @@ button:active
 	background-color:cyan;
 }
 
+input::-webkit-inner-spin-button
+{
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 input
 {
+	outline:none;
 	font-size:20px;
 	width:165%;
 	border:none;
@@ -82,6 +89,7 @@ h2
 </style>
 </head>
 <body>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <h2> Profile </h2>
 
@@ -123,18 +131,21 @@ h2
 				<th> <input class = "read-only" type = "text" id = "dateOfBirth" name = "dateOfBirth" value = "${ userDetails.getDateOfBirth() }" readonly> </th>
 			</tr>
 			</table><br>
-			<table>
-			<tr>
-				<th> <label for = "aadharNo"> Aadhar No </label> </th>
-				<th> <input class = "read-only" type = "number" id = "aadharNo" name = "aadharNo" value = "${ customerDetails.getAadharNo() }" readonly> </th>
-			</tr>
-			</table><br>
-			<table>
-			<tr>
-				<th> <label for = "panNo"> PAN No </label> </th>
-				<th> <input class = "read-only" type = "text" id = "panNo" name = "panNo" value = "${ customerDetails.getPanNo() }" readonly> </th>
-			</tr>
-			</table><br>
+			<c:set var = "test" value = "CUSTOMER" />
+			<c:if test="${ userDetails.getUserType().equals(test) }">
+				<table>
+				<tr>
+					<th> <label for = "aadharNo"> Aadhar No </label> </th>
+					<th> <input class = "read-only" type = "number" id = "aadharNo" name = "aadharNo" value = "${ customerDetails.getAadharNo() }" readonly> </th>
+				</tr>
+				</table><br>
+				<table>
+				<tr>
+					<th> <label for = "panNo"> PAN No </label> </th>
+					<th> <input class = "read-only" type = "text" id = "panNo" name = "panNo" value = "${ customerDetails.getPanNo() }" readonly> </th>
+				</tr>
+				</table><br>
+			</c:if>
 			<p style = "margin-left:20%; font-size:20px; color:red"> ${ Message } </p>
 			<button type = "submit" value = "Update Profile" name = "action"> Save </button>
 		</form>

@@ -30,8 +30,15 @@ button:active
 	background-color:cyan;
 }
 
+input::-webkit-inner-spin-button
+{
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 input
 {
+	outline:none;
 	font-size:20px;
 	border:none;
 	background:transparent;
@@ -112,7 +119,7 @@ h2
 				<table>
 				<tr>
 					<th class = "lable-th"> <label for = "aadharNo"> Aadhar </label> </th>
-					<th> <input type = "text" id = "aadharNo" name = "aadharNo" placeholder = "Aadhar" required>
+					<th> <input type = "number" id = "aadharNo" name = "aadharNo" placeholder = "Aadhar" required>
 				</tr>
 				</table><br>
 				<table>

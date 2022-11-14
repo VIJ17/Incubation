@@ -43,6 +43,12 @@ label
 	font-size:25px;
 }
 
+input::-webkit-inner-spin-button
+{
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 input
 {
 	font-size:20px;

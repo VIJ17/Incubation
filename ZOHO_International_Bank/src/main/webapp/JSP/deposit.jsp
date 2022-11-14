@@ -43,8 +43,15 @@ label
 	font-size:20px;
 }
 
+input::-webkit-inner-spin-button
+{
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 input
 {
+	outline:none;
 	font-size:20px;
 	border:none;
 	background:transparent;

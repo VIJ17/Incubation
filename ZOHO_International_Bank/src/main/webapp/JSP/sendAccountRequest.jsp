@@ -116,7 +116,7 @@ p
 				</table>
 				<table>
 				<tr>
-					<th style = "font-size:25px"> <label for = "accountNo"> Account No &nbsp &nbsp &nbsp </label> </th>
+					<th style = "font-size:25px"> <label for = "accountNo"> Account No &nbsp; &nbsp; &nbsp; </label> </th>
 					<th style = "font-size:15px">
 						<select name= "accountNo" required>
 						<option value="">Select an Account</option>
@@ -142,7 +142,7 @@ p
 				</table>
 				<table>
 				<tr>
-					<th style = "font-size:25px"> <label for = "accountNo"> Account No &nbsp &nbsp &nbsp </label> </th>
+					<th style = "font-size:25px"> <label for = "accountNo"> Account No &nbsp; &nbsp; &nbsp; </label> </th>
 					<th style = "font-size:15px">
 						<select name= "accountNo" required>
 						<option value="">Select an Account</option>

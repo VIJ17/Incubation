@@ -30,6 +30,7 @@ button:active
 
 input
 {
+	outline:none;
 	font-size:20px;
 	border:none;
 	background:transparent;
