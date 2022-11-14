@@ -47,7 +47,7 @@ button:active
 		<!-- <a href = "JSP/deposit.jsp" target = "menu"> Deposit </a> <br> -->
 		<button type = "submit" value ="Withdraw" name = "action"> Withdraw </button> <br>
 		<!-- <a href = "JSP/withdraw.jsp" target = "menu"> Withdraw </a> <br> -->
-		<button type = "submit" value ="Online Transfer" name = "action"> Online Transfer </button> <br>
+		<button type = "submit" value ="Online Transfer" name = "action"> Transfer </button> <br>
 		<!-- <a href = "JSP/transfer.jsp" target = "menu"> Online Transfer </a> <br> -->
 		<button type = "submit" value ="Profile" name = "action"> Profile </button> <br>
 		<!-- <a href = "JSP/profile.jsp" target = "menu"> Profile </a> <br> -->

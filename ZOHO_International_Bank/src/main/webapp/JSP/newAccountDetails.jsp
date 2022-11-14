@@ -31,6 +31,7 @@ button:active
 
 td
 {
+	height:25%;
 	text-align:center;
 	background-color:#e6e6ff;
 }

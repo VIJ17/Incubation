@@ -165,7 +165,7 @@ h2
 					<th> <input class = "radio" type="radio" id="karaikudi" name="branch" value="KARAIKUDI" required>
   						 <label for="karaikudi"> Karaikudi </label>
 						 <input class = "radio" type="radio" id="madurai" name="branch" value="MADURAI" required>
-  						 <label for="madurai"> Savings </label>
+  						 <label for="madurai"> Madurai </label>
 						 <input class = "radio" type="radio" id="trichy" name="branch" value="TIRUCHIRAPPALLI" required>
   						 <label for="trichy"> Trichy </label>
 					</th>
