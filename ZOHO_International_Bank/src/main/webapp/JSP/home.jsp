@@ -10,13 +10,13 @@
 
 .border
 {
-	margin-left:27%;
+	margin-left:25%;
 	margin-top:5%;
 	border:groove;
-	border-radius:20px 60px;
+	border-radius: 50% 20% / 10% 40%;
 	border-color:#e6e6ff;
 	box-shadow:15px 15px 20px #f3e6ff;
-	width:40%;
+	width:50%;
 	height:43vh;
 }
 
@@ -30,7 +30,6 @@
 .back-ground
 {
 	background-image:url(<%= request.getContextPath() %>/images/34.jpg);
-	overflow:hidden;
 	background-size:100% 100%;
 	height:60em;
 	width:100%;
@@ -41,7 +40,7 @@
 <body>
 <div class = "back-ground">
 	<div class = "border">
-		<div style = "margin-top:5%; margin-left:3%">
+		<div style = "margin-top:5%; margin-left:3%; margin-right:3%">
 			<p class = "para"> Thank you so much for allowing us to help you with your recent account opening.We are committed to provide our customers with the highest level of service and the most innovative banking products possible.
 				<br><br>
 				We are very glad you choose us as your financial institution and hope you will take advantage of our wide variety of savings, investment and loan products, all designed to meet your specific needs.

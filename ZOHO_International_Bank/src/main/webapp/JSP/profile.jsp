@@ -54,6 +54,16 @@ input
 	height:50vh;
 }
 
+.border-admin
+{
+	border:groove;
+	border-radius:20px 60px;
+	border-color:#e6e6ff;
+	box-shadow:15px 15px 50px #f3e6ff;
+	width:38%;
+	height:40vh;
+}
+
 .read-only
 {
 	background-color:#f3e6ff;
@@ -97,42 +107,44 @@ h2
 
 	<img style = "padding-left:5%; padding-top:2%; float:left; height:50%; width:18%" src="<%= request.getContextPath() %>/images/png14.png" alt="Request Image">
 	<img style = "padding-right:6%; padding-top:2%; float:right; height:50%; width:18%" src="<%= request.getContextPath() %>/images/png12.png" alt="Request Image">
+	
+	<c:set var = "test" value = "CUSTOMER" />
+	<c:if test="${ userDetails.getUserType().equals(test) }">
+	
 	<div style = "margin-left:30%" class = "border">
 		
 		<div style = "margin-top:7%; margin-left:3%">
-		<form action = "<%= request.getContextPath() %>/myServlet" method = "post" target = "actionFrame">
-			<table>
-			<tr>
-				<th> <label for = "userID"> User ID </label> </th>
-				<th> <input class = "read-only" type = "number" id = "userID" name = "userID" value = "${ userDetails.getUserID() }" readonly> </th>
-			</tr>
-			</table><br>
-			<table>
-			<tr>
-				<th> <label for = "name"> Name </label> </th>
-				<th> <input type = "text" id = "name" name = "name" value = "${ userDetails.getName() }"> </th>
-			</tr>
-			</table><br>
-			<table>
-			<tr>
-				<th> <label for = "mobile"> Mobile No </label> </th>
-				<th> <input type = "number" id = "mobile" name = "mobile" value = "${ userDetails.getMobile() }"> </th>
-			</tr>
-			</table><br>
-			<table>
-			<tr>
-				<th> <label for = "emailID"> Email ID </label> </th>
-				<th> <input type = "email" id = "emailID" name = "emailID" value = "${ userDetails.getEmailID() }"> </th>
-			</tr>
-			</table><br>
-			<table>
-			<tr>
-				<th> <label for = "dateOfBirth"> Date Of Birth </label> </th>
-				<th> <input class = "read-only" type = "text" id = "dateOfBirth" name = "dateOfBirth" value = "${ userDetails.getDateOfBirth() }" readonly> </th>
-			</tr>
-			</table><br>
-			<c:set var = "test" value = "CUSTOMER" />
-			<c:if test="${ userDetails.getUserType().equals(test) }">
+			<form action = "<%= request.getContextPath() %>/myServlet" method = "post" target = "actionFrame">
+				<table>
+				<tr>
+					<th> <label for = "userID"> User ID </label> </th>
+					<th> <input class = "read-only" type = "number" id = "userID" name = "userID" value = "${ userDetails.getUserID() }" readonly> </th>
+				</tr>
+				</table><br>
+				<table>
+				<tr>
+					<th> <label for = "name"> Name </label> </th>
+					<th> <input type = "text" id = "name" name = "name" value = "${ userDetails.getName() }"> </th>
+				</tr>
+				</table><br>
+				<table>
+				<tr>
+					<th> <label for = "mobile"> Mobile No </label> </th>
+					<th> <input type = "number" id = "mobile" name = "mobile" value = "${ userDetails.getMobile() }"> </th>
+				</tr>
+				</table><br>
+				<table>
+				<tr>
+					<th> <label for = "emailID"> Email ID </label> </th>
+					<th> <input type = "email" id = "emailID" name = "emailID" value = "${ userDetails.getEmailID() }"> </th>
+				</tr>
+				</table><br>
+				<table>
+				<tr>
+					<th> <label for = "dateOfBirth"> Date Of Birth </label> </th>
+					<th> <input class = "read-only" type = "text" id = "dateOfBirth" name = "dateOfBirth" value = "${ userDetails.getDateOfBirth() }" readonly> </th>
+				</tr>
+				</table><br>
 				<table>
 				<tr>
 					<th> <label for = "aadharNo"> Aadhar No </label> </th>
@@ -145,12 +157,56 @@ h2
 					<th> <input class = "read-only" type = "text" id = "panNo" name = "panNo" value = "${ customerDetails.getPanNo() }" readonly> </th>
 				</tr>
 				</table><br>
-			</c:if>
-			<p style = "margin-left:20%; font-size:20px; color:red"> ${ Message } </p>
-			<button type = "submit" value = "Update Profile" name = "action"> Save </button>
-		</form>
+				<p style = "margin-left:20%; font-size:20px; color:red"> ${ Message } </p>
+				<button type = "submit" value = "Update Profile" name = "action"> Save </button>
+			</form>
 		</div>
 	</div>
+	</c:if>
+	
+	<c:set var = "test" value = "ADMIN" />
+	<c:if test="${ userDetails.getUserType().equals(test) }">
+	
+	<div style = "margin-left:30%" class = "border-admin">
+		
+		<div style = "margin-top:7%; margin-left:3%">
+			<form action = "<%= request.getContextPath() %>/myServlet" method = "post" target = "actionFrame">
+				<table>
+				<tr>
+					<th> <label for = "userID"> User ID </label> </th>
+					<th> <input class = "read-only" type = "number" id = "userID" name = "userID" value = "${ userDetails.getUserID() }" readonly> </th>
+				</tr>
+				</table><br>
+				<table>
+				<tr>
+					<th> <label for = "name"> Name </label> </th>
+					<th> <input type = "text" id = "name" name = "name" value = "${ userDetails.getName() }"> </th>
+				</tr>
+				</table><br>
+				<table>
+				<tr>
+					<th> <label for = "mobile"> Mobile No </label> </th>
+					<th> <input type = "number" id = "mobile" name = "mobile" value = "${ userDetails.getMobile() }"> </th>
+				</tr>
+				</table><br>
+				<table>
+				<tr>
+					<th> <label for = "emailID"> Email ID </label> </th>
+					<th> <input type = "email" id = "emailID" name = "emailID" value = "${ userDetails.getEmailID() }"> </th>
+				</tr>
+				</table><br>
+				<table>
+				<tr>
+					<th> <label for = "dateOfBirth"> Date Of Birth </label> </th>
+					<th> <input class = "read-only" type = "text" id = "dateOfBirth" name = "dateOfBirth" value = "${ userDetails.getDateOfBirth() }" readonly> </th>
+				</tr>
+				</table><br>
+				<p style = "margin-left:20%; font-size:20px; color:red"> ${ Message } </p>
+				<button type = "submit" value = "Update Profile" name = "action"> Save </button>
+			</form>
+		</div>
+	</div>
+	</c:if>
 </div>
 </body>
 </html>
