@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<title>Family Tree</title>
+
+<style type="text/css">
+
+button
+{
+	border-radius:20px;
+	height:30px;
+	text-align:center;
+	background-color: #1b1b72;
+	color:white;
+	font-size:25px;
+	margin-left: 1%;
+	margin-top: 2%;
+	border:none;
+}
+
+button:hover
+{
+	background-color:#8080ff;
+}
+
+button:active
+{
+	background-color:cyan;
+}
+
+input::-webkit-inner-spin-button
+{
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input
+{
+	height:20px;
+	border: none;
+	border-bottom: 2px solid #1b1b72;
+	outline: none;
+}
+
+</style>
+
+<script>
+
+var family = {};
+
+function getNoOfGrandChildren()
+{
+	var count = 0;
+	
+	var x = document.getElementById("name").value;
+  	
+  	var grandChildrenNameList = [];
+  	
+	var children = family[x];
+	
+  	if(children)
+  	{
+	  	for(let child of children)
+	  	{
+	  		let grandChildren = family[child];
+	  		
+	  		if(grandChildren)
+	  		{
+		  		for(let grandChild of grandChildren)	
+		  		{
+		  			grandChildrenNameList[count] = grandChild;
+		  			
+		  			count += 1;
+		  		}
+	  		}
+	  	}
+	  	
+	  	var output = x + " has " + count + " grandchildren.";
+	  	
+	  	if(count == 1)
+	  	{
+	  		let grandChildrenNames = grandChildrenNameList.join();
+	  		output += " He is : " + grandChildrenNames ;
+	  	}
+	  	else if(count > 0)
+	  	{
+	  		output += "<br>They are : <br>";
+	  		
+	  		for(let i = 0; i < grandChildrenNameList.length; i++)
+	  		{
+	  			output += (i+1) + ". " + grandChildrenNameList[i] + "<br>";
+	  		}
+	  		
+	  	}
+	  	
+	  	document.getElementById("output").innerHTML = output;
+  	}
+  	else
+  	{
+  		var output;
+  		
+  		A:
+  		for(let father in family)
+  		{
+  			var a = family[father];
+  			
+  			for(let childName of a)
+  			{
+  				if(childName == x)
+  				{
+  					output = x + " has " + count + " grandchildren.";
+  					break A;
+  				}
+  			}
+  			
+  			output = "No such name in the Family tree.";
+  		}
+  		
+  		document.getElementById("output").innerHTML = output;
+  	}
+	
+}
+
+function setFamilyTree()
+{
+	var arrayOfObjects = document.getElementsByClassName("names");
+	
+	for(let i = 0; i < arrayOfObjects.length; i++)
+	{
+		var fatherNameObject = arrayOfObjects[i];
+		var fatherName = fatherNameObject.value;
+		i++;
+		var childNameObject = arrayOfObjects[i];
+		var childName = childNameObject.value;
+		
+		if(family[fatherName] == undefined)
+		{
+			family[fatherName] = [childName];
+		}
+		else
+		{
+			var x = family[fatherName];
+			x.push(childName);
+		}
+	}
+	
+	var element = document.createElement("INPUT");
+	element.setAttribute("type", "text");
+	element.setAttribute("id", "name");
+	element.setAttribute("placeholder", "GrandFather Name");
+	document.body.appendChild(element);
+	
+	var button1 = document.createElement("BUTTON");
+	button1.setAttribute("onclick", "getNoOfGrandChildren()");
+	var text = document.createTextNode("Ok");
+	button1.appendChild(text);
+	document.body.appendChild(button1);
+	
+	var para = document.createElement("p");
+	para.setAttribute("id", "output");
+	document.body.appendChild(para);
+	
+}
+
+function createPara()
+{
+	var para = document.createElement("p");
+	para.setAttribute("id", "output");
+	para.style.color = "red";
+	document.body.appendChild(para);
+}
+
+function createInputBoxes()
+{
+	var noOfValues = document.getElementById("noOfBoxes").value;
+	
+	if(noOfValues > 30)
+	{
+		var para = document.getElementById("output");
+		
+		if(para === null)
+		{
+			createPara();
+		}
+		
+		var output = "No. of pairs should be less than 30";
+		
+		document.getElementById("output").innerHTML = output;
+	}
+	else if(noOfValues < 2)
+	{
+		var para = document.getElementById("output");
+		
+		if(para === null)
+		{
+			createPara();
+		}
+		
+		var output = "Minimum there should be 2 pairs.";
+		
+		document.getElementById("output").innerHTML = output;
+	}
+	else
+	{
+		var para = document.getElementById("output");
+		
+		if(para !== null)
+		{
+			para.remove();
+		}
+		
+		for(let i = 0; i < noOfValues; i++)
+		{
+			var element1 = document.createElement("INPUT");
+			element1.setAttribute("type", "text");
+			element1.setAttribute("placeholder", "Father Name");
+			element1.setAttribute("class", "names");
+			document.body.appendChild(element1);
+			
+			var element2 = document.createElement("INPUT");
+			element2.setAttribute("type", "text");
+			element2.setAttribute("placeholder", "Child Name");
+			element2.setAttribute("class", "names");
+			element2.style.marginLeft = "5%";
+			element2.style.marginTop = "1%";
+			document.body.appendChild(element2);
+			
+			var element3 = document.createElement("BR");
+			document.body.appendChild(element3);
+		}
+		
+		var button = document.createElement("BUTTON");
+		button.setAttribute("onclick", "setFamilyTree()");
+		var text = document.createTextNode("Submit");
+		button.appendChild(text);
+		document.body.appendChild(button);
+		
+		var lineBreaker = document.createElement("BR");
+		document.body.appendChild(lineBreaker);
+		
+		var div = document.getElementById("pairs");
+		div.remove();
+	}
+	
+}
+
+</script>
+
+</head>
+<body style = "text-align:center; margin-top:10%">
+
+<div id = "pairs">
+	<input type = "number" max = "30" id = "noOfBoxes" placeholder = "Enter the no of pairs">
+	
+	<button onclick = "createInputBoxes()"> Go </button>
+	
+</div>
+
+</body>
+</html>
