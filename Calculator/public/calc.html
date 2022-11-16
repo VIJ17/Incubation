@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<title>Calculator</title>
+<style type="text/css">
+
+h1
+{
+	text-align: center;
+}
+
+body
+{
+	height: 1080px;
+	width: 1920px;
+}
+
+.border
+{
+	height: 56%;
+	width: 25%;
+	box-shadow: 0px 0px 10px 10px #888888;
+	margin: auto;
+	background-color: #cccccc;
+	border-radius: 10px;
+	
+}
+
+.head
+{
+	height:20%;
+	position: relative;
+}
+
+.display
+{
+	margin: 1%;
+	height: 100%;
+	width: 74%;
+}
+
+.display-input
+{
+	pointer-events: none;
+}
+
+input	
+{
+	height : 10vh;
+	width : 24.3%;
+	font-size: 30px;
+	color: white;
+	padding : 2%;
+	background-color: #505050;
+	border: none;
+	border-radius: 10px;
+}
+
+input:hover
+{
+	background-color: #FF9500;
+}
+
+input:active
+{
+	background-color: #1c1c1c;
+}
+
+.input-div
+{
+	padding-top: 1%;
+}
+
+#clear
+{
+	position: absolute;
+    right: 1.4%;
+	width : 24.3%;
+    height: 100%;
+}
+
+#output
+{
+	width: 94%;
+}
+
+</style>
+
+<script type="text/javascript">
+
+var operands = [];
+var operations = [];
+var element;
+
+function resetValues()
+{
+	operands = [];
+	operations = [];
+	document.getElementById("output").value = "";
+	
+	if(element)
+	{
+		removeHighlight();
+	}
+}
+
+function highlight()
+{
+	element.style.backgroundColor = "#FF9500";
+}
+
+function highlightOperator()
+{
+	var operator = operations[0];
+	
+	switch(operator)
+	{
+		case "+":
+		{
+			element = document.getElementById("Add");
+			element.addEventListener("click", highlight());
+			break;
+		}
+		case "-":
+		{
+			element = document.getElementById("Sub");
+			element.addEventListener("click", highlight());
+			break;
+		}
+		case "*":
+		{
+			element = document.getElementById("Mul");
+			element.addEventListener("click", highlight());
+			break;
+		}
+		case "/":
+		{
+			element = document.getElementById("Div");
+			element.addEventListener("click", highlight());
+			break;
+		}
+	}
+}
+
+function setValues(operator)
+{
+	var operand1 = document.getElementById("output").value;
+	
+	if(operand1 == "")
+	{
+		if(operator == "-")
+		{
+			document.getElementById("output").value = "-";
+		}
+		
+		return;
+	}
+	
+	operations.push(operator);
+	operands.push(operand1);
+	
+	document.getElementById("output").value = "";
+	
+	highlightOperator();
+}
+
+function finalAnswer()
+{
+	var operand2 = document.getElementById("output").value;
+	
+	if(operand2 == "" && operands[0] == undefined)
+	{
+		document.getElementById("output").value = "";
+		return;
+	}
+	if(operand2 != "" && operands[0] == undefined)
+	{
+		document.getElementById("output").value = operand2;
+		return;
+	}
+	
+	operands.push(operand2);
+	
+	solve();
+}
+
+function solve()
+{
+	let operator = operations[0];
+	var answer;
+	switch(operator)
+	{
+		case "+":
+		{
+			answer = Number(operands[0]) + Number(operands[1]);
+			break;
+		}
+		case "-":
+		{
+			answer = Number(operands[0]) - Number(operands[1]);
+			break;
+		}
+		case "*":
+		{
+			answer = Number(operands[0]) * Number(operands[1]);
+			break;
+		}
+		case "/":
+		{
+			answer = Number(operands[0]) / Number(operands[1]);
+			break;
+		}
+	}
+	
+	document.getElementById("output").value = answer;
+	operands = [];
+	operations = [];
+}
+
+function removeHighlight()
+{
+	element.style.backgroundColor = "#505050";
+}
+
+function buttonPress(number)
+{
+	document.getElementById("output").value += number;
+	
+	if(element)
+	{
+		removeHighlight();
+	}
+}
+
+</script>
+
+</head>
+<body>
+<h1> CALCULATOR </h1>
+<div class = "border">
+<div style = "padding-right: 2%; padding-left: 2%; padding-top: 1%">
+  <form>
+	<div class = "head">
+		<input type = "button" value = "Clear" onclick = "resetValues()" id = "clear">
+		<div class = "display">
+			<input class = "display-input" type = "text" id = "output" name = "answer" readonly>
+		</div>
+	</div>
+	<div style = "padding-top: 3%; margin: 1%">
+		<div class = "input-div">
+			<input type = "button" value = "7" onclick = "buttonPress('7')">
+			<input type = "button" value = "8" onclick = "buttonPress('8')">
+			<input type = "button" value = "9" onclick = "buttonPress('9')">
+			<input id = "Div" type = "button" value = "/" onclick = "setValues('/')">
+		</div>
+		<div class = "input-div">
+			<input type = "button" value = "4" onclick = "buttonPress('4')">
+			<input type = "button" value = "5" onclick = "buttonPress('5')">
+			<input type = "button" value = "6" onclick = "buttonPress('6')">
+			<input id = "Mul" type = "button" value = "*" onclick = "setValues('*')">
+		</div>
+		<div class = "input-div">
+			<input type = "button" value = "1" onclick = "buttonPress('1')">
+			<input type = "button" value = "2" onclick = "buttonPress('2')">
+			<input type = "button" value = "3" onclick = "buttonPress('3')">
+			<input id = "Sub" type = "button" value = "-" onclick = "setValues('-')">
+		</div>
+		<div class = "input-div">
+			<input type = "button" value = "." onclick = "buttonPress('.')">
+			<input type = "button" value = "0" onclick = "buttonPress('0')">
+			<input type = "button" value = "=" onclick = "finalAnswer()">
+			<input id = "Add" type = "button" value = "+" onclick = "setValues('+')">
+		</div>
+	</div>
+  </form>
+</div>
+</div>
+
+</body>
+</html>
