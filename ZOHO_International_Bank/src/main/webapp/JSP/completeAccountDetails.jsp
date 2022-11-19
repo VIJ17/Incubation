@@ -14,7 +14,16 @@ td
 
 th
 {
+	text-align:center;
 	color:#e6e6ff;
+	background-color:#3333cc;
+}
+
+table, th, td
+{
+	border: none;
+	border-collapse: collapse;
+	border-bottom: 1px solid #000000;
 }
 
 h2
@@ -45,7 +54,7 @@ h2
 	<div>
 		<table style = "height:250px; width:1100px; margin-left:15%">
 		
-			<tr style = "background-color:#3333cc">
+			<tr>
 				<th>CUSTOMER ID</th>
 				<th>ACCOUNT NO</th>
 				<th>ACC_TYPE</th>

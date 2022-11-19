@@ -93,7 +93,7 @@ h2
 									<option value="" disabled selected>Select an Account</option>
 								</c:when>
 								<c:otherwise>
-									<option value="" disabled selected> ${ accountNo } </option>
+									<option value="${ accountNo }" selected hidden = "hidden"> ${ accountNo } </option>
 								</c:otherwise>
 							</c:choose>
 							<c:forEach items="${ activeAccountsList }" var="entry">

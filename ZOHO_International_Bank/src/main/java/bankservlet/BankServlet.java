@@ -37,27 +37,6 @@ public class BankServlet extends HttpServlet
         
     }
     
-    private Map<Long,Map<Long,AccountDetails>> getActiveAccountsMap(Map<Long,Map<Long,AccountDetails>> map, long customerID)
-    {
-    	Map<Long, AccountDetails> innerMap = map.get(customerID);
-    	
-    	Map<Long,Map<Long,AccountDetails>> map1 = new Hashtable<>();
-    	
-    	for(Map.Entry<Long, AccountDetails> entry : innerMap.entrySet())
-			{
-				AccountDetails accountDetails = entry.getValue();
-				
-				if(accountDetails.getAccountStatus().equals("ACTIVE"))
-				{
-					innerMap.put(entry.getKey(), accountDetails);
-				}
-				map1.put(customerID, innerMap);
-			}
-    	
-    	return map1;
-			
-    }
-    
     private Map<Integer, Long> getActiveAccountsList(Map<Long,Map<Long,AccountDetails>> map, long customerID)
 	{
 		Map<Integer, Long> accountsList = new Hashtable<>();
@@ -614,8 +593,6 @@ public class BankServlet extends HttpServlet
 				try
 				{
 					Map<Long,Map<Long,AccountDetails>> map = bankCus.getAccountDetails(customerID);
-					
-					map = getActiveAccountsMap(map, customerID);
 					
 					request.setAttribute("completeAccountsMap", map);
 					path = "JSP/completeAccountDetails.jsp";
