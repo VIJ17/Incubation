@@ -31,7 +31,7 @@
 {
 	background-image:url(<%= request.getContextPath() %>/images/34.jpg);
 	background-size:100% 100%;
-	height:60em;
+	height:56em;
 	width:100%;
 }
 
