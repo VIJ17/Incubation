@@ -523,7 +523,7 @@ public class BankServlet extends HttpServlet
 				long customerID = Long.parseLong(request.getParameter("userID"));
 				String name = request.getParameter("name");
 				long mobile = Long.parseLong(request.getParameter("mobile"));
-				String email = request.getParameter("emailkID");
+				String email = request.getParameter("emailID");
 				
 				UserDetails userDetails = new UserDetails();
 				userDetails.setUserID(customerID);
