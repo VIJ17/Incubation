@@ -155,6 +155,17 @@ function setValues(operator)
 			document.getElementById("output").value = "-";
 		}
 		
+		operations = [];
+		operations.push(operator);
+		
+		if(element)
+		{
+			removeHighlight();
+			element = undefined;
+		}
+		
+		highlightOperator();
+		
 		return;
 	}
 	
@@ -231,6 +242,7 @@ function buttonPress(number)
 	if(element)
 	{
 		removeHighlight();
+		element = undefined;
 	}
 }
 
