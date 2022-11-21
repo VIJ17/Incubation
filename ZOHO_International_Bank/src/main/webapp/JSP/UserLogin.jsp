@@ -91,7 +91,7 @@ p
 <div>
 	
 	<div class = "border">
-		<h2 style = "font-family:monospace; margin-left:6%; margin-top:5%; align:center"> LOGIN </h2>
+		<h2 style = "font-family:monospace; margin-left:6%; margin-top:5%"> LOGIN </h2>
 		<hr> <br><br>
 		<form action = "<%= request.getContextPath() %>/myServlet" method = "post">
 			<table style = "padding-left:25%">
