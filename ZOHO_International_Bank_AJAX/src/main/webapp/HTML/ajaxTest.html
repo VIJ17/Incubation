@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<style type="text/css">
+
+td
+{
+	text-align:center;
+	background-color:#e6e6ff;
+}
+
+th
+{
+	text-align:center;
+	color:#e6e6ff;
+	background-color:#3333cc;
+}
+
+table, th, td
+{
+	border: none;
+	border-collapse: collapse;
+	border-bottom: 1px solid #000000;
+}
+
+h2
+{
+	padding-left:1%;
+	font-size:30px;
+	background-color:#3333cc;
+	color:white;
+}
+
+
+
+</style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+function connectServer()
+{
+	$.ajax({
+	        type: "GET",
+	        url: "../BankServlet",
+	        contentType: "application/json",
+	        dataType: "json",
+	        data:
+	        {
+	        	customerID : $("#customerID").val()
+	        },
+	        success: function(response)
+	        {
+	        	$("body").append("<div id = 'first'></div>");
+	        	$("#first").append("<table id = 'details'></table>");
+	        	$("#details").append("<tr> <th>CUSTOMER ID</th>" +
+	        									"<th>ACCOUNT NO</th>" +
+							    				"<th>ACC_TYPE</th>" +
+							    				"<th>ACC_STATUS</th>" +
+							    				"<th>IFSC_CODE</th>" +
+							    				"<th>BRANCH</th>" +
+							    				"<th>BALANCE</th> </tr>");
+	            for (var key in response)
+	            {
+            		var accountDetails = response[key];
+            	    var customerID = accountDetails["customerID"];
+            	    var accountNo = accountDetails["accountNo"];
+            	    var accountType = accountDetails["accountType"];
+            	    var accountStatus = accountDetails["accountStatus"];
+            	    var ifscCode = accountDetails["ifscCode"];
+            	    var branch = accountDetails["branch"];
+            	    var balance = accountDetails["balance"];
+            	    
+            	    $("#details").append("<tr> <td>" + customerID + "</td>" +
+													"<td>" + accountNo + "</td>" +
+								    				"<td>" + accountType + "</td>" +
+								    				"<td>" + accountStatus + "</td>" +
+								    				"<td>" + ifscCode + "</td>" +
+								    				"<td>" + branch + "</td>" +
+								    				"<td>" + balance + "</td> </tr>");
+            	}
+	        }
+		  });
+	
+}
+
+</script>
+
+</head>
+<body>
+
+<input type = "number" id = customerID placeholder = "Enter CustomerID">
+<button type = "submit" onclick = "connectServer()"> click </button>
+
+</body>
+</html>
