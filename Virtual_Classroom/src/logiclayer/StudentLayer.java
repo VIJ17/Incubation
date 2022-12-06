@@ -7,7 +7,7 @@ import datacarier.QADetails;
 import exceptions.WrongEntryException;
 import virtualclassroomframe.VirtualClassRoomInterface;
 
-public class StudentLayer
+public class StudentLayer extends UserLayer
 {
 	VirtualClassRoomInterface dbInterf = new VirtualClassRoomDataBase();
 	

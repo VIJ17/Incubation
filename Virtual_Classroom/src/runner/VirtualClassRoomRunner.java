@@ -7,10 +7,7 @@ import datacarier.MaterialDetails;
 import datacarier.QADetails;
 import datacarier.UserDetails;
 import exceptions.WrongEntryException;
-import logiclayer.AdminLayer;
-import logiclayer.FacultyLayer;
-import logiclayer.StudentLayer;
-import logiclayer.UserLayer;
+import logiclayer.Evaluator;
 
 public class VirtualClassRoomRunner
 {
@@ -36,7 +33,7 @@ public class VirtualClassRoomRunner
 		return str;
 	}
 	
-	private void editProfile(VirtualClassRoomRunner run, UserLayer user) throws WrongEntryException
+	private void editProfile(VirtualClassRoomRunner run, Evaluator eval) throws WrongEntryException
 	{
 		UserDetails userDetails = new UserDetails();
 		A:
@@ -90,11 +87,11 @@ public class VirtualClassRoomRunner
 			}
 		}
 		
-		user.editProfile(userDetails);
+		eval.editProfile(userDetails);
 		System.out.println("Profile edited successfully.");
 	}
 	
-	private void student(VirtualClassRoomRunner run, UserLayer user)
+	private void student(VirtualClassRoomRunner run, Evaluator eval)
 	{
 		System.out.println("Enter User ID.");
 		long userID = run.getLong();
@@ -103,26 +100,25 @@ public class VirtualClassRoomRunner
 		
 		try
 		{
-			UserDetails userDetails = user.userLogin(userID, password);
+			UserDetails userDetails = eval.userLogin(userID, password);
 			String status = userDetails.getStatus();
 			if(status.equals("ACTIVE"))
 			{
 				boolean condition = true;
 				do
 				{
-					StudentLayer student = new StudentLayer();
 					System.out.println("Enter case Number.");
 					int caseNumber = run.getInt();
 					switch(caseNumber)
 					{
 						case 1:									//Edit Profile...
 						{
-							editProfile(run, user);
+							editProfile(run, eval);
 							break;
 						}
 						case 2:									//Show Materials...
 						{
-							Map<Integer, MaterialDetails> materialMap = student.showMaterials();
+							Map<Integer, MaterialDetails> materialMap = eval.showMaterials();
 							System.out.println("________________________________________________________");
 							
 							for(int i = 1; i <= materialMap.size(); i++)
@@ -143,13 +139,13 @@ public class VirtualClassRoomRunner
 							String question = run.getString();
 							qaDetails.setQuestion(question);
 							
-							student.askQuestion(qaDetails);
+							eval.askQuestion(qaDetails);
 							System.out.println("Question posted successfully.");
 							break;
 						}
 						case 3:									//Show Answers...
 						{
-							Map<Integer, QADetails> qaMap = student.showAnswers();
+							Map<Integer, QADetails> qaMap = eval.showAnswers();
 							System.out.println("________________________________________________________");
 							
 							for(int i = 1; i <= qaMap.size(); i++)
@@ -187,7 +183,7 @@ public class VirtualClassRoomRunner
 		}
 	}
 	
-	private void faculty(VirtualClassRoomRunner run, UserLayer user)
+	private void faculty(VirtualClassRoomRunner run, Evaluator eval)
 	{
 		System.out.println("Enter User ID.");
 		long userID = run.getLong();
@@ -196,21 +192,20 @@ public class VirtualClassRoomRunner
 		
 		try
 		{
-			UserDetails userDetails = user.userLogin(userID, password);
+			UserDetails userDetails = eval.userLogin(userID, password);
 			String status = userDetails.getStatus();
 			if(status.equals("ACTIVE"))
 			{
 				boolean condition = true;
 				do
 				{
-					FacultyLayer faculty = new FacultyLayer();
 					System.out.println("Enter case Number.");
 					int caseNumber = run.getInt();
 					switch(caseNumber)
 					{
 						case 1:									//Edit Profile...
 						{
-							editProfile(run, user);
+							editProfile(run, eval);
 							break;
 						}
 						case 2:									//Upload Material...
@@ -224,7 +219,7 @@ public class VirtualClassRoomRunner
 							materialDetails.setTitle(title);
 							materialDetails.setContent(content);
 							
-							faculty.uploadMaterials(materialDetails);
+							eval.uploadMaterials(materialDetails);
 							System.out.println("Material Posted successfully.");
 							break;
 						}
@@ -233,13 +228,13 @@ public class VirtualClassRoomRunner
 							System.out.println("Enter Material ID.");
 							long materialID = run.getLong();
 							
-							faculty.removeMaterial(materialID);
+							eval.removeMaterial(materialID);
 							System.out.println("Material removed successfully.");
 							break;
 						}
 						case 4:									//Show Questions...
 						{
-							Map<Integer, QADetails> qaMap = faculty.showQuestions(userID);
+							Map<Integer, QADetails> qaMap = eval.showQuestions(userID);
 							System.out.println("_____________________________________________________");
 							
 							for(int i = 1; i <= qaMap.size(); i++)
@@ -258,7 +253,7 @@ public class VirtualClassRoomRunner
 							String answer = run.getString();
 							qaDetails.setAnswer(answer);
 							
-							faculty.uploadAnswers(qaDetails);
+							eval.uploadAnswers(qaDetails);
 							System.out.println("Answer posted successfully.");
 							break;
 						}
@@ -285,7 +280,7 @@ public class VirtualClassRoomRunner
 		}
 	}
 	
-	private void admin(VirtualClassRoomRunner run, UserLayer user)
+	private void admin(VirtualClassRoomRunner run, Evaluator eval)
 	{
 		System.out.println("Enter User ID.");
 		long userID = run.getLong();
@@ -294,18 +289,17 @@ public class VirtualClassRoomRunner
 		
 		try
 		{
-			user.userLogin(userID, password);
+			eval.userLogin(userID, password);
 			boolean condition = true;
 			do
 			{
-				AdminLayer admin = new AdminLayer();
 				System.out.println("Enter case Number.");
 				int caseNumber = run.getInt();
 				switch(caseNumber)
 				{
 					case 1:									//Users List...
 					{
-						Map<Integer, UserDetails> usersList = admin.getUsersList();
+						Map<Integer, UserDetails> usersList = eval.getUsersList();
 						
 						for(int i = 1; i <= usersList.size(); i++)
 						{
@@ -318,7 +312,7 @@ public class VirtualClassRoomRunner
 					}
 					case 2:									//Request List...
 					{
-						Map<Integer, UserDetails> usersList = admin.getUsersList();
+						Map<Integer, UserDetails> usersList = eval.getUsersList();
 						
 						for(int i = 1; i <= usersList.size(); i++)
 						{
@@ -336,7 +330,7 @@ public class VirtualClassRoomRunner
 					}
 					case 3:									//Show QA...
 					{
-						Map<Integer, QADetails> qaMap = admin.showQuestionsAndAnswers();
+						Map<Integer, QADetails> qaMap = eval.showQuestionsAndAnswers();
 						
 						for(int i = 1; i <= qaMap.size(); i++)
 						{
@@ -352,7 +346,7 @@ public class VirtualClassRoomRunner
 						QADetails qaDetails = qaMap.get(i);
 						long questionId = qaDetails.getQuestionID();
 						
-						admin.deleteQADetails(questionId);
+						eval.deleteQADetails(questionId);
 						System.out.println("Question Answer entry removed.");
 						break;
 					}
@@ -370,7 +364,7 @@ public class VirtualClassRoomRunner
 		}
 	}
 	
-	private void login(VirtualClassRoomRunner run, UserLayer user)
+	private void login(VirtualClassRoomRunner run, Evaluator eval)
 	{
 		System.out.println("Press : \n1 - Student \n2 - Faculty \n3 - Admin");
 		int value = run.getInt();
@@ -397,23 +391,23 @@ public class VirtualClassRoomRunner
 		{
 			case "STUDENT":
 			{
-				run.student(run, user);
+				run.student(run, eval);
 				break;
 			}
 			case "FACULTY":
 			{
-				run.faculty(run, user);
+				run.faculty(run, eval);
 				break;
 			}
 			case "ADMIN":
 			{
-				run.admin(run, user);
+				run.admin(run, eval);
 				break;
 			}
 		}
 	}
 	
-	private void register(VirtualClassRoomRunner run, UserLayer user)
+	private void register(VirtualClassRoomRunner run, Evaluator eval)
 	{
 		System.out.println("Enter Name.");
 		String name = run.getString();
@@ -452,7 +446,7 @@ public class VirtualClassRoomRunner
 		
 		try
 		{
-			userDetails = user.userRegistration(userDetails);
+			userDetails = eval.userRegistration(userDetails);
 			System.out.println("*------------------------*");
 			System.out.println("|Registration Successfull|");
 			System.out.println("*------------------------*");
@@ -472,7 +466,7 @@ public class VirtualClassRoomRunner
 		{
 			System.out.println("Press : \n1 - Login \n2 - Register \n3 - Exit");
 			int value = run.getInt();
-			UserLayer user = new UserLayer();
+			Evaluator eval = new Evaluator();
 			String type = null;
 			switch(value)
 			{
@@ -496,12 +490,12 @@ public class VirtualClassRoomRunner
 			{
 				case "REGISTER":
 				{
-					run.register(run, user);
+					run.register(run, eval);
 					break;
 				}
 				case "LOGIN":
 				{
-					run.login(run, user);
+					run.login(run, eval);
 					break;
 				}
 				case "EXIT":
