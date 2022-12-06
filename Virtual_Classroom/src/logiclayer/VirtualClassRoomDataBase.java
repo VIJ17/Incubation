@@ -11,7 +11,7 @@ import java.util.Map;
 import datacarier.MaterialDetails;
 import datacarier.QADetails;
 import datacarier.UserDetails;
-import exceptions.WrongEntryException;
+import exceptions.InvalidException;
 import virtualclassroomframe.VirtualClassRoomInterface;
 
 public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
@@ -53,24 +53,24 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 		return stmt;
 	}
 	
-	private void dataAvailabilityCheck(ResultSet result) throws WrongEntryException, SQLException
+	private void dataAvailabilityCheck(ResultSet result) throws InvalidException, SQLException
 	{
 		if(result.next() == false)
 		{
-			throw new WrongEntryException("UserID or Password is incorrect.");
+			throw new InvalidException("UserID or Password is incorrect.");
 		}
 		else if(result.getString("STATUS").equals("INACTIVE"))
 		{
-			throw new WrongEntryException("Your ID is INACTIVE. \nPlease contact Admin.");
+			throw new InvalidException("Your ID is INACTIVE. \nPlease contact Admin.");
 		}
 		else if(result.getString("STATUS").equals("PENDING"))
 		{
-			throw new WrongEntryException("Your ID is pending for approval. \nPlease contact Admin.");
+			throw new InvalidException("Your ID is pending for approval. \nPlease contact Admin.");
 		}
 	}
 	
 	@Override
-	public UserDetails userRegistration(UserDetails userDetails) throws WrongEntryException
+	public UserDetails userRegistration(UserDetails userDetails) throws InvalidException
 	{
 		String password = userDetails.getPassword();
 		String name = userDetails.getName();
@@ -122,7 +122,7 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 		}
 		catch(SQLException e)
 		{
-			throw new WrongEntryException(e);
+			throw new InvalidException(e);
 		}
 		finally
 		{
@@ -132,7 +132,7 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 	}
 
 	@Override
-	public UserDetails userLogin(long userID, String password) throws WrongEntryException
+	public UserDetails userLogin(long userID, String password) throws InvalidException
 	{
 		String sql = "SELECT * FROM USER_DETAILS WHERE USER_ID = ? AND PASSWORD = ?";
 		
@@ -170,7 +170,7 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 		}
 		catch(SQLException e)
 		{
-			throw new WrongEntryException(e);
+			throw new InvalidException(e);
 		}
 		finally
 		{
@@ -180,7 +180,7 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 	}
 
 	@Override
-	public boolean editProfile(UserDetails userDetails) throws WrongEntryException
+	public boolean editProfile(UserDetails userDetails) throws InvalidException
 	{
 		String name = userDetails.getName();
 		int age = userDetails.getAge();
@@ -208,7 +208,7 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 		}
 		catch(SQLException e)
 		{
-			throw new WrongEntryException(e);
+			throw new InvalidException(e);
 		}
 		finally
 		{
@@ -218,7 +218,7 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 	}
 
 	@Override
-	public Map<Integer, MaterialDetails> showMaterials() throws WrongEntryException
+	public Map<Integer, MaterialDetails> showMaterials() throws InvalidException
 	{
 		String sql = "SELECT * FROM MATERIAL_DETAILS";
 		
@@ -249,7 +249,7 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 		}
 		catch(SQLException e)
 		{
-			throw new WrongEntryException(e);
+			throw new InvalidException(e);
 		}
 		finally
 		{
@@ -259,7 +259,7 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 	}
 
 	@Override
-	public boolean uploadMaterials(MaterialDetails materialDetails) throws WrongEntryException
+	public boolean uploadMaterials(MaterialDetails materialDetails) throws InvalidException
 	{
 		long postedBy = materialDetails.getPostedBy();
 		String title = materialDetails.getTitle();
@@ -285,7 +285,7 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 		}
 		catch(SQLException e)
 		{
-			throw new WrongEntryException(e);
+			throw new InvalidException(e);
 		}
 		finally
 		{
@@ -295,7 +295,7 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 	}
 	
 	@Override
-	public void removeMaterial(long materialID) throws WrongEntryException
+	public void removeMaterial(long materialID) throws InvalidException
 	{
 		String sql = "DELETE FROM MATERIAL_DETAILS WHERE MATERIAL_ID = ?";
 		
@@ -313,7 +313,7 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 		}
 		catch(SQLException e)
 		{
-			throw new WrongEntryException(e);
+			throw new InvalidException(e);
 		}
 		finally
 		{
@@ -323,7 +323,7 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 	}
 
 	@Override
-	public void askQuestion(QADetails qaDetails) throws WrongEntryException
+	public void askQuestion(QADetails qaDetails) throws InvalidException
 	{
 		long materialID = qaDetails.getMaterialID();
 		String question = qaDetails.getQuestion();
@@ -345,7 +345,7 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 		}
 		catch(SQLException e)
 		{
-			throw new WrongEntryException(e);
+			throw new InvalidException(e);
 		}
 		finally
 		{
@@ -355,7 +355,7 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 	}
 
 	@Override
-	public Map<Integer, QADetails> showAnswers() throws WrongEntryException
+	public Map<Integer, QADetails> showAnswers() throws InvalidException
 	{
 		String sql = "SELECT * FROM QA_DETAILS";
 		
@@ -386,7 +386,7 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 		}
 		catch(SQLException e)
 		{
-			throw new WrongEntryException(e);
+			throw new InvalidException(e);
 		}
 		finally
 		{
@@ -396,7 +396,7 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 	}
 
 	@Override
-	public Map<Integer, QADetails> showQuestions(long postedBy) throws WrongEntryException
+	public Map<Integer, QADetails> showQuestions(long postedBy) throws InvalidException
 	{
 		String sql = "SELECT * FROM QA_DETAILS INNER JOIN MATERIAL_DETAILS ON QA_DETAILS.MATERIAL_ID = MATERIAL_DETAILS.MATERIAL_ID WHERE QA_DETAILS.ANSWER IS NULL AND MATERIAL_DETAILS.POSTED_BY = ?";
 		
@@ -429,7 +429,7 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 		}
 		catch(SQLException e)
 		{
-			throw new WrongEntryException(e);
+			throw new InvalidException(e);
 		}
 		finally
 		{
@@ -439,7 +439,7 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 	}
 
 	@Override
-	public void uploadAnswers(QADetails qaDetails) throws WrongEntryException
+	public void uploadAnswers(QADetails qaDetails) throws InvalidException
 	{
 		String answer = qaDetails.getAnswer();
 		long questionID = qaDetails.getQuestionID();
@@ -461,7 +461,7 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 		}
 		catch(SQLException e)
 		{
-			throw new WrongEntryException(e);
+			throw new InvalidException(e);
 		}
 		finally
 		{
@@ -471,7 +471,7 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 	}
 
 	@Override
-	public Map<Integer, UserDetails> getUsersList() throws WrongEntryException
+	public Map<Integer, UserDetails> getUsersList() throws InvalidException
 	{
 		String sql = "SELECT NAME, ROLE, STATUS FROM USER_DETAILS WHERE STATUS = 'ACTIVE'";
 		
@@ -501,7 +501,7 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 		}
 		catch(SQLException e)
 		{
-			throw new WrongEntryException(e);
+			throw new InvalidException(e);
 		}
 		finally
 		{
@@ -511,7 +511,7 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 	}
 
 	@Override
-	public Map<Integer, UserDetails> showRequest() throws WrongEntryException
+	public Map<Integer, UserDetails> showRequest() throws InvalidException
 	{
 		String sql = "SELECT * FROM USER_DETAILS WHERE STATUS = 'PENDING'";
 		
@@ -546,7 +546,7 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 		}
 		catch(SQLException e)
 		{
-			throw new WrongEntryException(e);
+			throw new InvalidException(e);
 		}
 		finally
 		{
@@ -556,7 +556,7 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 	}
 
 	@Override
-	public Map<Integer, QADetails> showQuestionsAndAnswers() throws WrongEntryException
+	public Map<Integer, QADetails> showQuestionsAndAnswers() throws InvalidException
 	{
 		String sql = "SELECT * FROM QA_DETAILS";
 		
@@ -587,7 +587,7 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 		}
 		catch(SQLException e)
 		{
-			throw new WrongEntryException(e);
+			throw new InvalidException(e);
 		}
 		finally
 		{
@@ -597,7 +597,7 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 	}
 
 	@Override
-	public void deleteQADetails(long questionID) throws WrongEntryException
+	public void deleteQADetails(long questionID) throws InvalidException
 	{
 		String sql = "DELETE * FROM QA_DETAILS WHERE QUESTION_ID = ?";
 		
@@ -614,7 +614,7 @@ public class VirtualClassRoomDataBase implements VirtualClassRoomInterface
 		}
 		catch(SQLException e)
 		{
-			throw new WrongEntryException(e);
+			throw new InvalidException(e);
 		}
 		finally
 		{

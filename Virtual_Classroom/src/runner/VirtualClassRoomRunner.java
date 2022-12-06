@@ -6,7 +6,7 @@ import java.util.Scanner;
 import datacarier.MaterialDetails;
 import datacarier.QADetails;
 import datacarier.UserDetails;
-import exceptions.WrongEntryException;
+import exceptions.InvalidException;
 import logiclayer.Evaluator;
 
 public class VirtualClassRoomRunner
@@ -33,7 +33,7 @@ public class VirtualClassRoomRunner
 		return str;
 	}
 	
-	private void editProfile(VirtualClassRoomRunner run, Evaluator eval) throws WrongEntryException
+	private void editProfile(VirtualClassRoomRunner run, Evaluator eval) throws InvalidException
 	{
 		UserDetails userDetails = new UserDetails();
 		A:
@@ -177,7 +177,7 @@ public class VirtualClassRoomRunner
 				System.out.println("Your registration request is still pending. \nPlease contact admin.");
 			}
 		}
-		catch (WrongEntryException e)
+		catch (InvalidException e)
 		{
 			e.printStackTrace();
 		}
@@ -274,7 +274,7 @@ public class VirtualClassRoomRunner
 				System.out.println("Your registration request is still pending. \nPlease contact admin.");
 			}
 		}
-		catch (WrongEntryException e)
+		catch (InvalidException e)
 		{
 			e.printStackTrace();
 		}
@@ -358,7 +358,7 @@ public class VirtualClassRoomRunner
 				}
 			}while(condition);
 		}
-		catch (WrongEntryException e)
+		catch (InvalidException e)
 		{
 			e.printStackTrace();
 		}
@@ -452,7 +452,7 @@ public class VirtualClassRoomRunner
 			System.out.println("*------------------------*");
 			System.out.println(userDetails);
 		}
-		catch (WrongEntryException e)
+		catch (InvalidException e)
 		{
 			e.printStackTrace();
 		}
