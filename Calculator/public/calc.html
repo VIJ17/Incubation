@@ -154,27 +154,29 @@ function setValues(operator)
 		{
 			document.getElementById("output").value = "-";
 		}
-		
-		operations = [];
-		operations.push(operator);
-		
-		if(element)
+		else
 		{
-			removeHighlight();
-			element = undefined;
+			operations = [];
+			operations.push(operator);
+			
+			if(element)
+			{
+				removeHighlight();
+				element = undefined;
+			}
+			
+			highlightOperator();
 		}
+	}
+	else
+	{
+		operations.push(operator);
+		operands.push(operand1);
+		
+		document.getElementById("output").value = "";
 		
 		highlightOperator();
-		
-		return;
 	}
-	
-	operations.push(operator);
-	operands.push(operand1);
-	
-	document.getElementById("output").value = "";
-	
-	highlightOperator();
 }
 
 function finalAnswer()
