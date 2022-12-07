@@ -3,7 +3,7 @@ package beginnersTask;
 public class SingletonWithoutEnum
 {
 	private int value;
-	static SingletonWithoutEnum instance = new SingletonWithoutEnum();
+	private static SingletonWithoutEnum instance;
 
 	public int getValue()
 	{
@@ -22,6 +22,16 @@ public class SingletonWithoutEnum
 	
 	public static SingletonWithoutEnum createInstance()
 	{
+		if(instance == null)
+		{
+			synchronized(instance)
+			{
+				if(instance == null)
+				{
+					instance = new SingletonWithoutEnum();
+				}
+			}
+		}
 		return instance;
 	}
 	
