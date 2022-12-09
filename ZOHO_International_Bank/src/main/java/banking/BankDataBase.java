@@ -173,7 +173,7 @@ public class BankDataBase implements BankingInterface
 			
 			if(!(accountStatus.equalsIgnoreCase("ACTIVE")))
 			{
-				throw new WrongEntryException("Account is Blocked. \nContact Admin to unblock.");
+				throw new WrongEntryException("Account is Blocked. Contact Admin to unblock.");
 			}
 			
 		}
