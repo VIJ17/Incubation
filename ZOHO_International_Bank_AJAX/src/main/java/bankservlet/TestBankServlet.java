@@ -264,7 +264,6 @@ public class TestBankServlet extends HttpServlet
 					transactionDetails.setAmount(amount);
 				
 					bankAdmin.deposit(transactionDetails);
-					request.setAttribute("Message", "Deposit Successfull.");
 					String message = "{message : Deposit Successfull.}";
 					JSONObject jsonObj1 = new JSONObject(message);
 					String jsonObjStr = jsonObj1.toString();
