@@ -1,11 +1,11 @@
-package practice;
+																															package practice;
 
 public class StringRotation_05
 {
 	public static void main(String[] args)
 	{
 		String str1 = "Hello from here";
-		String str2 = "erHello from he";
+		String str2 = "reHello from he";
 		System.out.println(StringRotate(str1, str2));
 	}
 	
