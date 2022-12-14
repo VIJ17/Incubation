@@ -69,8 +69,7 @@ public class RemovePalindrome
 			{
 				index++;
 			}
-			
-			if(ch != ' ')
+			else if(ch != ' ')
 			{
 				if(i != index)
 				{
