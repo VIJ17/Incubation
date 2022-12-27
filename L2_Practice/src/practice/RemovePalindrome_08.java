@@ -1,6 +1,6 @@
 package practice;
 
-public class RemovePalindrome
+public class RemovePalindrome_08
 {
 	public static void main(String[] args)
 	{
