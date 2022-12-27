@@ -25,7 +25,6 @@ public class MappingOfDigits_07
 		
 		String temp1 = "";
 		String temp2 = "";
-		List<String> innerList = new ArrayList<>();
 		
 		for(int i = 0; i < length1; i++)
 		{
@@ -41,6 +40,7 @@ public class MappingOfDigits_07
 			{
 				if(temp1 != "")
 				{
+					List<String> innerList = new ArrayList<>();
 					innerList.add(temp1);
 					innerList.add(temp2);
 					list.add(innerList);
